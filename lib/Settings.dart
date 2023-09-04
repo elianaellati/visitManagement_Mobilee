@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'HomePage.dart';
+import 'LoginPage.dart';
 
-
-void main() {
-  runApp(const MaterialApp(
-    home: Settings(),
-  ));
-}
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
 
@@ -16,17 +12,29 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsPage2State extends State<Settings> {
-
-
   bool _isDark = false;
+
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: _isDark ? ThemeData.dark() : ThemeData.light(),
-      child: Scaffold(
+    return MaterialApp(
+      theme: ThemeData.light(), // Set the default light theme
+      darkTheme: ThemeData.dark(), // Set the dark theme
+      themeMode: _isDark ? ThemeMode.dark : ThemeMode.light, // Set the current theme mode
+      home: Scaffold(
         appBar: AppBar(
           title: const Text("Settings"),
+          leading: Builder(
+            builder: (context) {
+              return IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
+            },
+          ),
         ),
+        drawer: const NavigatorDrawer(),
         body: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 400),
@@ -36,21 +44,31 @@ class _SettingsPage2State extends State<Settings> {
                   title: "General",
                   children: [
                     _CustomListTile(
-                        title: "Dark Mode",
-                        icon: Icons.dark_mode_outlined,
-                        trailing: Switch(
-                            value: _isDark,
-                            onChanged: (value) {
-                              setState(() {
-                                _isDark = value;
-                              });
-                            })),
+                      title: "Dark Mode",
+                      icon: Icons.dark_mode_outlined,
+                      trailing: Switch(
+                        value: _isDark,
+                        onChanged: (value) {
+                          setState(() {
+                            _isDark = value;
+                            // Toggle between dark and light themes
+                            if (_isDark) {
+                              ThemeMode.dark;
+                            } else {
+                              ThemeMode.light;
+                            }
+                          });
+                        },
+                      ),
+                    ),
                     const _CustomListTile(
-                        title: "Notifications",
-                        icon: Icons.notifications_none_rounded),
+                      title: "Notifications",
+                      icon: Icons.notifications_none_rounded,
+                    ),
                     const _CustomListTile(
-                        title: "Security Status",
-                        icon: CupertinoIcons.lock_shield),
+                      title: "Security Status",
+                      icon: CupertinoIcons.lock_shield,
+                    ),
                   ],
                 ),
                 const Divider(),
@@ -58,27 +76,30 @@ class _SettingsPage2State extends State<Settings> {
                   title: "Organization",
                   children: [
                     _CustomListTile(
-                        title: "Profile", icon: Icons.person_outline_rounded),
+                      title: "Profile",
+                      icon: Icons.person_outline_rounded,
+                    ),
                     _CustomListTile(
-                        title: "Messaging", icon: Icons.message_outlined),
-                    _CustomListTile(
-                        title: "Calling", icon: Icons.phone_outlined),
-                    _CustomListTile(
-                        title: "People", icon: Icons.contacts_outlined),
-                    _CustomListTile(
-                        title: "Calendar", icon: Icons.calendar_today_rounded)
+                      title: "People",
+                      icon: Icons.contacts_outlined,
+                    ),
                   ],
                 ),
                 const Divider(),
                 const _SingleSection(
                   children: [
                     _CustomListTile(
-                        title: "Help & Feedback",
-                        icon: Icons.help_outline_rounded),
+                      title: "Help & Feedback",
+                      icon: Icons.help_outline_rounded,
+                    ),
                     _CustomListTile(
-                        title: "About", icon: Icons.info_outline_rounded),
+                      title: "About",
+                      icon: Icons.info_outline_rounded,
+                    ),
                     _CustomListTile(
-                        title: "Sign out", icon: Icons.exit_to_app_rounded),
+                      title: "Sign out",
+                      icon: Icons.exit_to_app_rounded,
+                    ),
                   ],
                 ),
               ],
@@ -94,9 +115,13 @@ class _CustomListTile extends StatelessWidget {
   final String title;
   final IconData icon;
   final Widget? trailing;
-  const _CustomListTile(
-      {Key? key, required this.title, required this.icon, this.trailing})
-      : super(key: key);
+
+  const _CustomListTile({
+    Key? key,
+    required this.title,
+    required this.icon,
+    this.trailing,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +129,14 @@ class _CustomListTile extends StatelessWidget {
       title: Text(title),
       leading: Icon(icon),
       trailing: trailing,
-      onTap: () {},
+      onTap: () {
+        if (title == "Sign out") {
+          // Navigate to the home page
+          Navigator.of(context).pop(); // Close the settings screen
+          // Replace the following line with your home page widget
+          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+        }
+      },
     );
   }
 }
@@ -112,6 +144,7 @@ class _CustomListTile extends StatelessWidget {
 class _SingleSection extends StatelessWidget {
   final String? title;
   final List<Widget> children;
+
   const _SingleSection({
     Key? key,
     this.title,
