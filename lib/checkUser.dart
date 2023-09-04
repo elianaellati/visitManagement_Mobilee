@@ -20,6 +20,7 @@ class checkUser {
       final jsonData = jsonDecode(response.body);
       final user = User.fromJson(jsonData);
       await storage.write(key: 'username', value: username);
+
       return true;
 
     } else {

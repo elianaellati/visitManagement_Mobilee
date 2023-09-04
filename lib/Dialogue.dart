@@ -28,6 +28,10 @@ class AssignmentDetailsState extends State<Dialogue> {
 
   @override
   Widget build(BuildContext context) {
+    final bool showStartButton =
+        widget.form.status == 'Not Started';
+
+    bool isStarted = false;
     return Scaffold(
       appBar: AppBar(
         title: Text('Form Information'),
@@ -47,17 +51,51 @@ class AssignmentDetailsState extends State<Dialogue> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8), // Add space between the title and rows
+                const SizedBox(height: 8), // Add space between the title and rows
                 buildInfoRow('Name', widget.form.customerName),
-                SizedBox(height: 8), // Add space between rows
+                const SizedBox(height: 8), // Add space between rows
                 buildInfoRow('Location', '${widget.form.customerAddress}, ${widget.form.customerCity}'),
-                SizedBox(height: 8), // Add space between rows
+                const SizedBox(height: 8), // Add space between rows
                 buildInfoRow('Status', widget.form.status),
+
+
+                if (showStartButton)
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() {
+                        isStarted = true;
+                        print('isStarted set to true');
+                      });
+                      await http.put(
+                        Uri.parse('http://10.10.33.91:8080/visit_forms/${widget.form.id}/start'),
+                      );
+
+                    },
+                    child: Text('Start'),
+                  ),
+                if (isStarted) // Show "Cancelled" and "Completed" buttons if the form is started
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // Handle the "Cancelled" button click here
+                        },
+                        child: Text('Cancelled'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Handle the "Completed" button click here
+                        },
+                        child: Text('Completed'),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
-          Divider(),
-          SizedBox(height: 8), // Add space between "Contacts" and the list view
+          const Divider(),
+          const SizedBox(height: 8), // Add space between "Contacts" and the list view
           const Padding(
             padding: EdgeInsets.all(16.0), // Add padding around the "Contacts" text
             child: Text(
@@ -73,11 +111,11 @@ class AssignmentDetailsState extends State<Dialogue> {
               future: futureAssignment,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No Assignment Details available.'));
+                  return const Center(child: Text('No Assignment Details available.'));
                 } else {
                   final assignmentDetails = snapshot.data!;
 
@@ -91,6 +129,7 @@ class AssignmentDetailsState extends State<Dialogue> {
                 }
               },
             ),
+
           ),
         ],
       ),
@@ -98,6 +137,7 @@ class AssignmentDetailsState extends State<Dialogue> {
   }
 
   Widget buildInfoRow(String label, String value) {
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -109,13 +149,14 @@ class AssignmentDetailsState extends State<Dialogue> {
   }
 
   Widget buildAssignmentTile(contact assignment) {
+
     return Card(
       elevation: 2,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
         title: Text(
           '${assignment.firstName} ${assignment.lastName}',
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -162,11 +203,12 @@ class AssignmentDetailsState extends State<Dialogue> {
             ),
             // Add more widgets to display other details
           ],
-        ),
+        )
       ),
+
+
     );
   }
-
   Future<List<contact>> fetchAssignments(int assignmentId) async {
     final response = await http.get(
       Uri.parse('http://10.10.33.91:8080/visit_forms/$assignmentId/contacts'),

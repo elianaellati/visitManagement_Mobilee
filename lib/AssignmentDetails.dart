@@ -44,6 +44,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
             return Text('No Assignment Details available.');
           } else {
             final assignmentDetails = snapshot.data!;
+
             // Create a list of widgets to display assignment details
             final assignmentWidgets = assignmentDetails.map((assignment) {
               return GestureDetector(
@@ -64,8 +65,9 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
                       // Add more widgets to display other details
                     ],
                   ),
-                ),
+              ),
               );
+
             }).toList();
 
             return ListView(
