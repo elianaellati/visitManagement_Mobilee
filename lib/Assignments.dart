@@ -65,7 +65,8 @@ class _AssignmentsState extends State<Assignments> {
                   child: ListTile(
                     title: Text(assignment.comment),
                     subtitle: Text(assignment.type),
-                    trailing: Text(assignment.date),
+                    trailing: _buildStatusIcon(assignment.status),
+                   // trailing: Text(assignment.date),
                   ),
                 );
               }).toList();
@@ -82,7 +83,7 @@ class _AssignmentsState extends State<Assignments> {
 
   Future<List<Assignment>> fetchAssignments() async {
     final response = await http.get(
-      Uri.parse('http://10.10.33.91:8080/users/chrishosh/visit_assignments'),
+      Uri.parse('http://10.10.33.91:8080/users/halamon/visit_assignments'),
     );
 
     if (response.statusCode == 200) {
@@ -92,4 +93,23 @@ class _AssignmentsState extends State<Assignments> {
       throw Exception('Failed to load users');
     }
   }
+  Widget _buildStatusIcon(String status) {
+    Icon icon;
+    Color iconColor;
+
+    // Define icons and colors based on status
+    if (status == "Completed") {
+      icon = Icon(Icons.check_circle, color: Colors.green);
+    } else if (status == "In Progress") {
+      icon = Icon(Icons.access_time, color: Colors.orange);
+    } else if (status == "Not Started") {
+      icon = Icon(Icons.error, color: Colors.red);
+    } else {
+      // Handle other statuses or default case here
+      icon = Icon(Icons.error, color: Colors.grey);
+    }
+
+    return icon;
+  }
+
 }

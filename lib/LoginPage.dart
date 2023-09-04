@@ -85,7 +85,7 @@ class LoginState extends State<LoginPage> {
                               String username = _usernameController.text;
                               if( await _userChecker.fetchUser(username)){
                                 Navigator.pop(context);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()),);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()),);
                             }
 
                             },
