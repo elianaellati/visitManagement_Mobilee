@@ -3,8 +3,8 @@ import 'dart:js';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/HomePage.dart';
-import 'package:untitled1/Classes/User.dart';
+import 'package:visitManagement_Mobilee/HomePage.dart';
+import 'package:visitManagement_Mobilee/Classes/User.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

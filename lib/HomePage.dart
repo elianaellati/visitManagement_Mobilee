@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled1/Assignments.dart';
+import 'package:visitManagement_Mobilee/Assignments.dart';
 import 'HomePage.dart';
 import 'package:http/http.dart' as http;
 import 'Settings.dart';
@@ -93,10 +93,6 @@ class NavigatorDrawer extends StatelessWidget {
           ),
         ],
       );
-
-
-
-
 
 
 
