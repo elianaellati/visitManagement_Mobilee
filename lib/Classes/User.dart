@@ -15,4 +15,11 @@ class User{
        lastName:json['lastName'],
      );
    }
+   Map<String, dynamic> toJson() {
+     return {
+       'username': username,
+       'firstName': firstname,
+       'lastName': lastName,
+     };
+   }
 }

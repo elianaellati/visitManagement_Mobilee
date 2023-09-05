@@ -1,9 +1,21 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Classes/contact.dart';
 import 'package:http/http.dart' as http;
+import 'Classes/contact.dart';
+import 'Location.dart';
+import 'Classes/forms.dart';
 
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'Classes/contact.dart';
+import 'Location.dart';
 import 'Classes/forms.dart';
 
 class Dialogue extends StatefulWidget {
@@ -19,6 +31,13 @@ class Dialogue extends StatefulWidget {
 
 class AssignmentDetailsState extends State<Dialogue> {
   late Future<List<contact>> futureAssignment;
+  bool servicestatus = false;
+  bool haspermission = false;
+  late LocationPermission permission;
+  late Position position;
+  String long = "";
+  String lat = "";
+  bool isStarted = false; // Initialize isStarted
 
   @override
   void initState() {
@@ -28,10 +47,8 @@ class AssignmentDetailsState extends State<Dialogue> {
 
   @override
   Widget build(BuildContext context) {
-    final bool showStartButton =
-        widget.form.status == 'Not Started';
+    final bool showStartButton = widget.form.status == 'Not Started';
 
-    bool isStarted = false;
     return Scaffold(
       appBar: AppBar(
         title: Text('Form Information'),
@@ -51,41 +68,40 @@ class AssignmentDetailsState extends State<Dialogue> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8), // Add space between the title and rows
+                const SizedBox(height: 8),
                 buildInfoRow('Name', widget.form.customerName),
-                const SizedBox(height: 8), // Add space between rows
-                buildInfoRow('Location', '${widget.form.customerAddress}, ${widget.form.customerCity}'),
-                const SizedBox(height: 8), // Add space between rows
+                const SizedBox(height: 8),
+                buildInfoRow('Location',
+                    '${widget.form.customerAddress}, ${widget.form.customerCity}'),
+                const SizedBox(height: 8),
                 buildInfoRow('Status', widget.form.status),
-
-
                 if (showStartButton)
                   ElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        isStarted = true;
-                        print('isStarted set to true');
-                      });
-                      await http.put(
-                        Uri.parse('http://10.10.33.91:8080/visit_forms/${widget.form.id}/start'),
-                      );
-
+                      String request =
+                          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                      await requestServer(request, true);
                     },
                     child: Text('Start'),
                   ),
-                if (isStarted) // Show "Cancelled" and "Completed" buttons if the form is started
+                if (isStarted)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
                         onPressed: () {
                           // Handle the "Cancelled" button click here
+                          String request =
+                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
+                          requestServer(request, false);
                         },
                         child: Text('Cancelled'),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          // Handle the "Completed" button click here
+                        onPressed: () async {
+                          String request =
+                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete';
+                          await requestServer(request, false);
                         },
                         child: Text('Completed'),
                       ),
@@ -95,9 +111,9 @@ class AssignmentDetailsState extends State<Dialogue> {
             ),
           ),
           const Divider(),
-          const SizedBox(height: 8), // Add space between "Contacts" and the list view
+          const SizedBox(height: 8),
           const Padding(
-            padding: EdgeInsets.all(16.0), // Add padding around the "Contacts" text
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Contacts',
               style: TextStyle(
@@ -129,7 +145,6 @@ class AssignmentDetailsState extends State<Dialogue> {
                 }
               },
             ),
-
           ),
         ],
       ),
@@ -137,7 +152,6 @@ class AssignmentDetailsState extends State<Dialogue> {
   }
 
   Widget buildInfoRow(String label, String value) {
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -149,7 +163,6 @@ class AssignmentDetailsState extends State<Dialogue> {
   }
 
   Widget buildAssignmentTile(contact assignment) {
-
     return Card(
       elevation: 2,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -170,7 +183,6 @@ class AssignmentDetailsState extends State<Dialogue> {
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {
-                  // Handle the error (e.g., show a message)
                   print('Could not launch $url');
                 }
               },
@@ -189,7 +201,6 @@ class AssignmentDetailsState extends State<Dialogue> {
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {
-                  // Handle the error (e.g., show a message)
                   print('Could not launch $url');
                 }
               },
@@ -201,14 +212,12 @@ class AssignmentDetailsState extends State<Dialogue> {
                 ),
               ),
             ),
-            // Add more widgets to display other details
           ],
-        )
+        ),
       ),
-
-
     );
   }
+
   Future<List<contact>> fetchAssignments(int assignmentId) async {
     final response = await http.get(
       Uri.parse('http://10.10.33.91:8080/visit_forms/$assignmentId/contacts'),
@@ -237,5 +246,101 @@ class AssignmentDetailsState extends State<Dialogue> {
     }
   }
 
+  checkGps() async {
+    servicestatus = await Geolocator.isLocationServiceEnabled();
+    if (!servicestatus) {
+      print("GPS Service is not enabled, turn on GPS location");
+      return;
+    }
 
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      print("REQUESTING LOCATION PERMISSION");
+    }
+
+    if (permission == LocationPermission.whileInUse) {
+      haspermission = true;
+    }
+
+    if (haspermission) {
+      setState(() {
+        // Refresh the UI
+      });
+
+      await getLocation();
+    } else {
+      setState(() {
+        // Refresh the UI
+      });
+    }
+  }
+
+  getLocation() async {
+    position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    print(position.longitude);
+    print(position.latitude);
+
+    long = position.longitude.toString();
+    lat = position.latitude.toString();
+
+    print("Longitude:  $long ");
+    print("Latitude: $lat");
+    print("Request successful");
+
+    LocationSettings locationSettings = const LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+
+    StreamSubscription<Position> positionStream =
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position position) {
+      print(position.longitude);
+      print(position.latitude);
+      long = position.longitude.toString();
+      lat = position.latitude.toString();
+
+      setState(() {
+        // Refresh UI on update
+      });
+    });
+  }
+
+  Future<void> requestServer(String request, bool state) async {
+    try {
+      await checkGps();
+      Map<String, dynamic> data = {
+        "latitude": lat,
+        "longitude": long,
+      };
+
+      String requestBody = json.encode(data);
+
+      final response = await http.put(
+        Uri.parse(request),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        // Handle a successful response
+        print("Request successful");
+        setState(() {
+          isStarted = state;
+        });
+      } else {
+        // Handle other response codes if needed
+        print("Your Location is Far : ${response.statusCode}");
+      }
+    } catch (error) {
+      // Handle any exceptions that may occur during the request
+      print("Error: $error");
+    }
+  }
 }

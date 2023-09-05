@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 class LoginState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController _usernameController = TextEditingController();
-  final checkUser _userChecker = checkUser();
+  final CheckUser _userChecker = CheckUser();
   bool _isObscure = true;
 
 
@@ -24,7 +24,7 @@ class LoginState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
-          backgroundColor:Color(0xFF3F51B5)
+          backgroundColor:const Color(0xFF3F51B5)
 
       ),
       body: Center(
