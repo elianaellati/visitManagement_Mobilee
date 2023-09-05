@@ -133,7 +133,7 @@ class _AssignmentsState extends State<Assignments> {
   Widget showTasks() {
     return Expanded(
       child: Obx(() {
-        final hasTasksForSelectedDate = _taskController.taskList.any((task) {
+        final hasTasksForSelectedDate = _taskController.assignmentList.any((task) {
           var outputFormat = DateFormat('dd-MM-yyyy');
           try {
             var parsedDate = outputFormat.parse(task.date);
@@ -144,16 +144,16 @@ class _AssignmentsState extends State<Assignments> {
           }
         });
 
-        if (_taskController.taskList.isEmpty || !hasTasksForSelectedDate) {
+        if (_taskController.assignmentList.isEmpty || !hasTasksForSelectedDate) {
           return _noTaskMsg(); // Show "No Task" message
         } else {
           return ListView.builder(
             scrollDirection: SizeConfig.orientation == Orientation.landscape
                 ? Axis.horizontal
                 : Axis.vertical,
-            itemCount: _taskController.taskList.length,
+            itemCount: _taskController.assignmentList.length,
             itemBuilder: (BuildContext context, int index) {
-              var task = _taskController.taskList[index];
+              var task = _taskController.assignmentList[index];
               var outputFormat = DateFormat('dd-MM-yyyy');
               try {
                 var parsedDate = outputFormat.parse(task.date);
