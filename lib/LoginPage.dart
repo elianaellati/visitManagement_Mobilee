@@ -20,6 +20,7 @@ class LoginState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    _usernameController.text = 'chrishosh';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
