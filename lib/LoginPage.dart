@@ -24,7 +24,7 @@ class LoginState extends State<LoginPage> {
     _usernameController.text = 'chrishosh';
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Login'), backgroundColor: const Color(0xFF3F51B5)),
+          title: const Text('Login'), backgroundColor: Color(0xFF3F51B5)),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +111,7 @@ class LoginState extends State<LoginPage> {
                   child: Text(
                     'Forget Password?',
                     style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
+                        color: Color(0xFF3F51B5), fontWeight: FontWeight.bold),
                   )),
             ]),
       ),
