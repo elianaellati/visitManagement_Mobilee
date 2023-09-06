@@ -4,14 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:visitManagement_Mobilee/Settings.dart';
+import 'package:visitManagement_Mobilee/ui/button.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
 
+import 'AddFormPage.dart';
 import 'Classes/Assignment.dart';
 import 'Dialogue.dart';
 import 'Classes/forms.dart';
 import 'package:http/http.dart' as http;
 
+import 'controllers/_taskController.dart';
 import 'formTitle.dart';
 
 class AssignmentDetails extends StatefulWidget {
@@ -27,65 +33,14 @@ class AssignmentDetails extends StatefulWidget {
 
 class AssignmentDetailsState extends State<AssignmentDetails> {
   late Future<List<forms>> futureAssignment;
-
+  late Assignment _assignment;
   @override
   void initState() {
     super.initState();
-    futureAssignment = fetchForms(widget.assignment.id);
+    futureAssignment = fetchAssignments(widget.assignment.id);
+    _assignment = widget.assignment;
   }
 
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Forms'),
-//         backgroundColor: Color(0xFF3F51B5),
-//       ),
-//       body: FutureBuilder<List<forms>>(
-//         future: futureAssignment,
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return CircularProgressIndicator();
-//           } else if (snapshot.hasError) {
-//             return Text('Error: ${snapshot.error}');
-//           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-//             return Text('No Assignment Details available.');
-//           } else {
-//             final assignmentDetails = snapshot.data!;
-//             final assignmentWidgets = assignmentDetails.map((assignment) {
-//               return GestureDetector(
-//                 onTap: () {
-//                   Navigator.of(context).push(
-//                     MaterialPageRoute(
-//                       builder: (context) =>
-//                           Dialogue(assignment),
-//                     ),
-//                   );
-//                 },
-//                 child: ListTile(
-//                   title: Text(assignment.customerName), // Adjust the property you want to display
-//                   subtitle: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text( '${assignment.customerCity},${assignment.customerAddress}')
-//                       // Add more widgets to display other details
-//                     ],
-//                   ),
-//               ),
-//               );
-//
-//             }).toList();
-//
-//             return ListView(
-//               children: assignmentWidgets,
-//             );
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
 
   @override
   Widget build(BuildContext context) {
@@ -94,59 +49,65 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
         title: const Text('Forms'),
         backgroundColor: Color(0xFF3F51B5),
       ),
-      body: FutureBuilder<List<forms>>(
-        future: futureAssignment,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return _noTaskMsg();
-          } else {
-            final assignmentDetails = snapshot.data!;
-            return ListView.builder(
-              itemCount: assignmentDetails.length,
-              itemBuilder: (context, index) {
-                final assignment = assignmentDetails[index];
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  duration: const Duration(milliseconds: 375),
-                  child: SlideAnimation(
-                    verticalOffset: 50.0,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => Dialogue(assignment),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0), // Add your desired padding
+            child: _addFormBar(context, _assignment),
+          ),
+
+          Expanded(
+
+            child: FutureBuilder<List<forms>>(
+
+              future: futureAssignment,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return _noTaskMsg();
+                } else {
+                  final assignmentDetails = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: assignmentDetails.length,
+                    itemBuilder: (context, index) {
+                      final assignment = assignmentDetails[index];
+                      return AnimationConfiguration.staggeredList(
+                        position: index,
+                        duration: const Duration(milliseconds: 375),
+                        child: SlideAnimation(
+                          verticalOffset: 50.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => Dialogue(assignment),
+                                ),
+                              );
+                            },
+                            child: formTitle(assignment),
                           ),
-                        );
-                      },
-                      child: formTitle(assignment),
-                      // child: ListTile(
-                      //   title: Text(assignment.customerName),
-                      //   subtitle: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Text('${assignment.customerCity}, ${assignment
-                      //           .customerAddress}'),
-                      //       Add more widgets to display other details
-                      //     ],
-                      //   ),
-                      // ),
-                    ),
-                  ),
-                );
+
+                        ),
+                      );
+
+                    },
+                  );
+                }
               },
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
 
 
-  Future<List<forms>> fetchForms(int assignmentId) async {
+
+  Future<List<forms>> fetchAssignments(int assignmentId) async {
     final response = await http.get(
       Uri.parse(
           'http://10.10.33.91:8080/visit_assignments/$assignmentId/forms'),
@@ -154,20 +115,24 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
-      return jsonData.map((formsJsonList) {
-        final customerName = formsJsonList['customer']['name'] ?? 'Unknown Customer';
-        final customerAddress = formsJsonList['customer']['location']['address'] ??
+      print(jsonData);
+      return jsonData.map((userJson) {
+        final customerName = userJson['customer']['name'] ?? 'Unknown Customer';
+        final customerAddress = userJson['customer']['location']['address'] ??
             'Unknown Address';
-        final customerCity = formsJsonList['customer']['location']['cityName'] ??
+        final customerCity = userJson['customer']['location']['cityName'] ??
             'Unknown city';
-        final customerId = formsJsonList['customer']['id'] ?? 'Unknown customer id';
-        final endTime = formsJsonList['endTime'] ?? 'Unknown endTime';
-        final startTime = formsJsonList['startTime'] ?? 'Unknown startTime';
-        final status = formsJsonList['status'] ?? 'Unknown status';
-        final id = formsJsonList['id'] ?? 'Unknown id';
-
+        final customerId = userJson['customer']['id'] ?? 'Unknown customer id';
+        final endTime = userJson['endTime'] ?? 'Unknown endTime';
+        final startTime = userJson['startTime'] ?? 'Unknown startTime';
+        final status = userJson['status'] ?? 'Unknown status';
+        final id = userJson['id'] ?? 'Unknown id';
+        final longitude = userJson['customer']['longitude'] ?? 'Unknown longitude';
+        final latitude = userJson['customer']['latitude'] ?? 'Unknown latitude';
 
         return forms(
+          longitude:longitude,
+          latitude:latitude,
           customerName: customerName,
           customerAddress: customerAddress,
           status: status,
@@ -234,5 +199,40 @@ _noTaskMsg() {
       ),
 
     ],
+  );
+}
+
+_addFormBar(BuildContext context,Assignment assignment) {
+  final TaskController _taskController = Get.put(TaskController());
+  return Container(
+    margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              assignment.comment,
+              style: subHeadingStyle,
+            ),
+            // Text(
+            //   'Today',
+            //   style: subHeadingStyle,
+            // ),
+          ],
+        ),
+        MyButton(
+            label: '+ Add Form',
+          onTap: () {
+            // Navigate to AddFormPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddFormPage(assignment)),
+            );
+          },
+        ),
+      ],
+    ),
   );
 }

@@ -17,7 +17,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    // بيانات المستخدم (يمكنك استبدالها بالبيانات الفعلية)
     final userData = {
       'firstName': 'John',
       'lastName': 'Doe',

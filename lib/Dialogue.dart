@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'Classes/contact.dart';
 import 'Location.dart';
 import 'Classes/forms.dart';
+import 'openMap.dart';
 
 
 // ... (import statements)
@@ -35,8 +36,9 @@ class AssignmentDetailsState extends State<Dialogue> {
   void initState() {
     super.initState();
     statusText=widget.form.status.toString();
-    print(statusText+"fjdvjdfjgjdfgjdjgjdfg");
+
     futureAssignment = fetchContacts(widget.form.id);
+
   }
 
   @override
@@ -62,6 +64,9 @@ class AssignmentDetailsState extends State<Dialogue> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+        Text('long: ${widget.form.longitude}'),
+        Text('lat: ${widget.form.latitude}'),
+
                 const SizedBox(height: 8),
                 buildInfoRow('Name', widget.form.customerName),
                 const SizedBox(height: 8),
@@ -74,6 +79,7 @@ class AssignmentDetailsState extends State<Dialogue> {
                   Visibility(
                     visible: true,
                     // Show the "Start" button when isStarted is false
+
                     child: ElevatedButton(
                       onPressed: () {
                         String request = 'http://10.10.33.91:8080/visit_forms/${widget
@@ -109,8 +115,15 @@ class AssignmentDetailsState extends State<Dialogue> {
                     },
                     child: Text('Completed'),
                   ),
-                )
-
+                ),
+                ElevatedButton(
+                 onPressed: () {  Navigator.of(context).push(
+                   MaterialPageRoute(
+                     builder: (context) => openMap(widget.form.latitude,widget.form.longitude),
+                   ),
+                 ); },
+                 child: Text("Show Route"),
+                ),
 
     ],
             ),
