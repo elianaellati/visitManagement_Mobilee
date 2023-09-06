@@ -24,7 +24,14 @@ class LoginState extends State<LoginPage> {
     _usernameController.text = 'chrishosh';
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Login'), backgroundColor: Color(0xFF3F51B5)),
+<<<<<<<<< Temporary merge branch 1
+        title: const Text('Login'),
+          backgroundColor:const Color(0xFF3F51B5)
+
+      ),
+=========
+          title: const Text('Login'), backgroundColor: const Color(0xFF3F51B5)),
+>>>>>>>>> Temporary merge branch 2
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
