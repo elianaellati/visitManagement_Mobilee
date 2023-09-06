@@ -28,6 +28,7 @@ class _SettingsPage2State extends State<Settings> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Settings"),
+          backgroundColor: const Color(0xFF3F51B5),
           leading: Builder(
             builder: (context) {
               return IconButton(

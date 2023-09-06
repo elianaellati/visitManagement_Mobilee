@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:visitManagement_Mobilee/Settings.dart';
+
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -11,13 +13,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController userNameController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    // بيانات المستخدم (يمكنك استبدالها بالبيانات الفعلية)
     final userData = {
       'firstName': 'John',
       'lastName': 'Doe',
@@ -26,6 +23,9 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Settings()))),
         title: Text('Profile'),
         centerTitle: true,
         toolbarHeight: 56.0,
@@ -45,7 +45,6 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             SizedBox(height: 20.0),
-            // عرض البيانات المضافة داخل التطبيق باستخدام Text
             ListTile(
               title: Text('First Name'),
               subtitle: Text(userData['firstName']!),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:visitManagement_Mobilee/HomePage.dart';
+import 'package:visitManagement_Mobilee/Settings.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -91,10 +92,12 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Settings()))),
         title: Text('Bisan Project'),
         centerTitle: true,
         backgroundColor: const Color(0xFF3F51B5),
-       
       ),
       body: SingleChildScrollView(
         child: Column(
