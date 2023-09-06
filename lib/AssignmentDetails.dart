@@ -31,7 +31,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
   @override
   void initState() {
     super.initState();
-    futureAssignment = fetchAssignments(widget.assignment.id);
+    futureAssignment = fetchForms(widget.assignment.id);
   }
 
 //
@@ -146,7 +146,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
   }
 
 
-  Future<List<forms>> fetchAssignments(int assignmentId) async {
+  Future<List<forms>> fetchForms(int assignmentId) async {
     final response = await http.get(
       Uri.parse(
           'http://10.10.33.91:8080/visit_assignments/$assignmentId/forms'),
@@ -154,17 +154,17 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
-      return jsonData.map((userJson) {
-        final customerName = userJson['customer']['name'] ?? 'Unknown Customer';
-        final customerAddress = userJson['customer']['location']['address'] ??
+      return jsonData.map((formsJsonList) {
+        final customerName = formsJsonList['customer']['name'] ?? 'Unknown Customer';
+        final customerAddress = formsJsonList['customer']['location']['address'] ??
             'Unknown Address';
-        final customerCity = userJson['customer']['location']['cityName'] ??
+        final customerCity = formsJsonList['customer']['location']['cityName'] ??
             'Unknown city';
-        final customerId = userJson['customer']['id'] ?? 'Unknown customer id';
-        final endTime = userJson['endTime'] ?? 'Unknown endTime';
-        final startTime = userJson['startTime'] ?? 'Unknown startTime';
-        final status = userJson['status'] ?? 'Unknown status';
-        final id = userJson['id'] ?? 'Unknown id';
+        final customerId = formsJsonList['customer']['id'] ?? 'Unknown customer id';
+        final endTime = formsJsonList['endTime'] ?? 'Unknown endTime';
+        final startTime = formsJsonList['startTime'] ?? 'Unknown startTime';
+        final status = formsJsonList['status'] ?? 'Unknown status';
+        final id = formsJsonList['id'] ?? 'Unknown id';
 
 
         return forms(

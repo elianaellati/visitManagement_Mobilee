@@ -52,8 +52,6 @@ class _AssignmentsState extends State<Assignments> {
         backgroundColor: Color(0xFF3F51B5),
       ),
 
-      // // ignore: deprecated_member_use
-      // backgroundColor: context.theme.backgroundColor,
       body: Column(
         children: [
           _addTaskBar(),

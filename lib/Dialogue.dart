@@ -8,19 +8,11 @@ import 'Classes/contact.dart';
 import 'Location.dart';
 import 'Classes/forms.dart';
 
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import 'Classes/contact.dart';
-import 'Location.dart';
-import 'Classes/forms.dart';
+
+// ... (import statements)
 
 class Dialogue extends StatefulWidget {
   final forms form;
-
   Dialogue(this.form);
 
   @override
@@ -38,16 +30,18 @@ class AssignmentDetailsState extends State<Dialogue> {
   String long = "";
   String lat = "";
   bool isStarted = false; // Initialize isStarted
-
+  String statusText ='';
   @override
   void initState() {
     super.initState();
-    futureAssignment = fetchAssignments(widget.form.id);
+    statusText=widget.form.status.toString();
+    print(statusText+"fjdvjdfjgjdfgjdjgjdfg");
+    futureAssignment = fetchContacts(widget.form.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool showStartButton = widget.form.status == 'Not Started';
+   // final bool showStartButton = widget.form.status == 'Not Started';
 
     return Scaffold(
       appBar: AppBar(
@@ -74,40 +68,51 @@ class AssignmentDetailsState extends State<Dialogue> {
                 buildInfoRow('Location',
                     '${widget.form.customerAddress}, ${widget.form.customerCity}'),
                 const SizedBox(height: 8),
-                buildInfoRow('Status', widget.form.status),
-                if (showStartButton)
-                  ElevatedButton(
-                    onPressed: () async {
-                      String request =
-                          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                      await requestServer(request, true);
+                // Set statusText to customerCity
+                buildInfoRow('Status', statusText), // Update the status here
+                if(statusText=="Not Started")
+                  Visibility(
+                    visible: true,
+                    // Show the "Start" button when isStarted is false
+                    child: ElevatedButton(
+                      onPressed: () {
+                        String request = 'http://10.10.33.91:8080/visit_forms/${widget
+                            .form.id}/start';
+                        requestServer(request);
+                        setState(() {
+                          isStarted =
+                          true; // Update the isStarted state to true when "Start" is clicked
+                        });
+                      },
+                      child: Text('Start'),
+                    ),
+                  ),
+
+
+                Visibility(
+                  visible:true, // Show the "Cancelled" button when isStarted is true
+                  child: ElevatedButton(
+                    onPressed: () {
+                      String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
+                      requestServer(request);
                     },
-                    child: Text('Start'),
+                    child: Text('Cancelled'),
                   ),
-                if (isStarted)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle the "Cancelled" button click here
-                          String request =
-                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
-                          requestServer(request, false);
-                        },
-                        child: Text('Cancelled'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          String request =
-                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete';
-                          await requestServer(request, false);
-                        },
-                        child: Text('Completed'),
-                      ),
-                    ],
+                ),
+                if(statusText=="Undergoing")
+                Visibility(
+                  visible: true, // Show the "Completed" button when isStarted is true
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete';
+                      requestServer(request);
+                    },
+                    child: Text('Completed'),
                   ),
-              ],
+                )
+
+
+    ],
             ),
           ),
           const Divider(),
@@ -218,7 +223,7 @@ class AssignmentDetailsState extends State<Dialogue> {
     );
   }
 
-  Future<List<contact>> fetchAssignments(int assignmentId) async {
+  Future<List<contact>> fetchContacts(int assignmentId) async {
     final response = await http.get(
       Uri.parse('http://10.10.33.91:8080/visit_forms/$assignmentId/contacts'),
     );
@@ -303,14 +308,10 @@ class AssignmentDetailsState extends State<Dialogue> {
       print(position.latitude);
       long = position.longitude.toString();
       lat = position.latitude.toString();
-
-      setState(() {
-        // Refresh UI on update
-      });
     });
   }
 
-  Future<void> requestServer(String request, bool state) async {
+  Future<void> requestServer(String request) async {
     try {
       await checkGps();
       Map<String, dynamic> data = {
@@ -330,9 +331,12 @@ class AssignmentDetailsState extends State<Dialogue> {
 
       if (response.statusCode == 200) {
         // Handle a successful response
+        final jsonData = jsonDecode(requestBody);
+        final form = forms.fromJson(jsonData);
         print("Request successful");
         setState(() {
-          isStarted = state;
+          statusText= "Completed";
+         // Update the status text here
         });
       } else {
         // Handle other response codes if needed
