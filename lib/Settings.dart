@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visitManagement_Mobilee/Change_Password.dart';
+import 'package:visitManagement_Mobilee/Profile.dart';
 
 import 'HomePage.dart';
 import 'LoginPage.dart';
@@ -150,6 +151,12 @@ class _CustomListTile extends StatelessWidget {
 
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => ChangePassword()));
+        }
+
+        if (title == "Profile") {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Profile()));
         }
       },
     );
