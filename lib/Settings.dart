@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:visitManagement_Mobilee/Change_Password.dart';
+import 'package:visitManagement_Mobilee/Profile.dart';
 
 import 'HomePage.dart';
 import 'LoginPage.dart';
@@ -19,7 +22,9 @@ class _SettingsPage2State extends State<Settings> {
     return MaterialApp(
       theme: ThemeData.light(), // Set the default light theme
       darkTheme: ThemeData.dark(), // Set the dark theme
-      themeMode: _isDark ? ThemeMode.dark : ThemeMode.light, // Set the current theme mode
+      themeMode: _isDark
+          ? ThemeMode.dark
+          : ThemeMode.light, // Set the current theme mode
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Settings"),
@@ -83,6 +88,10 @@ class _SettingsPage2State extends State<Settings> {
                       title: "People",
                       icon: Icons.contacts_outlined,
                     ),
+                    _CustomListTile(
+                      title: 'Change Password',
+                      icon: Icons.lock,
+                    ),
                   ],
                 ),
                 const Divider(),
@@ -134,7 +143,20 @@ class _CustomListTile extends StatelessWidget {
           // Navigate to the home page
           Navigator.of(context).pop(); // Close the settings screen
           // Replace the following line with your home page widget
-          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
+        }
+        if (title == "Change Password") {
+          Navigator.of(context).pop();
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ChangePassword()));
+        }
+
+        if (title == "Profile") {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Profile()));
         }
       },
     );

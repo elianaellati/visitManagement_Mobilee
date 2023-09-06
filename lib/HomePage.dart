@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Bisan"),
-        backgroundColor:const Color(0xFF3F51B5),
+        backgroundColor: const Color(0xFF3F51B5),
       ),
       drawer: const NavigatorDrawer(),
     );
@@ -38,7 +38,7 @@ class NavigatorDrawer extends StatelessWidget {
       ));
 
   Widget buildHeader(BuildContext context) => Container(
-      color:const Color(0xFF3F51B5),
+      color: const Color(0xFF3F51B5),
       padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top + 20,
           bottom: MediaQuery.of(context).padding.bottom + 20),
@@ -50,14 +50,16 @@ class NavigatorDrawer extends StatelessWidget {
             child: Icon(
               Icons.person,
               size: 75,
-              color:const Color(0xFF3F51B5),
+              color: const Color(0xFF3F51B5),
             ),
             // backgroundImage: NetworkImage(
             //     "https://static-00.iconduck.com/assets.00/user-icon-2048x2048-ihoxz4vq.png"),
           ),
           SizedBox(height: 12),
-          Text("halamon",style: TextStyle(fontSize: 12,color:Colors.white),),
-
+          Text(
+            "halamon",
+            style: TextStyle(fontSize: 12, color: Colors.white),
+          ),
         ],
       ));
 
