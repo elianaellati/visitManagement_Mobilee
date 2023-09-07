@@ -52,8 +52,6 @@ class _AssignmentsState extends State<Assignments> {
         backgroundColor: Color(0xFF3F51B5),
       ),
 
-      // // ignore: deprecated_member_use
-      // backgroundColor: context.theme.backgroundColor,
       body: Column(
         children: [
           _addTaskBar(),
@@ -173,7 +171,12 @@ class _AssignmentsState extends State<Assignments> {
                                   ),
                                 );
                               },
-                              child: TaskTitle(task),
+
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 5), // Add padding here
+                            child: TaskTitle(task),
+                        ),
+
                       ),
                     ),
                   );

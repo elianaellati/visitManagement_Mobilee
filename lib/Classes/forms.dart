@@ -1,8 +1,9 @@
 import 'dart:core';
-import 'dart:core';
 
 class forms {
   final String status;
+  final double longitude;
+  final double latitude;
   final String startTime;
   final String endTime;
   final int id;
@@ -20,12 +21,16 @@ class forms {
     required this.customerAddress,
     required this.customerId,
     required this.customerCity,
+    required this.longitude,
+    required this.latitude,
 
   });
 
   factory forms.fromJson(Map<String, dynamic> json) {
     return forms(
       status: json['status'],
+      longitude:json['customer']['longitude'],
+      latitude: json['customer']['latitude'],
       id:json['id'],
       customerName: json['customer']['name'],
       customerId: json['customer']['id'],
