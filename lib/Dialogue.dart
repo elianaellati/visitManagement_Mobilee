@@ -344,14 +344,15 @@ class AssignmentDetailsState extends State<Dialogue> {
         body: requestBody,
       );
 
+      print(requestBody);
+      print(jsonDecode(response.body));
       if (response.statusCode == 200) {
-        // Handle a successful response
-        final jsonData = jsonDecode(requestBody);
-        final form = forms.fromJson(jsonData);
+        final jsonData = jsonDecode(response.body);
+        // final form = forms.fromJson(jsonData);
         print("Request successful");
+        print(jsonData['status']);
         setState(() {
-          statusText= "Completed";
-         // Update the status text here
+          statusText= jsonData['status'];
         });
       } else {
         // Handle other response codes if needed
