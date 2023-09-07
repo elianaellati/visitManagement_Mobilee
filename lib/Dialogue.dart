@@ -117,9 +117,11 @@ class AssignmentDetailsState extends State<Dialogue> {
                   ),
                 ),
                 ElevatedButton(
-                 onPressed: () {  Navigator.of(context).push(
+                 onPressed: () {
+                   checkGps();
+                   Navigator.of(context).push(
                    MaterialPageRoute(
-                     builder: (context) => openMap(widget.form.latitude,widget.form.longitude),
+                     builder: (context) => openMap(widget.form.latitude,widget.form.longitude,lat,long),
                    ),
                  ); },
                  child: Text("Show Route"),

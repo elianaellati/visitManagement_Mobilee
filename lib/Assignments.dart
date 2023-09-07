@@ -171,7 +171,12 @@ class _AssignmentsState extends State<Assignments> {
                                   ),
                                 );
                               },
-                              child: TaskTitle(task),
+
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 5), // Add padding here
+                            child: TaskTitle(task),
+                        ),
+
                       ),
                     ),
                   );

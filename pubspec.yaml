@@ -52,7 +52,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   untitled1: ^0.0.3
 
-
+  flutter_polyline_points: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

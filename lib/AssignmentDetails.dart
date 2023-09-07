@@ -58,9 +58,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
           ),
 
           Expanded(
-
             child: FutureBuilder<List<forms>>(
-
               future: futureAssignment,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -88,14 +86,16 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
                                 ),
                               );
                             },
-                            child: formTitle(assignment),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 5), // Add padding here
+                              child: formTitle(assignment),
+                            ),
                           ),
-
                         ),
                       );
-
                     },
                   );
+
                 }
               },
             ),

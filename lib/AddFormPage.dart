@@ -52,10 +52,10 @@ class _AddFormPageState extends State<AddFormPage> {
           key: formKey,
           child: Column(
             children: [
-              Text(
-                'Add Form',
-                style: headingStyle,
-              ),
+              // Text(
+              //   'Add Form',
+              //   style: headingStyle,
+              // ),
               Padding(
                 padding: EdgeInsets.only(top: 25.0),
                 child: TextFormField(
@@ -81,10 +81,7 @@ class _AddFormPageState extends State<AddFormPage> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 25.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
+                child: TextFormField(
                         controller: _firstNameController,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp(
@@ -96,11 +93,11 @@ class _AddFormPageState extends State<AddFormPage> {
                           EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                           labelText: 'Contact FirstName',
                           prefixIcon: Icon(Icons.account_box_outlined),
-                          hintText: 'Enter Contact FirstName',
+                          hintText: 'Enter Contact First Name',
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Contact FirstName';
+                            return 'Please enter Contact First Name';
                           }
                           return null;
                         },
@@ -109,7 +106,8 @@ class _AddFormPageState extends State<AddFormPage> {
                     const SizedBox(
                       width: 12,
                     ),
-                    Expanded(
+              Padding(
+                padding: EdgeInsets.only(top: 25.0),
                       child: TextFormField(
                         controller: _lastNameController,
                         inputFormatters: [
@@ -122,19 +120,16 @@ class _AddFormPageState extends State<AddFormPage> {
                           EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                           labelText: 'Contact LastName',
                           prefixIcon: Icon(Icons.account_box_outlined),
-                          hintText: 'Enter Contact LastName',
+                          hintText: 'Enter Contact Last Name',
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Contact LastName';
+                            return 'Please enter Contact Last Name';
                           }
                           return null;
                         },
                       ),
-                    ),
-                  ],
                 ),
-              ),
               Padding(
                 padding: EdgeInsets.only(top: 25.0),
                 child: TextFormField(
@@ -146,12 +141,12 @@ class _AddFormPageState extends State<AddFormPage> {
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Contact PhoneNumber',
-                    hintText: 'Enter Contact PhoneNumber',
+                    hintText: 'Enter Contact Phone Number',
                     prefixIcon: Icon(Icons.phone_android_outlined),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter Contact PhoneNumber';
+                      return 'Please enter Contact Phone Number';
                     } else if (value.length != 10) {
                       return 'Phone number must be 10 digits';
                     }
