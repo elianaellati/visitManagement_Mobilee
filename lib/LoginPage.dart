@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:visitManagement_Mobilee/Assignments.dart';
 import 'package:visitManagement_Mobilee/Forget_pw.dart';
 import 'checkUser.dart';
 import 'HomePage.dart';
@@ -83,7 +84,7 @@ class LoginState extends State<LoginPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const HomePage()),
+                              builder: (context) => const Assignments()),
                         );
                       }
                     },

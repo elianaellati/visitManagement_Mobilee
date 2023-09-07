@@ -19,7 +19,7 @@ class CheckUser {
       final user = User.fromJson(jsonData);
       final userJson = jsonEncode(user.toJson());
       final storageManager = StorageManager();
-      await storageManager.storeObject('user', userJson);
+      await storageManager.storeObject('user',userJson);
 
       return true;
     } else {
