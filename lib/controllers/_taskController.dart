@@ -15,7 +15,6 @@ class TaskController extends GetxController {
     if (storedUserJson == null) {
       throw Exception('Failed to load user');
     }
-
     final storedUser = User.fromJson(jsonDecode(storedUserJson));
     String username = storedUser.username;
 

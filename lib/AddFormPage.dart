@@ -10,14 +10,13 @@ import 'controllers/_taskController.dart';
 
 import '../Classes/Assignment.dart';
 import '../ui/button.dart';
-import '../ui/inputField.dart';
-import '../ui/theme.dart';
-import '../Classes/forms.dart';
 
 class AddFormPage extends StatefulWidget {
   final Assignment assignment;
 
-  AddFormPage(this.assignment);
+  final Function() onFormAdded;
+
+  const AddFormPage(this.assignment,{super.key, required this.onFormAdded});
 
   @override
   State<AddFormPage> createState() => _AddFormPageState();
@@ -44,10 +43,10 @@ class _AddFormPageState extends State<AddFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forms'),
-        backgroundColor: Color(0xFF3F51B5),
+        backgroundColor: const Color(0xFF3F51B5),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Form(
           key: formKey,
           child: Column(
@@ -57,7 +56,7 @@ class _AddFormPageState extends State<AddFormPage> {
               //   style: headingStyle,
               // ),
               Padding(
-                padding: EdgeInsets.only(top: 25.0),
+                padding: const EdgeInsets.only(top: 25.0),
                 child: TextFormField(
                   controller: _customerNameController,
                   inputFormatters: [
@@ -80,58 +79,58 @@ class _AddFormPageState extends State<AddFormPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 25.0),
+                padding: const EdgeInsets.only(top: 25.0),
                 child: TextFormField(
-                        controller: _firstNameController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(
-                              r'[a-zA-Z]+')),
-                        ],
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(borderSide: BorderSide()),
-                          contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                          labelText: 'Contact FirstName',
-                          prefixIcon: Icon(Icons.account_box_outlined),
-                          hintText: 'Enter Contact First Name',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Contact First Name';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 12,
-                    ),
-              Padding(
-                padding: EdgeInsets.only(top: 25.0),
-                      child: TextFormField(
-                        controller: _lastNameController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(
-                              r'[a-zA-Z]+')),
-                        ],
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(borderSide: BorderSide()),
-                          contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                          labelText: 'Contact LastName',
-                          prefixIcon: Icon(Icons.account_box_outlined),
-                          hintText: 'Enter Contact Last Name',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Contact Last Name';
-                          }
-                          return null;
-                        },
-                      ),
+                  controller: _firstNameController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(
+                        r'[a-zA-Z]+')),
+                  ],
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(borderSide: BorderSide()),
+                    contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    labelText: 'Contact FirstName',
+                    prefixIcon: Icon(Icons.account_box_outlined),
+                    hintText: 'Enter Contact First Name',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Contact First Name';
+                    }
+                    return null;
+                  },
                 ),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
               Padding(
-                padding: EdgeInsets.only(top: 25.0),
+                padding: const EdgeInsets.only(top: 25.0),
+                child: TextFormField(
+                  controller: _lastNameController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(
+                        r'[a-zA-Z]+')),
+                  ],
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(borderSide: BorderSide()),
+                    contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    labelText: 'Contact LastName',
+                    prefixIcon: Icon(Icons.account_box_outlined),
+                    hintText: 'Enter Contact Last Name',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Contact Last Name';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 25.0),
                 child: TextFormField(
                   controller: _phoneController,
                   maxLength: 10,
@@ -155,7 +154,7 @@ class _AddFormPageState extends State<AddFormPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 25.0),
+                padding: const EdgeInsets.only(top: 25.0),
                 child: TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -223,6 +222,7 @@ class _AddFormPageState extends State<AddFormPage> {
       if (response.statusCode == 200) {
         // Handle a successful response
         print("Request successful");
+        widget.onFormAdded();
       } else {
         // Handle other response codes if needed
         print("Your Location is Far : ${response.statusCode}");
@@ -305,10 +305,11 @@ class _AddFormPageState extends State<AddFormPage> {
         "phoneNumber": _phoneController.text,
         "email": _emailController.text,
       };
+      print(_customerNameController.text);
       String requestBody = json.encode(data);
       String request = 'http://10.10.33.91:8080/visit_assignments/${assignment.id}/new_visit';
 
-      final response = await http.put(
+      final response = await http.post(
         Uri.parse(request),
         headers: {
           "Content-Type": "application/json",
@@ -318,6 +319,7 @@ class _AddFormPageState extends State<AddFormPage> {
 
       if (response.statusCode == 200) {
         // Handle a successful response
+
         print("Request successful");
       } else {
         // Handle other response codes if needed

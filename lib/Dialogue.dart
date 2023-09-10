@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'Classes/contact.dart';
 import 'Classes/surveyQuestion.dart';
-import 'Location.dart';
+
 import 'Classes/forms.dart';
 import 'Survey.dart';
 import 'openMap.dart';
@@ -27,6 +27,7 @@ class Dialogue extends StatefulWidget {
 
 class AssignmentDetailsState extends State<Dialogue> {
 
+  TextEditingController textarea = TextEditingController();
   final storageManager=StorageManager();
   dynamic storedIdJson;
 
@@ -46,19 +47,21 @@ class AssignmentDetailsState extends State<Dialogue> {
     super.initState();
     statusText=widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
+
     initilizeData();
   }
 
-
-
   Future<void> initilizeData() async{
     storedIdJson=await storageManager.getObject('assignmentId');
-    late Future<surveyQuestion> question;
+
+  //  question = fetchQuestion(widget.form.id);
+
+
   }
   @override
   Widget build(BuildContext context) {
    // final bool showStartButton = widget.form.status == 'Not Started';
-
+    TextEditingController textarea = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: Text('Form Information'),
@@ -78,8 +81,6 @@ class AssignmentDetailsState extends State<Dialogue> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-        Text('long: ${widget.form.longitude}'),
-        Text('lat: ${widget.form.latitude}'),
 
                 const SizedBox(height: 8),
                 buildInfoRow('Name', widget.form.customerName),
@@ -89,68 +90,105 @@ class AssignmentDetailsState extends State<Dialogue> {
                 const SizedBox(height: 8),
                 // Set statusText to customerCity
                 buildInfoRow('Status', statusText), // Update the status here
-                if(statusText=="Not Started")
+        if (statusText == "Not Started")
+     Visibility(
+      visible: true,
+      child: Row(
+        children: <Widget>[
+          // Show the "Start" button when isStarted is false
+          ElevatedButton(
+            onPressed: () {
+              String request = 'http://10.10.33.91:8080/visit_forms/${widget
+                  .form.id}/start';
+              requestServer(request);
+              setState(() {
+                isStarted = true;
+                // Update the isStarted state to true when "Start" is clicked
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(150, 30),// Set the desired width and height
+              primary: Color(0xFF3F51B5), // Change the button's background color
+            ),
+            child: Text('Start'),
+          ),
+          SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: () {
+              _showAlertDialog();
+            },
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(150, 30),// Set the desired width and height
+              primary: Color(0xFF3F51B5), // Change the button's background color
+            ),
+            child: Text('Cancelled'),
+          ),
+        ],
+      ),
+    ),
+
+
+                if(statusText=="Undergoing")
                   Visibility(
                     visible: true,
-                    // Show the "Start" button when isStarted is false
-                    child: ElevatedButton(
-                      onPressed: () {
-                        String request = 'http://10.10.33.91:8080/visit_forms/${widget
-                            .form.id}/start';
-                        requestServer(request);
-                        setState(() {
-                          isStarted =
-                          true; // Update the isStarted state to true when "Start" is clicked
-                        });
-                        late Future<surveyQuestion> question;
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Question 1: $}'),
-                            Text('Question 2: ${questionData.question2}'),
-                            Text('Question 3: ${questionData.question3}'),
-                          ],
+                    child: Row(
+                      children: <Widget>[
+                        // Show the "Start" button when isStarted is false
+                         ElevatedButton(
+                          onPressed: () async {
+                            _showNote();
+                          },
+                           style: ElevatedButton.styleFrom(
+                             fixedSize: Size(150, 30), // Set the desired width and height
+                             primary: Color(0xFF3F51B5), // Change the button's background color
+                           ),
+                          child: Text('Completed'),
                         ),
-                        );
-                      },
-                      child: Text('Start'),
+                        SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            _showAlertDialog();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(150, 30), // Set the desired width and height
+                            primary: Color(0xFF3F51B5), // Change the button's background color
+                          ),
+                          child: Text('Cancelled'),
+                        ),
+                      ],
                     ),
                   ),
-               Visibility(
-                  visible: true, // Show the "Completed" button when isStarted is true
-                  child: ElevatedButton(
-                    onPressed: () {
 
-                 Navigator.of(context).push(MaterialPageRoute(
-                   builder: (context) => Survey(storedIdJson),
-                    ),
-                 ); },
-                    child: Text('Survey'),
-                  ),
-                ),
 
-                Visibility(
-                  visible:true, // Show the "Cancelled" button when isStarted is true
-                  child: ElevatedButton(
-                    onPressed: () {
-                      String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
-                      requestServer(request);
-                    },
-                    child: Text('Cancelled'),
-                  ),
-                ),
-                if(statusText=="Undergoing")
-                Visibility(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              /*  Visibility(
                   visible: true, // Show the "Completed" button when isStarted is true
                   child: ElevatedButton(
                     onPressed: () async {
-                      String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete';
+                      String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
                       requestServer(request);
                     },
                     child: Text('Completed'),
                   ),
-                ),
+                ),*/
                 ElevatedButton(
                  onPressed: () {
                    checkGps();
@@ -203,7 +241,9 @@ class AssignmentDetailsState extends State<Dialogue> {
           ),
         ],
       ),
+
     );
+
   }
 
   Widget buildInfoRow(String label, String value) {
@@ -331,6 +371,96 @@ class AssignmentDetailsState extends State<Dialogue> {
       });
     }
   }
+  Future<void> _showAlertDialog() async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title:const Text("Cancel Form",
+                style: TextStyle(
+                  color: Color(0xFF3F51B5), // Change the color to your desired color
+                )),
+          content:const Text("Are you sure you want to cancel form?", style: TextStyle(
+            color: Color(0xFF3F51B5), // Change the color to your desired color
+          )),
+          actions: <Widget>[
+          TextButton(
+          child: const Text('No', style: TextStyle(
+            color: Color(0xFF3F51B5), // Change the color to your desired color
+          )),
+          onPressed: () {
+          Navigator.of(context).pop();
+          },
+          ),
+          TextButton(
+          child: const Text('Yes', style: TextStyle(
+          color:Color(0xFF3F51B5), // Change the color to your desired color
+          )),
+          onPressed: () {
+            String request = 'http://10.10.33.91:8080/visit_forms/${widget
+                .form.id}/cancel';
+            requestServer(request);
+            Navigator.of(context).pop();
+          },
+          ),
+          ],
+          elevation:24.0,
+            backgroundColor: Colors.white ,
+
+          );
+        },
+    );
+  }
+  Future<void> _showNote() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:const Text("FeedBack",
+              style: TextStyle(
+                color: Color(0xFF3F51B5), // Change the color to your desired color
+              )),
+          content:
+          TextField(
+              controller: textarea,
+              keyboardType: TextInputType.multiline,
+              maxLines: 4,
+              decoration: InputDecoration(
+                  hintText: "Suggest us what went wrong",
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 1, color: Colors.redAccent)
+                  )
+              ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('cancel', style: TextStyle(
+                color: Color(0xFF3F51B5), // Change the color to your desired color
+              )),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('submit', style: TextStyle(
+                color:Color(0xFF3F51B5), // Change the color to your desired color
+              )),
+              onPressed: () {
+                String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
+                requestServer(request);
+              },
+            ),
+          ],
+          elevation:24.0,
+          backgroundColor: Colors.white ,
+
+        );
+      },
+    );
+  }
+
 
   getLocation() async {
     position = await Geolocator.getCurrentPosition(
@@ -364,9 +494,14 @@ class AssignmentDetailsState extends State<Dialogue> {
   Future<void> requestServer(String request) async {
     try {
       await checkGps();
+      String note="";
+      if(request.contains("complete")){
+         note=textarea.text;
+      }
       Map<String, dynamic> data = {
         "latitude": lat,
         "longitude": long,
+        "note":note,
       };
 
       String requestBody = json.encode(data);
@@ -400,21 +535,4 @@ class AssignmentDetailsState extends State<Dialogue> {
   }
 
 }
-Future<surveyQuestion> fetchQuestion(int assignmentId) async {
-  final response = await http.get(
-    Uri.parse('http://10.10.33.91:8080/$assignmentId/questions'),
-  );
 
-  if (response.statusCode == 200) {
-    final dynamic data = json.decode(response.body);
-    final surveyQuestion questionData = surveyQuestion(
-      question1: data['question1'] as String,
-      question2: data['question2'] as String,
-      question3: data['question3'] as String,
-    );
-
-    return questionData;
-  } else {
-    throw Exception('Failed to load question');
-  }
-}

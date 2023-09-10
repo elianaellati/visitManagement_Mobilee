@@ -235,7 +235,7 @@ _addFormBar(BuildContext context,Assignment assignment) {
             // Navigate to AddFormPage
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddFormPage(assignment)),
+              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){},)),
             );
           },
         ),
