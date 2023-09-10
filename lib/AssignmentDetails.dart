@@ -11,7 +11,7 @@ import 'package:visitManagement_Mobilee/ui/button.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
 import 'Classes/StorageManager.dart';
-
+import 'controllers/_taskController.dart';
 import 'AddFormPage.dart';
 import 'Classes/Assignment.dart';
 import 'Dialogue.dart';
@@ -42,10 +42,8 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     super.initState();
     futureAssignment = fetchAssignments(widget.assignment.id);
     _assignment = widget.assignment;
-
     final String idAsString=widget.assignment.id.toString();
     storageManager.storeObject('assignmentId', idAsString);
-
   }
 
 
@@ -89,7 +87,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => Dialogue(assignment),
+                                  builder: (context) => Dialogue(assignment, ),
                                 ),
                               );
                             },

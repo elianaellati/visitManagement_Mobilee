@@ -16,8 +16,7 @@ import 'Classes/StorageManager.dart';
 
 class Dialogue extends StatefulWidget {
   final forms form;
-  Dialogue(this.form);
-
+  Dialogue(this.form, {super.key});
   @override
   State<StatefulWidget> createState() {
     return AssignmentDetailsState();
@@ -25,9 +24,8 @@ class Dialogue extends StatefulWidget {
 }
 
 class AssignmentDetailsState extends State<Dialogue> {
-
   TextEditingController textarea = TextEditingController();
-  final storageManager=StorageManager();
+  final storageManager = StorageManager();
   dynamic storedIdJson;
 
   late Future<List<contact>> futureAssignment;
@@ -38,29 +36,26 @@ class AssignmentDetailsState extends State<Dialogue> {
   String long = "";
   String lat = "";
   bool isStarted = false;
-  String statusText = '';
-  late surveyQuestion questionData; // Add questionData here
+  String statusText = '';// Add questionData here
 
   @override
   void initState() {
     super.initState();
+
+
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
-
     initilizeData();
   }
 
-  Future<void> initilizeData() async{
-    storedIdJson=await storageManager.getObject('assignmentId');
-
-  //  question = fetchQuestion(widget.form.id);
-
+  Future<void> initilizeData() async {
+    storedIdJson = await storageManager.getObject('assignmentId');
 
   }
 
   @override
   Widget build(BuildContext context) {
-   // final bool showStartButton = widget.form.status == 'Not Started';
+    // final bool showStartButton = widget.form.status == 'Not Started';
     TextEditingController textarea = TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -90,58 +85,65 @@ class AssignmentDetailsState extends State<Dialogue> {
                 const SizedBox(height: 8),
                 // Set statusText to customerCity
                 buildInfoRow('Status', statusText), // Update the status here
-        if (statusText == "Not Started")
-     Visibility(
-      visible: true,
-      child: Row(
-        children: <Widget>[
-          // Show the "Start" button when isStarted is false
-          ElevatedButton(
-            onPressed: () {
-              String request = 'http://10.10.33.91:8080/visit_forms/${widget
-                  .form.id}/start';
-              requestServer(request);
-              setState(() {
-                isStarted = true;
-                // Update the isStarted state to true when "Start" is clicked
-              });
-            },
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(150, 30),// Set the desired width and height
-              primary: Color(0xFF3F51B5), // Change the button's background color
-            ),
-            child: Text('Start'),
-          ),
-          SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () {
-              _showAlertDialog();
-            },
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(150, 30),// Set the desired width and height
-              primary: Color(0xFF3F51B5), // Change the button's background color
-            ),
-            child: Text('Cancelled'),
-          ),
-        ],
-      ),
-    ),
-
-
-                if(statusText=="Undergoing")
+                if (statusText == "Not Started")
                   Visibility(
                     visible: true,
                     child: Row(
                       children: <Widget>[
                         // Show the "Start" button when isStarted is false
-                         ElevatedButton(
-                          onPressed: () async {
-                            _showNote();
+                        ElevatedButton(
+                          onPressed: () {
+                            String request =
+                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                            requestServer(request);
+                            setState(() {
+                              isStarted = true;
+                              // Update the isStarted state to true when "Start" is clicked
+                            });
                           },
-                           style: ElevatedButton.styleFrom(
-                             fixedSize: Size(150, 30), // Set the desired width and height
-                             primary: Color(0xFF3F51B5), // Change the button's background color
-                           ),
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(150, 30),
+                            // Set the desired width and height
+                            primary: const Color(
+                                0xFF3F51B5), // Change the button's background color
+                          ),
+                          child: const Text('Start'),
+                        ),
+                        const SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            _showAlertDialog();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(150, 30),
+                            // Set the desired width and height
+                            primary: const Color(
+                                0xFF3F51B5), // Change the button's background color
+                          ),
+                          child: const Text('Cancelled'),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                if (statusText == "Undergoing")
+                  Visibility(
+                    visible: true,
+                    child: Row(
+                      children: <Widget>[
+                        // Show the "Start" button when isStarted is false
+                        ElevatedButton(
+                          onPressed: () async {
+                            String request =
+                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
+                            _showNote(request);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(150, 30),
+                            // Set the desired width and height
+                            primary: Color(
+                                0xFF3F51B5), // Change the button's background color
+                          ),
                           child: Text('Completed'),
                         ),
                         SizedBox(width: 16),
@@ -150,8 +152,10 @@ class AssignmentDetailsState extends State<Dialogue> {
                             _showAlertDialog();
                           },
                           style: ElevatedButton.styleFrom(
-                            fixedSize: Size(150, 30), // Set the desired width and height
-                            primary: Color(0xFF3F51B5), // Change the button's background color
+                            fixedSize: Size(150, 30),
+                            // Set the desired width and height
+                            primary: Color(
+                                0xFF3F51B5), // Change the button's background color
                           ),
                           child: Text('Cancelled'),
                         ),
@@ -159,27 +163,7 @@ class AssignmentDetailsState extends State<Dialogue> {
                     ),
                   ),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              /*  Visibility(
+                /*  Visibility(
                   visible: true, // Show the "Completed" button when isStarted is true
                   child: ElevatedButton(
                     onPressed: () async {
@@ -243,9 +227,7 @@ class AssignmentDetailsState extends State<Dialogue> {
           ),
         ],
       ),
-
     );
-
   }
 
   Widget buildInfoRow(String label, String value) {
@@ -319,6 +301,7 @@ class AssignmentDetailsState extends State<Dialogue> {
     );
 
     if (response.statusCode == 200) {
+      print('response.body ${response.body}');
       final List<dynamic> jsonData = jsonDecode(response.body);
       return jsonData.map((userJson) {
         final id = userJson['id'] ?? 'Unknown id';
@@ -371,96 +354,104 @@ class AssignmentDetailsState extends State<Dialogue> {
       });
     }
   }
-  Future<void> _showAlertDialog() async {
-    return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title:const Text("Cancel Form",
-                style: TextStyle(
-                  color: Color(0xFF3F51B5), // Change the color to your desired color
-                )),
-          content:const Text("Are you sure you want to cancel form?", style: TextStyle(
-            color: Color(0xFF3F51B5), // Change the color to your desired color
-          )),
-          actions: <Widget>[
-          TextButton(
-          child: const Text('No', style: TextStyle(
-            color: Color(0xFF3F51B5), // Change the color to your desired color
-          )),
-          onPressed: () {
-          Navigator.of(context).pop();
-          },
-          ),
-          TextButton(
-          child: const Text('Yes', style: TextStyle(
-          color:Color(0xFF3F51B5), // Change the color to your desired color
-          )),
-          onPressed: () {
-            String request = 'http://10.10.33.91:8080/visit_forms/${widget
-                .form.id}/cancel';
-            requestServer(request);
-            Navigator.of(context).pop();
-          },
-          ),
-          ],
-          elevation:24.0,
-            backgroundColor: Colors.white ,
 
-          );
-        },
-    );
-  }
-  Future<void> _showNote() async {
+  Future<void> _showAlertDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title:const Text("FeedBack",
+          title: const Text("Cancel Form",
               style: TextStyle(
-                color: Color(0xFF3F51B5), // Change the color to your desired color
+                color:
+                    Color(0xFF3F51B5), // Change the color to your desired color
               )),
-          content:
-          TextField(
-              controller: textarea,
-              keyboardType: TextInputType.multiline,
-              maxLines: 4,
-              decoration: InputDecoration(
-                  hintText: "Suggest us what went wrong",
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1, color: Colors.redAccent)
-                  )
-              ),
-          ),
+          content: const Text("Are you sure you want to cancel form?",
+              style: TextStyle(
+                color:
+                    Color(0xFF3F51B5), // Change the color to your desired color
+              )),
           actions: <Widget>[
             TextButton(
-              child: const Text('cancel', style: TextStyle(
-                color: Color(0xFF3F51B5), // Change the color to your desired color
-              )),
+              child: const Text('No',
+                  style: TextStyle(
+                    color: Color(
+                        0xFF3F51B5), // Change the color to your desired color
+                  )),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('submit', style: TextStyle(
-                color:Color(0xFF3F51B5), // Change the color to your desired color
-              )),
+              child: const Text('Yes',
+                  style: TextStyle(
+                    color: Color(
+                        0xFF3F51B5), // Change the color to your desired color
+                  )),
               onPressed: () {
-                String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
-                requestServer(request);
+                String request =
+                    'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
+                Navigator.of(context).pop();
+                _showNote(request);
               },
             ),
           ],
-          elevation:24.0,
-          backgroundColor: Colors.white ,
-
+          elevation: 24.0,
+          backgroundColor: Colors.white,
         );
       },
     );
   }
 
+  Future<void> _showNote(String request) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Feed Back",
+              style: TextStyle(
+                color:
+                    Color(0xFF3F51B5), // Change the color to your desired color
+              )),
+          content: TextField(
+            controller: textarea,
+            keyboardType: TextInputType.multiline,
+            maxLines: 4,
+            decoration: const InputDecoration(
+                hintText: "Suggest us what went wrong",
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Colors.redAccent))),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('cancel',
+                  style: TextStyle(
+                    color: Color(
+                        0xFF3F51B5), // Change the color to your desired color
+                  )),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('submit',
+                  style: TextStyle(
+                    color: Color(
+                        0xFF3F51B5), // Change the color to your desired color
+                  )),
+              onPressed: () {
+                requestServer(request);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          elevation: 24.0,
+          backgroundColor: Colors.white,
+        );
+      },
+    );
+  }
 
   getLocation() async {
     position = await Geolocator.getCurrentPosition(
@@ -494,14 +485,14 @@ class AssignmentDetailsState extends State<Dialogue> {
   Future<void> requestServer(String request) async {
     try {
       await checkGps();
-      String note="";
-      if(request.contains("complete")){
-         note=textarea.text;
+      String note = "";
+      if (request.contains("complete") || request.contains("cancel")) {
+        note = textarea.text;
       }
       Map<String, dynamic> data = {
         "latitude": lat,
         "longitude": long,
-        "note":note,
+        "note": note,
       };
 
       String requestBody = json.encode(data);
@@ -523,6 +514,7 @@ class AssignmentDetailsState extends State<Dialogue> {
         setState(() {
           statusText = jsonData['status'];
         });
+
       } else {
         print("Your Location is Far : ${response.statusCode}");
       }
@@ -531,4 +523,3 @@ class AssignmentDetailsState extends State<Dialogue> {
     }
   }
 }
-

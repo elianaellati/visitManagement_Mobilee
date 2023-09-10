@@ -41,6 +41,7 @@ class LoginState extends State<LoginPage> {
     );
 
     if (response.statusCode == 202) {
+      _userChecker.fetchUser( _usernameController.text);
       return true;
     } else {
       final responseBody = json.decode(response.body);
