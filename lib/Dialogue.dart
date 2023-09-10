@@ -13,7 +13,6 @@ import 'Survey.dart';
 import 'openMap.dart';
 
 import 'Classes/StorageManager.dart';
-// ... (import statements)
 
 class Dialogue extends StatefulWidget {
   final forms form;
@@ -31,7 +30,6 @@ class AssignmentDetailsState extends State<Dialogue> {
   final storageManager=StorageManager();
   dynamic storedIdJson;
 
-
   late Future<List<contact>> futureAssignment;
   bool servicestatus = false;
   bool haspermission = false;
@@ -39,13 +37,14 @@ class AssignmentDetailsState extends State<Dialogue> {
   late Position position;
   String long = "";
   String lat = "";
-  bool isStarted = false; // Initialize isStarted
-  String statusText ='';
+  bool isStarted = false;
+  String statusText = '';
+  late surveyQuestion questionData; // Add questionData here
 
   @override
   void initState() {
     super.initState();
-    statusText=widget.form.status.toString();
+    statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
 
     initilizeData();
@@ -58,6 +57,7 @@ class AssignmentDetailsState extends State<Dialogue> {
 
 
   }
+
   @override
   Widget build(BuildContext context) {
    // final bool showStartButton = widget.form.status == 'Not Started';
@@ -190,17 +190,18 @@ class AssignmentDetailsState extends State<Dialogue> {
                   ),
                 ),*/
                 ElevatedButton(
-                 onPressed: () {
-                   checkGps();
-                   Navigator.of(context).push(
-                   MaterialPageRoute(
-                     builder: (context) => openMap(widget.form.latitude,widget.form.longitude,lat,long),
-                   ),
-                 ); },
-                 child: Text("Show Route"),
+                  onPressed: () {
+                    checkGps();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => openMap(widget.form.latitude,
+                            widget.form.longitude, lat, long),
+                      ),
+                    );
+                  },
+                  child: Text("Show Route"),
                 ),
-
-    ],
+              ],
             ),
           ),
           const Divider(),
@@ -224,7 +225,8 @@ class AssignmentDetailsState extends State<Dialogue> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No Assignment Details available.'));
+                  return const Center(
+                      child: Text('No Assignment Details available.'));
                 } else {
                   final assignmentDetails = snapshot.data!;
 
@@ -250,9 +252,7 @@ class AssignmentDetailsState extends State<Dialogue> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          '$label: $value',
-        ),
+        Text('$label: $value'),
       ],
     );
   }
@@ -482,8 +482,8 @@ class AssignmentDetailsState extends State<Dialogue> {
     );
 
     StreamSubscription<Position> positionStream =
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position position) {
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
       print(position.longitude);
       print(position.latitude);
       long = position.longitude.toString();
@@ -518,21 +518,17 @@ class AssignmentDetailsState extends State<Dialogue> {
       print(jsonDecode(response.body));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-        // final form = forms.fromJson(jsonData);
         print("Request successful");
         print(jsonData['status']);
         setState(() {
-          statusText= jsonData['status'];
+          statusText = jsonData['status'];
         });
       } else {
-        // Handle other response codes if needed
         print("Your Location is Far : ${response.statusCode}");
       }
     } catch (error) {
-      // Handle any exceptions that may occur during the request
       print("Error: $error");
     }
   }
-
 }
 

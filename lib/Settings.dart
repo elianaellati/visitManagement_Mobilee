@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:visitManagement_Mobilee/About.dart';
 import 'package:visitManagement_Mobilee/Change_Password.dart';
 import 'package:visitManagement_Mobilee/Profile.dart';
 
@@ -103,8 +104,8 @@ class _SettingsPage2State extends State<Settings> {
                       icon: Icons.help_outline_rounded,
                     ),
                     _CustomListTile(
-                      title: "About",
-                      icon: Icons.info_outline_rounded,
+                      title: "Team",
+                      icon: Icons.group,
                     ),
                     _CustomListTile(
                       title: "Sign out",
@@ -158,6 +159,11 @@ class _CustomListTile extends StatelessWidget {
           Navigator.of(context).pop();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Profile()));
+        }
+        if (title == 'Team') {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => About()));
         }
       },
     );

@@ -51,7 +51,6 @@ class _AssignmentsState extends State<Assignments> {
         title: const Text('Assignments'),
         backgroundColor: Color(0xFF3F51B5),
       ),
-
       body: Column(
         children: [
           _addTaskBar(),
@@ -65,7 +64,6 @@ class _AssignmentsState extends State<Assignments> {
     );
   }
 
-
   _addDateBar() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
@@ -78,22 +76,22 @@ class _AssignmentsState extends State<Assignments> {
         selectionColor: primaryClr,
         dateTextStyle: GoogleFonts.lato(
             textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            )),
+          color: Colors.grey,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        )),
         dayTextStyle: GoogleFonts.lato(
             textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            )),
+          color: Colors.grey,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        )),
         monthTextStyle: GoogleFonts.lato(
             textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            )),
+          color: Colors.grey,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        )),
         onDateChange: (newDate) {
           setState(() {
             _selectedDate = newDate;
@@ -120,7 +118,6 @@ class _AssignmentsState extends State<Assignments> {
                 DateFormat.yMMMMd().format(DateTime.now()),
                 style: subHeadingStyle,
               ),
-
             ],
           ),
         ],
@@ -131,18 +128,21 @@ class _AssignmentsState extends State<Assignments> {
   Widget showTasks() {
     return Expanded(
       child: Obx(() {
-        final hasTasksForSelectedDate = _taskController.assignmentList.any((task) {
+        final hasTasksForSelectedDate =
+            _taskController.assignmentList.any((task) {
           var outputFormat = DateFormat('dd-MM-yyyy');
           try {
             var parsedDate = outputFormat.parse(task.date);
-            return outputFormat.format(parsedDate) == outputFormat.format(_selectedDate);
+            return outputFormat.format(parsedDate) ==
+                outputFormat.format(_selectedDate);
           } catch (e) {
             print('Error parsing time: $e');
             return false;
           }
         });
 
-        if (_taskController.assignmentList.isEmpty || !hasTasksForSelectedDate) {
+        if (_taskController.assignmentList.isEmpty ||
+            !hasTasksForSelectedDate) {
           return _noTaskMsg(); // Show "No Task" message
         } else {
           return ListView.builder(
@@ -157,26 +157,26 @@ class _AssignmentsState extends State<Assignments> {
                 var parsedDate = outputFormat.parse(task.date);
                 if (outputFormat.format(parsedDate) ==
                     outputFormat.format(_selectedDate)) {
-                  print('Assignment with matching date: ${task.comment} - ${task.date}');
+                  print(
+                      'Assignment with matching date: ${task.comment} - ${task.date}');
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     duration: const Duration(milliseconds: 375),
                     child: SlideAnimation(
                       verticalOffset: 50.0,
                       child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AssignmentDetails(task),
-                                  ),
-                                );
-                              },
-
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AssignmentDetails(task),
+                            ),
+                          );
+                        },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 5), // Add padding here
-                            child: TaskTitle(task),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 5), // Add padding here
+                          child: TaskTitle(task),
                         ),
-
                       ),
                     ),
                   );
@@ -191,8 +191,6 @@ class _AssignmentsState extends State<Assignments> {
       }),
     );
   }
-
-
 
   _noTaskMsg() {
     return Stack(
@@ -209,11 +207,11 @@ class _AssignmentsState extends State<Assignments> {
               children: [
                 SizeConfig.orientation == Orientation.landscape
                     ? const SizedBox(
-                  height: 6,
-                )
+                        height: 6,
+                      )
                     : const SizedBox(
-                  height: 220,
-                ),
+                        height: 220,
+                      ),
                 SvgPicture.asset(
                   'images/task.svg',
                   // ignore: deprecated_member_use
@@ -222,8 +220,8 @@ class _AssignmentsState extends State<Assignments> {
                   semanticsLabel: 'Task',
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 30, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: Text(
                     'You do not have any tasks yet!',
                     style: subTitleStyle,
@@ -232,16 +230,15 @@ class _AssignmentsState extends State<Assignments> {
                 ),
                 SizeConfig.orientation == Orientation.landscape
                     ? const SizedBox(
-                  height: 90,
-                )
+                        height: 90,
+                      )
                     : const SizedBox(
-                  height: 90,
-                ),
+                        height: 90,
+                      ),
               ],
             ),
           ),
         ),
-
       ],
     );
   }
