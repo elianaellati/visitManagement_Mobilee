@@ -299,14 +299,14 @@ class _AddFormPageState extends State<AddFormPage> {
       Map<String, dynamic> data = {
         "latitude": lat,
         "longitude": long,
-        "Name": _customerNameController.text,
+        "name": _customerNameController.text,
         "firstName": _firstNameController.text,
         "lastName": _lastNameController.text,
         "phoneNumber": _phoneController.text,
         "email": _emailController.text,
       };
       String requestBody = json.encode(data);
-      String request = 'http://10.10.33.91:8080/visit_forms/${assignment.id}';
+      String request = 'http://10.10.33.91:8080/visit_assignments/${assignment.id}/new_visit';
 
       final response = await http.put(
         Uri.parse(request),
