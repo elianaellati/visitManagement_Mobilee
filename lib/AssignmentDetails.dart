@@ -10,6 +10,7 @@ import 'package:visitManagement_Mobilee/Settings.dart';
 import 'package:visitManagement_Mobilee/ui/button.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
+import 'Classes/StorageManager.dart';
 
 import 'AddFormPage.dart';
 import 'Classes/Assignment.dart';
@@ -32,6 +33,8 @@ class AssignmentDetails extends StatefulWidget {
 }
 
 class AssignmentDetailsState extends State<AssignmentDetails> {
+  final storageManager=StorageManager();
+
   late Future<List<forms>> futureAssignment;
   late Assignment _assignment;
   @override
@@ -39,6 +42,10 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     super.initState();
     futureAssignment = fetchAssignments(widget.assignment.id);
     _assignment = widget.assignment;
+
+    final String idAsString=widget.assignment.id.toString();
+    storageManager.storeObject('assignmentId', idAsString);
+
   }
 
 

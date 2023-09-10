@@ -5,6 +5,7 @@ import 'package:visitManagement_Mobilee/Assignments.dart';
 import 'Classes/User.dart';
 import 'HomePage.dart';
 import 'package:http/http.dart' as http;
+import 'LoginPage.dart';
 import 'Settings.dart';
 import 'Classes/StorageManager.dart';
 
@@ -88,6 +89,16 @@ class NavigatorDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Settings()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
+            title: const Text('Sign out'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => LoginPage()),
               );
             },
           ),

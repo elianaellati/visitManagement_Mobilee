@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'Classes/contact.dart';
+import 'Classes/surveyQuestion.dart';
 import 'Location.dart';
 import 'Classes/forms.dart';
+import 'Survey.dart';
 import 'openMap.dart';
 
-
+import 'Classes/StorageManager.dart';
 // ... (import statements)
 
 class Dialogue extends StatefulWidget {
@@ -23,6 +26,11 @@ class Dialogue extends StatefulWidget {
 }
 
 class AssignmentDetailsState extends State<Dialogue> {
+
+  final storageManager=StorageManager();
+  dynamic storedIdJson;
+
+
   late Future<List<contact>> futureAssignment;
   bool servicestatus = false;
   bool haspermission = false;
@@ -32,15 +40,21 @@ class AssignmentDetailsState extends State<Dialogue> {
   String lat = "";
   bool isStarted = false; // Initialize isStarted
   String statusText ='';
+
   @override
   void initState() {
     super.initState();
     statusText=widget.form.status.toString();
-
     futureAssignment = fetchContacts(widget.form.id);
-
+    initilizeData();
   }
 
+
+
+  Future<void> initilizeData() async{
+    storedIdJson=await storageManager.getObject('assignmentId');
+    late Future<surveyQuestion> question;
+  }
   @override
   Widget build(BuildContext context) {
    // final bool showStartButton = widget.form.status == 'Not Started';
@@ -79,7 +93,6 @@ class AssignmentDetailsState extends State<Dialogue> {
                   Visibility(
                     visible: true,
                     // Show the "Start" button when isStarted is false
-
                     child: ElevatedButton(
                       onPressed: () {
                         String request = 'http://10.10.33.91:8080/visit_forms/${widget
@@ -89,11 +102,33 @@ class AssignmentDetailsState extends State<Dialogue> {
                           isStarted =
                           true; // Update the isStarted state to true when "Start" is clicked
                         });
+                        late Future<surveyQuestion> question;
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Question 1: $}'),
+                            Text('Question 2: ${questionData.question2}'),
+                            Text('Question 3: ${questionData.question3}'),
+                          ],
+                        ),
+                        );
                       },
                       child: Text('Start'),
                     ),
                   ),
+               Visibility(
+                  visible: true, // Show the "Completed" button when isStarted is true
+                  child: ElevatedButton(
+                    onPressed: () {
 
+                 Navigator.of(context).push(MaterialPageRoute(
+                   builder: (context) => Survey(storedIdJson),
+                    ),
+                 ); },
+                    child: Text('Survey'),
+                  ),
+                ),
 
                 Visibility(
                   visible:true, // Show the "Cancelled" button when isStarted is true
@@ -362,5 +397,24 @@ class AssignmentDetailsState extends State<Dialogue> {
       // Handle any exceptions that may occur during the request
       print("Error: $error");
     }
+  }
+
+}
+Future<surveyQuestion> fetchQuestion(int assignmentId) async {
+  final response = await http.get(
+    Uri.parse('http://10.10.33.91:8080/$assignmentId/questions'),
+  );
+
+  if (response.statusCode == 200) {
+    final dynamic data = json.decode(response.body);
+    final surveyQuestion questionData = surveyQuestion(
+      question1: data['question1'] as String,
+      question2: data['question2'] as String,
+      question3: data['question3'] as String,
+    );
+
+    return questionData;
+  } else {
+    throw Exception('Failed to load question');
   }
 }
