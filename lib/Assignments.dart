@@ -35,7 +35,7 @@ class _AssignmentsState extends State<Assignments> {
   @override
   void initState() {
     super.initState();
-    _taskController.getTasks();
+    _taskController.getTasks(); // test
     // futureAssignment = fetchAssignments();
   }
 
