@@ -91,7 +91,7 @@ class LoginState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
-                      obscureText: _isObscure,
+                      obscureText: _isObscure,//test
                       controller: _PasswordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
