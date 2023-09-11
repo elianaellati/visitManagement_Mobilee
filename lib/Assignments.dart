@@ -35,7 +35,8 @@ class _AssignmentsState extends State<Assignments> {
   @override
   void initState() {
     super.initState();
-     refresh(); // test
+    refresh();
+   // test
     // futureAssignment = fetchAssignments();
   }
 
@@ -168,12 +169,12 @@ class _AssignmentsState extends State<Assignments> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => AssignmentDetails(task),
+                              builder: (context) => AssignmentDetails(task,refreshCallback: refresh),
                             ),
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 4.0, horizontal: 5), // Add padding here
                           child: TaskTitle(task),
                         ),
@@ -241,6 +242,7 @@ class _AssignmentsState extends State<Assignments> {
         ),
       ],
     );
+
   }
   void refresh(){
     _taskController.getTasks();
