@@ -268,3 +268,37 @@ _noTaskMsg() {
 }
 
 
+_addFormBar(BuildContext context,Assignment assignment) {
+  final TaskController _taskController = Get.put(TaskController());
+  return Container(
+    margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              assignment.comment,
+              style: subHeadingStyle,
+            ),
+            // Text(
+            //   'Today',
+            //   style: subHeadingStyle,
+            // ),
+          ],
+        ),
+        MyButton(
+          label: '+ Add Form',
+          onTap: () {
+            // Navigate to AddFormPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){},)),
+            );
+          },
+        ),
+      ],
+    ),
+  );
+}

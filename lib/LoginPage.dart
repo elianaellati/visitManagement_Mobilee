@@ -61,13 +61,13 @@ class LoginState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 150),
+              const SizedBox(height: 20),
               Text("Welcome back",
                   style: Theme.of(context).textTheme.headline5),
               const SizedBox(height: 10),
               Text("Login to your account",
                   style: Theme.of(context).textTheme.bodyText1),
-              const SizedBox(height: 60),
+              const SizedBox(height: 15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Form(
