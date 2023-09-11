@@ -14,17 +14,18 @@ import 'openMap.dart';
 
 import 'Classes/StorageManager.dart';
 
-class Dialogue extends StatefulWidget {
+class FillForm extends StatefulWidget {
   final forms form;
   final Function refreshCallback; // Change the type to Function
-  Dialogue(this.form, {Key? key, required this.refreshCallback});
+  FillForm(this.form, {Key? key, required this.refreshCallback});
+
   @override
   State<StatefulWidget> createState() {
-    return AssignmentDetailsState();
+    return FillFormState();
   }
 }
 
-class AssignmentDetailsState extends State<Dialogue> {
+class FillFormState extends State<FillForm> {
   TextEditingController textarea = TextEditingController();
   final storageManager = StorageManager();
   dynamic storedIdJson;
@@ -37,12 +38,11 @@ class AssignmentDetailsState extends State<Dialogue> {
   String long = "";
   String lat = "";
   bool isStarted = false;
-  String statusText = '';// Add questionData here
+  String statusText = ''; // Add questionData here
 
   @override
   void initState() {
     super.initState();
-
 
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
@@ -51,7 +51,6 @@ class AssignmentDetailsState extends State<Dialogue> {
 
   Future<void> initilizeData() async {
     storedIdJson = await storageManager.getObject('assignmentId');
-
   }
 
   @override
@@ -61,11 +60,307 @@ class AssignmentDetailsState extends State<Dialogue> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Form Information'),
+        backgroundColor: Color(0xFF3F51B5),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
+            margin: EdgeInsets.symmetric(horizontal: 31, vertical: 21),
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                    blurRadius: 5.0, color: Colors.grey, offset: Offset(0, 5)),
+              ],
+              borderRadius: BorderRadius.circular(15.0),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF3F51B5),
+                  Colors.blue,
+                ],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    /*    Container(
+
+              child: Image.asset(
+                "assets/imgs/chip.png",
+                width: 51,
+                height: 51,
+              ),
+            ),*/
+                    buildInfoRow(widget.form.customerName, 22.0 , Colors.white),
+                    // Replace 20.0 with your desired font size
+
+                    const SizedBox(
+                      height: 11,
+                    ),
+                     Row(
+                     children:[
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 24, // Adjust the size as needed
+                        color: Colors.white, // Adjust the color as needed
+                      ),
+                     const SizedBox(
+                        width: 11,
+                      ),
+                      buildInfoRow(
+                          '${widget.form.customerAddress}, ${widget.form.customerCity}',
+                          16.0 ,
+                          Colors.white),
+                       const SizedBox(
+                         width: 600
+                       ),
+                       Row(
+                           children:[
+
+                             buildInfoRow( statusText, 16.0, Colors.white),
+                             const SizedBox(
+                               width:6,
+                             ),
+                             _buildStatusIcon(statusText),
+                           ]
+                       ),
+
+                    ]
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const Divider(),
+
+          if (statusText == "Not Started")
+
+            Visibility(
+              visible: true,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  // Show the "Start" button when isStarted is false
+                 child: InkWell(
+                    onTap: () {
+                      String request =
+                          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                      requestServer(request);
+                      setState(() {
+                        isStarted = true;
+                        widget.refreshCallback();
+                        // Update the isStarted state to true when "Start" is clicked
+                      });
+                    },
+                    child: Container(
+                      width: 50, // Adjust the width as needed
+                      height: 50, // Adjust the height as needed
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF3F51B5), // Change the button's background color
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.play_arrow, // Add an Icon here
+                          size: 24, // Adjust the size of the icon as needed
+                          color: Colors.white, // Adjust the color of the icon as needed
+                        ),
+                      ),
+                    ),
+                  ),
+                  ),
+                  Padding(
+                      padding:const EdgeInsets.all(40.0),
+                      child:InkWell(
+                    onTap: () {
+                      _showAlertDialog();
+                    },
+
+                    child: Container(
+                      width: 50, // Adjust the width as needed
+                      height: 50, // Adjust the height as needed
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF3F51B5), // Change the button's background color
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.cancel, // Add an Icon here
+                          size: 24, // Adjust the size of the icon as needed
+                          color: Colors.white, // Adjust the color of the icon as needed
+                        ),
+                      ),
+                    ),
+                  ),
+                  ),
+                 Padding(
+                 padding: const EdgeInsets.all(40.0),
+                child:  InkWell(
+                    onTap: () {
+                      checkGps();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => openMap(
+                            widget.form.latitude,
+                            widget.form.longitude,
+                            lat,
+                            long,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 50, // Adjust the width as needed
+                      height: 50, // Adjust the height as needed
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF3F51B5), // Change the button's background color
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.location_on_outlined, // Replace with your desired icon
+                          size: 24, // Adjust the size of the icon as needed
+                          color: Colors.white,
+                          // Adjust the color of the icon as needed
+                        ),
+
+                      ),
+                    ),
+
+                  ),
+                 ),
+                ],
+              ),
+            ),
+          if (statusText == "Undergoing")
+            Visibility(
+              visible: true,
+              child: Row(
+                children: <Widget>[
+                  // Show the "Start" button when isStarted is false
+                  InkWell(
+                    onTap: () async {
+                      String request =
+                          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
+                      _showNote(request);
+                    },
+                    child: Container(
+                      width: 50, // Adjust the width as needed
+                      height: 50, // Adjust the height as needed
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF3F51B5), // Change the button's background color
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.check, // Add an Icon here
+                          size: 24, // Adjust the size of the icon as needed
+                          color: Colors.white, // Adjust the color of the icon as needed
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  InkWell(
+                    onTap: () {
+                      _showAlertDialog();
+                    },
+                    child: Container(
+                      width: 50, // Adjust the width as needed
+                      height: 50, // Adjust the height as needed
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF3F51B5), // Change the button's background color
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.cancel, // Add an Icon here
+                          size: 24, // Adjust the size of the icon as needed
+                          color: Colors.white, // Adjust the color of the icon as needed
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      checkGps();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => openMap(
+                            widget.form.latitude,
+                            widget.form.longitude,
+                            lat,
+                            long,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 50, // Adjust the width as needed
+                      height: 50, // Adjust the height as needed
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFF3F51B5), // Change the button's background color
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.map, // Replace with your desired icon
+                          size: 24, // Adjust the size of the icon as needed
+                          color: Colors.white, // Adjust the color of the icon as needed
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+
+
+          /*Container(
+            color: Colors.transparent,
+            child: customButton(
+              buttonIcon: const Icon(
+                Icons.not_started, // Replace with your desired icon
+                size: 24,
+                color: Colors.white,
+              ),
+              buttonTitle: 'Start', // Replace with your desired title
+              circleColor: Colors.blue,
+              onTap: () {
+                print("Button tapped!");
+                // Your button's onTap action
+                if (statusText == "Not Started") {
+                  String request =
+                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                  requestServer(request);
+                  setState(() {
+                    isStarted = true;
+                    widget.refreshCallback();
+                  });
+                } else if (statusText == "Undergoing") {
+                  String request =
+                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
+                  _showNote(request);
+                }
+              },
+            ),
+          ),*/
+        ],
+      ),
+    );
+  }
+
+    /*Container(
             padding: EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +394,7 @@ class AssignmentDetailsState extends State<Dialogue> {
                             requestServer(request);
                             setState(() {
                               isStarted = true;
-                              widget.refreshCallback();
+                              widget.refreshCallback?.call();
                               // Update the isStarted state to true when "Start" is clicked
                             });
                           },
@@ -189,8 +484,8 @@ class AssignmentDetailsState extends State<Dialogue> {
                 ),
               ],
             ),
-          ),
-          const Divider(),
+          ),*/
+  /*   const Divider(),
           const SizedBox(height: 8),
           const Padding(
             padding: EdgeInsets.all(16.0),
@@ -231,14 +526,14 @@ class AssignmentDetailsState extends State<Dialogue> {
       ),
     );
   }
+*/
+  Widget buildInfoRow(String value, double fontSize, Color textColor) {
+    return
+        Text(
+          value,
+          style: TextStyle(fontSize: fontSize, color: textColor),
+        );
 
-  Widget buildInfoRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('$label: $value'),
-      ],
-    );
   }
 
   Widget buildAssignmentTile(contact assignment) {
@@ -516,14 +811,66 @@ class AssignmentDetailsState extends State<Dialogue> {
         setState(() {
           widget.refreshCallback();
           statusText = jsonData['status'];
-
         });
-
       } else {
         print("Your Location is Far : ${response.statusCode}");
       }
     } catch (error) {
       print("Error: $error");
     }
+  }
+  Widget _buildStatusIcon(String status) {
+    Icon icon;
+    Color iconColor;
+
+    // Define icons and colors based on status
+    if (status == "Completed") {
+      icon = const Icon(Icons.check_circle, color: Colors.white);
+    } else if (status == "Undergoing") {
+      icon = const Icon(Icons.access_time, color: Colors.white);
+    } else if (status == "Not Started") {
+      icon = const Icon(Icons.error, color: Colors.white);
+    } else {
+      icon = const Icon(Icons.error, color: Colors.white);
+    }
+
+    return icon;
+  }
+
+  Widget customButton({
+    required Icon buttonIcon,
+    required String buttonTitle,
+    required Color circleColor,
+    required Function onTap,
+  }) {
+    return Container(
+      child: InkWell(
+        onTap: onTap(),
+        child: Container(
+          padding: EdgeInsets.all(5.0),
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                  radius: 20,
+                  backgroundColor: circleColor,
+                  child: buttonIcon
+
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Text(
+                buttonTitle,
+                overflow: TextOverflow.clip,
+                style: TextStyle(),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

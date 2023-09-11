@@ -6,7 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:visitManagement_Mobilee/Settings.dart';
+import 'package:visitManagement_Mobilee/FillForm.dart';
 import 'package:visitManagement_Mobilee/ui/button.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
@@ -15,6 +15,7 @@ import 'controllers/_taskController.dart';
 import 'AddFormPage.dart';
 import 'Classes/Assignment.dart';
 import 'Dialogue.dart';
+
 import 'Classes/forms.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,24 +24,26 @@ import 'formTitle.dart';
 
 class AssignmentDetails extends StatefulWidget {
   final Assignment assignment;
-
-  AssignmentDetails(this.assignment);
+  final Function refreshCallback; // Change the type to Function
+  AssignmentDetails(this.assignment, {Key? key, required this.refreshCallback});
 
   @override
   State<StatefulWidget> createState() {
     return AssignmentDetailsState();
   }
+
 }
 
 class AssignmentDetailsState extends State<AssignmentDetails> {
   final storageManager=StorageManager();
-
   late Future<List<forms>> futureAssignment;
+  late Future<List<forms>> updated;
   late Assignment _assignment;
   @override
   void initState() {
     super.initState();
     futureAssignment = fetchAssignments(widget.assignment.id);
+
     _assignment = widget.assignment;
     final String idAsString=widget.assignment.id.toString();
     storageManager.storeObject('assignmentId', idAsString);
@@ -49,6 +52,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
 
   @override
   Widget build(BuildContext context) {
+    widget.refreshCallback();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forms'),
@@ -85,9 +89,11 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
                           verticalOffset: 50.0,
                           child: GestureDetector(
                             onTap: () {
+                          //    widget.refreshCallback();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => Dialogue(assignment, ),
+
+                                  builder: (context) => FillForm(assignment, refreshCallback: _refreshAssignmentDetails),
                                 ),
                               );
                             },
@@ -153,7 +159,60 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
       throw Exception('Failed to load assignment details');
     }
   }
+  _addFormBar(BuildContext context,Assignment assignment) {
+    final TaskController _taskController = Get.put(TaskController());
+    return Container(
+      margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                assignment.comment,
+                style: subHeadingStyle,
+              ),
+              // Text(
+              //   'Today',
+              //   style: subHeadingStyle,
+              // ),
+            ],
+          ),
+          MyButton(
+            label: '+ Add Form',
+            onTap: () {
+              // Navigate to AddFormPage
+              Navigator.push(
+
+                context,
+                MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback: _refreshAssignmentDetails)),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ...
+
+  Future<void> _refreshAssignmentDetails() async {
+ updated = fetchAssignments(widget.assignment.id);
+ print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
+    // Update the state of your widget with the new data.
+    setState(() {
+      print("eliana");
+      futureAssignment = updated;
+      // Assign the updated data to your widget's state variable.
+      // For example:
+      // assignmentData = updatedData;
+    });
+  }
+
+
 }
+
 
 _noTaskMsg() {
   return Stack(
@@ -205,7 +264,9 @@ _noTaskMsg() {
 
     ],
   );
+
 }
+
 
 _addFormBar(BuildContext context,Assignment assignment) {
   final TaskController _taskController = Get.put(TaskController());

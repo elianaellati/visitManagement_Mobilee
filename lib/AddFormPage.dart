@@ -12,11 +12,12 @@ import '../Classes/Assignment.dart';
 import '../ui/button.dart';
 
 class AddFormPage extends StatefulWidget {
+  final Function refreshCallback; // Change the type to Function
   final Assignment assignment;
 
   final Function() onFormAdded;
 
-  const AddFormPage(this.assignment,{super.key, required this.onFormAdded});
+  const AddFormPage(this.assignment,{super.key, required this.onFormAdded,required this.refreshCallback});
 
   @override
   State<AddFormPage> createState() => _AddFormPageState();
@@ -318,8 +319,7 @@ class _AddFormPageState extends State<AddFormPage> {
       );
 
       if (response.statusCode == 200) {
-        // Handle a successful response
-
+        widget.refreshCallback();
         print("Request successful");
       } else {
         // Handle other response codes if needed

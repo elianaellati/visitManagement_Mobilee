@@ -32,12 +32,6 @@ class _AssignmentsState extends State<Assignments> {
     refresh();
   }
 
-  @override
-  void didUpdateWidget(covariant Assignments oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    refresh();
-  }
-
   void refresh() {
     _taskController.getTasks().then((tasks) {
       datesWithTasks.clear();
@@ -191,7 +185,7 @@ class _AssignmentsState extends State<Assignments> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => AssignmentDetails(task),
+                              builder: (context) => AssignmentDetails(task,refreshCallback: refresh),
                             ),
                           );
                         },
@@ -263,5 +257,6 @@ class _AssignmentsState extends State<Assignments> {
         ),
       ],
     );
+
   }
 }
