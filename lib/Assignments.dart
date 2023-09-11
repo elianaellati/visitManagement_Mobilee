@@ -57,10 +57,6 @@ class _AssignmentsState extends State<Assignments> {
     });
   }
 
-  Color _dateColor(DateTime date) {
-    return datesWithTasks.contains(date) ? Colors.green : Colors.grey;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,37 +79,48 @@ class _AssignmentsState extends State<Assignments> {
   }
 
   _addDateBar() {
+    bool hasTasksForSelectedDate = datesWithTasks.contains(_selectedDate);
+    Color dateColor = hasTasksForSelectedDate ? Colors.green : primaryClr;
+
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-      child: DatePicker(
-        DateTime.now(),
-        width: 80,
-        height: 100,
-        initialSelectedDate: _selectedDate,
-        selectedTextColor: Colors.white,
-        selectionColor: Colors.green, // استخدم هنا اللون الأخضر كلون افتراضي
-        dateTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            )),
-        dayTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            )),
-        monthTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            )),
-        onDateChange: (newDate) {
-          setState(() {
-            _selectedDate = newDate;
-          });
+      child: FutureBuilder(
+        future: _taskController.getTasks(), // Replace with your data fetching logic
+        builder: (context, snapshot) {
+          return DatePicker(
+            DateTime.now(),
+            width: 80,
+            height: 100,
+            initialSelectedDate: _selectedDate,
+            selectedTextColor: Colors.white,
+            selectionColor: dateColor,
+            dateTextStyle: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            dayTextStyle: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                color: Colors.grey,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            monthTextStyle: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            onDateChange: (newDate) {
+              setState(() {
+                _selectedDate = newDate;
+              });
+            },
+          );
         },
       ),
     );
