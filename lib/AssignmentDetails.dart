@@ -228,7 +228,7 @@ _addFormBar(BuildContext context,Assignment assignment) {
           ],
         ),
         MyButton(
-            label: '+ Add Form',
+          label: '+ Add Form',
           onTap: () {
             // Navigate to AddFormPage
             Navigator.push(
