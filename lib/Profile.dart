@@ -49,6 +49,7 @@ class _ProfileState extends State<Profile> {
         title: const Text('Profile'),
         centerTitle: true,
         toolbarHeight: 56.0,
+        backgroundColor: Color(0xFF3F51B5),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
