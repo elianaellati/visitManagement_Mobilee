@@ -27,7 +27,7 @@ class _ProfileState extends State<Profile> {
 
   Future<void> initilizeData() async {
     storedUserJson = await storageManager.getObject('user');
-    // تحويل البيانات المسترجعة من الـ JSON إلى Map
+
     if (storedUserJson != null) {
       setState(() {
         userData = json.decode(storedUserJson);
