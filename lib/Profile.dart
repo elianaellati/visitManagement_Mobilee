@@ -1,8 +1,10 @@
+import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
+import 'package:visitManagement_Mobilee/Classes/User.dart';
 import 'package:visitManagement_Mobilee/Settings.dart';
 
 class Profile extends StatefulWidget {
@@ -13,28 +15,23 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final storageManager = StorageManager();
+  dynamic storedUserJson;
   Map<String, dynamic> userData = {};
 
   @override
   void initState() {
     super.initState();
-    fetchUserData().then((data) {
-      setState(() {
-        userData = data;
-      });
-    });
+    initilizeData();
   }
 
-  Future<Map<String, dynamic>> fetchUserData() async {
-    final url = 'http://10.10.33.91:8080/users/';
+  Future<void> initilizeData() async {
+    storedUserJson = await storageManager.getObject('user');
 
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final userData = jsonDecode(response.body);
-      return userData;
-    } else {
-      throw Exception('Failed to load user data');
+    if (storedUserJson != null) {
+      setState(() {
+        userData = json.decode(storedUserJson);
+      });
     }
   }
 
@@ -43,40 +40,42 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Settings()),
-          ),
+          onPressed: () =>
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Settings()),
+              ),
         ),
-        title: Text('Profile'),
+        title: const Text('Profile'),
         centerTitle: true,
         toolbarHeight: 56.0,
+        backgroundColor: Color(0xFF3F51B5),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
+            const CircleAvatar(
               backgroundColor: Colors.white,
               radius: 50,
               child: Icon(
                 Icons.person,
                 size: 75,
-                color: const Color(0xFF3F51B5),
+                color: Color(0xFF3F51B5),
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ListTile(
-              title: Text('First Name'),
+              title: const Text('First Name'),
               subtitle: Text(userData['firstName'] ?? 'Loading...'),
             ),
             ListTile(
-              title: Text('Last Name'),
+              title: const Text('Last Name'),
               subtitle: Text(userData['lastName'] ?? 'Loading...'),
             ),
             ListTile(
-              title: Text('Username'),
+              title: const Text('Username'),
               subtitle: Text(userData['username'] ?? 'Loading...'),
             ),
           ],
