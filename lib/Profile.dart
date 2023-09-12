@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -144,42 +143,9 @@ class _ProfileState extends State<Profile> {
               ),
             ),
           ),
-
-
-
-
         ],
       ) ,
-      // body: Padding(
-      //   padding: EdgeInsets.all(20.0),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       const CircleAvatar(
-      //         backgroundColor: Colors.white,
-      //         radius: 50,
-      //         child: Icon(
-      //           Icons.person,
-      //           size: 75,
-      //           color: Color(0xFF3F51B5),
-      //         ),
-      //       ),
-      //       const SizedBox(height: 20.0),
-      //       ListTile(
-      //         title: const Text('First Name'),
-      //         subtitle: Text(userData['firstName'] ?? 'Loading...'),
-      //       ),
-      //       ListTile(
-      //         title: const Text('Last Name'),
-      //         subtitle: Text(userData['lastName'] ?? 'Loading...'),
-      //       ),
-      //       ListTile(
-      //         title: const Text('Username'),
-      //         subtitle: Text(userData['username'] ?? 'Loading...'),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+
     );
   }
 }
