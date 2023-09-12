@@ -6,8 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'Classes/contact.dart';
-import 'Classes/surveyQuestion.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'Classes/forms.dart';
 import 'Survey.dart';
 import 'openMap.dart';
@@ -66,13 +65,13 @@ class FillFormState extends State<FillForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 31, vertical: 21),
+            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
             decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
                     blurRadius: 5.0, color: Colors.grey, offset: Offset(0, 5)),
               ],
-              borderRadius: BorderRadius.circular(15.0),
+              borderRadius: BorderRadius.circular(12.0),
               gradient: const LinearGradient(
                 colors: [
                   Color(0xFF3F51B5),
@@ -80,8 +79,6 @@ class FillFormState extends State<FillForm> {
                 ],
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(13.0),
               child: Padding(
                 padding: const EdgeInsets.all(13.0),
                 child: Column(
@@ -102,7 +99,7 @@ class FillFormState extends State<FillForm> {
                     const SizedBox(
                       height: 11,
                     ),
-                     Row(
+                  /*   Row(
                      children:[
                       const Icon(
                         Icons.location_on_outlined,
@@ -131,232 +128,785 @@ class FillFormState extends State<FillForm> {
                        ),
 
                     ]
-                    ),
+                    ),*/
+                    Container(
+                      padding: const EdgeInsets.all(8.0), // Add padding to the container
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align children to the start and end
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on_outlined,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(
+                                width: 11,
+                              ),
+                              Text(
+                                '${widget.form.customerAddress}, ${widget.form.customerCity}',
+                                style: TextStyle(fontSize: 16.0, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              buildInfoRow(statusText, 16.0, Colors.white),
+                              const SizedBox(
+                                width: 6,
+                              ),
+                              _buildStatusIcon(statusText),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+
 
                   ],
                 ),
+
+            ),
+          ),
+
+         /* Container(
+            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 5.0,
+                  color: Colors.grey,
+                  offset: Offset(0, 5),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(15.0),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF3F51B5),
+                  Colors.blue,
+                ],
+              ),
+            ),
+            child: Column(
+              children: [
+                if (statusText == "Not Started")
+                  Row(
+                    children: <Widget>[
+                     Padding(
+                     padding: const EdgeInsets.only(left:13),
+                        child: InkWell(
+                          onTap: () {
+                            String request =
+                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                            requestServer(request);
+                            setState(() {
+                              isStarted = true;
+                              widget.refreshCallback();
+                            });
+                          },
+
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.play_arrow,
+                                size: 24,
+                              color:  Color(0xFF3F51B5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: InkWell(
+                          onTap: () {
+                            _showAlertDialog();
+                          },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.cancel,
+                                size: 24,
+                                color: Color(0xFF3F51B5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: InkWell(
+                          onTap: () {
+                            checkGps();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => openMap(
+                                  widget.form.latitude,
+                                  widget.form.longitude,
+                                  lat,
+                                  long,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:  Colors.white,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.location_on_outlined,
+                                size: 24,
+                                color:  Color(0xFF3F51B5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                if (statusText == "Undergoing")
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: InkWell(
+                          onTap: () async {
+                            String request =
+                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
+                            _showNote(request);
+                          },
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.check,
+                                size: 24,
+                                color:Color(0xFF3F51B5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: InkWell(
+                          onTap: () {
+                            _showAlertDialog();
+                          },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.cancel,
+                                size: 24,
+                                color: Color(0xFF3F51B5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: InkWell(
+                          onTap: () {
+                            checkGps();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => openMap(
+                                  widget.form.latitude,
+                                  widget.form.longitude,
+                                  lat,
+                                  long,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white ,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.map,
+                                size: 24,
+                                color: Color(0xFF3F51B5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),*/
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+            height: 150, // Adjust the height as needed
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 5.0,
+                  color: Colors.grey,
+                  offset: Offset(0, 5),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(15.0),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF3F51B5),
+                  Colors.blue,
+                ],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 35, bottom: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          String request =
+                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                          requestServer(request);
+                          setState(() {
+                            isStarted = true;
+                            widget.refreshCallback();
+                          });
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.play_arrow,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Start',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          _showAlertDialog();
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.cancel,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          checkGps();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => openMap(
+                                widget.form.latitude,
+                                widget.form.longitude,
+                                lat,
+                                long,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.location_on_outlined,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Location',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-          const Divider(),
 
-          if (statusText == "Not Started")
 
-            Visibility(
-              visible: true,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  // Show the "Start" button when isStarted is false
-                 child: InkWell(
-                    onTap: () {
-                      String request =
-                          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                      requestServer(request);
-                      setState(() {
-                        isStarted = true;
-                        widget.refreshCallback();
-                        // Update the isStarted state to true when "Start" is clicked
-                      });
-                    },
-                    child: Container(
-                      width: 50, // Adjust the width as needed
-                      height: 50, // Adjust the height as needed
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF3F51B5), // Change the button's background color
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.play_arrow, // Add an Icon here
-                          size: 24, // Adjust the size of the icon as needed
-                          color: Colors.white, // Adjust the color of the icon as needed
-                        ),
-                      ),
-                    ),
-                  ),
-                  ),
-                  Padding(
-                      padding:const EdgeInsets.all(40.0),
-                      child:InkWell(
-                    onTap: () {
-                      _showAlertDialog();
-                    },
 
-                    child: Container(
-                      width: 50, // Adjust the width as needed
-                      height: 50, // Adjust the height as needed
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF3F51B5), // Change the button's background color
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.cancel, // Add an Icon here
-                          size: 24, // Adjust the size of the icon as needed
-                          color: Colors.white, // Adjust the color of the icon as needed
-                        ),
-                      ),
-                    ),
-                  ),
-                  ),
-                 Padding(
-                 padding: const EdgeInsets.all(40.0),
-                child:  InkWell(
-                    onTap: () {
-                      checkGps();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => openMap(
-                            widget.form.latitude,
-                            widget.form.longitude,
-                            lat,
-                            long,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      width: 50, // Adjust the width as needed
-                      height: 50, // Adjust the height as needed
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF3F51B5), // Change the button's background color
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.location_on_outlined, // Replace with your desired icon
-                          size: 24, // Adjust the size of the icon as needed
-                          color: Colors.white,
-                          // Adjust the color of the icon as needed
-                        ),
 
-                      ),
-                    ),
 
-                  ),
-                 ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          /* Container(
+            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 5.0,
+                  color: Colors.grey,
+                  offset: Offset(0, 5),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(15.0),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF3F51B5),
+                  Colors.blue,
                 ],
               ),
             ),
-          if (statusText == "Undergoing")
-            Visibility(
-              visible: true,
-              child: Row(
-                children: <Widget>[
-                  // Show the "Start" button when isStarted is false
-                  InkWell(
-                    onTap: () async {
-                      String request =
-                          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
-                      _showNote(request);
-                    },
-                    child: Container(
-                      width: 50, // Adjust the width as needed
-                      height: 50, // Adjust the height as needed
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF3F51B5), // Change the button's background color
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.check, // Add an Icon here
-                          size: 24, // Adjust the size of the icon as needed
-                          color: Colors.white, // Adjust the color of the icon as needed
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  InkWell(
-                    onTap: () {
-                      _showAlertDialog();
-                    },
-                    child: Container(
-                      width: 50, // Adjust the width as needed
-                      height: 50, // Adjust the height as needed
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF3F51B5), // Change the button's background color
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.cancel, // Add an Icon here
-                          size: 24, // Adjust the size of the icon as needed
-                          color: Colors.white, // Adjust the color of the icon as needed
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      checkGps();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => openMap(
-                            widget.form.latitude,
-                            widget.form.longitude,
-                            lat,
-                            long,
+            child: Column(
+              children: [
+                if (statusText == "Not Started")
+                  Row(
+
+                    children: <Widget>[
+
+                      InkWell(
+                        onTap: () {
+                          String request =
+                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                          requestServer(request);
+                          setState(() {
+                            isStarted = true;
+                            widget.refreshCallback();
+                          });
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.play_arrow,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      width: 50, // Adjust the width as needed
-                      height: 50, // Adjust the height as needed
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFF3F51B5), // Change the button's background color
                       ),
-                      child: Center(
-                        child: Icon(
-                          Icons.map, // Replace with your desired icon
-                          size: 24, // Adjust the size of the icon as needed
-                          color: Colors.white, // Adjust the color of the icon as needed
+                      const Spacer(), // Empty space to center the cancel icon
+                      InkWell(
+                        onTap: () {
+                          _showAlertDialog();
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.cancel,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      const Spacer(), // Empty space to center the location icon
+                      InkWell(
+                        onTap: () {
+                          checkGps();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => openMap(
+                                widget.form.latitude,
+                                widget.form.longitude,
+                                lat,
+                                long,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.location_on_outlined,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-
-                ],
-              ),
-            ),
-
-
-          /*Container(
-            color: Colors.transparent,
-            child: customButton(
-              buttonIcon: const Icon(
-                Icons.not_started, // Replace with your desired icon
-                size: 24,
-                color: Colors.white,
-              ),
-              buttonTitle: 'Start', // Replace with your desired title
-              circleColor: Colors.blue,
-              onTap: () {
-                print("Button tapped!");
-                // Your button's onTap action
-                if (statusText == "Not Started") {
-                  String request =
-                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                  requestServer(request);
-                  setState(() {
-                    isStarted = true;
-                    widget.refreshCallback();
-                  });
-                } else if (statusText == "Undergoing") {
-                  String request =
-                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
-                  _showNote(request);
-                }
-              },
+                if (statusText == "Undergoing")
+                  Row(
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () async {
+                          String request =
+                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
+                          _showNote(request);
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.check,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Spacer(), // Empty space to center the cancel icon
+                      InkWell(
+                        onTap: () {
+                          _showAlertDialog();
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.cancel,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Spacer(), // Empty space to center the location icon
+                      InkWell(
+                        onTap: () {
+                          checkGps();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => openMap(
+                                widget.form.latitude,
+                                widget.form.longitude,
+                                lat,
+                                long,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.map,
+                              size: 24,
+                              color: Color(0xFF3F51B5),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ),*/
+
+          const Divider(),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 13, vertical: 21),
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 5.0,
+                  color: Colors.grey,
+                  offset: Offset(0, 5),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(15.0),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF3F51B5),
+                  Colors.blue,
+                ],
+              ),
+            ),
+            child: Column(
+              children: [
+         const Padding(
+         padding: EdgeInsets.all(13.0), // Add padding to the left
+    child: Align(
+    alignment: Alignment.centerLeft, // Align the text to the left
+    child: Text(
+    'Contacts Details:',
+    style: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+    ),
+    ),
+    ),
+    ),
+
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+                  decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 5.0,
+                        color: Colors.white,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(15.0),
+                    border: Border.all( // Add this to set the border color
+                      color: Colors.white, // Change this color to your desired border color
+                      width: 2.0, // Adjust the border width as needed
+                    ),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFF3F51B5),
+                        Colors.blue,
+                      ],
+                    ),
+                  ),
+                  child: FutureBuilder<List<contact>>(
+                    future: futureAssignment,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text('No Assignment Details available.'),
+                        );
+                      } else {
+                        final assignmentDetails = snapshot.data!;
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: assignmentDetails.length,
+                          itemBuilder: (context, index) {
+                            final assignment = assignmentDetails[index];
+                            return ListTile(
+                              leading: const CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.supervised_user_circle,
+                                  color: Color(0xFF3F51B5),
+                                ),
+                              ),
+                              title: Text(
+                                assignment.firstName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              subtitle: Text(
+                                assignment.email,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              trailing: Text(
+                                assignment.phoneNumber,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          )
+
+
+
+
+          /*  Container(
+      color: Colors.blue,
+       child: Expanded(
+            child: FutureBuilder<List<contact>>(
+              future: futureAssignment,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                      child: Text('No Assignment Details available.'));
+                } else {
+                  final assignmentDetails = snapshot.data!;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: assignmentDetails.length,
+                    itemBuilder: (context, index) {
+                      final assignment = assignmentDetails[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                      //    backgroundColor: Col, // Customize this based on your data
+                          child: const Icon(
+                            Icons.supervised_user_circle, // Customize this based on your data
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(assignment.firstName), // Customize this based on your data
+                        subtitle: Text(assignment.email), // Customize this based on your data
+                        trailing: Text(assignment.phoneNumber), // Customize this based on your data
+
+                      );
+                    },
+                  );
+
+                  /*ListView.builder(
+                    itemCount: assignmentDetails.length,
+                    itemBuilder: (context, index) {
+                      final assignment = assignmentDetails[index];
+                      return buildAssignmentTile(assignment);
+                    },
+*/                }
+              },
+            ),
+          ),
+       ),*/
+
         ],
       ),
+
     );
   }
 
@@ -812,6 +1362,7 @@ class FillFormState extends State<FillForm> {
           widget.refreshCallback();
           statusText = jsonData['status'];
         });
+        Fluttertoast.showToast(msg: "Hello!");
       } else {
         print("Your Location is Far : ${response.statusCode}");
       }
@@ -873,4 +1424,5 @@ class FillFormState extends State<FillForm> {
       ),
     );
   }
+
 }

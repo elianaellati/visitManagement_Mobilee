@@ -268,7 +268,7 @@ _noTaskMsg() {
 }
 
 
-_addFormBar(BuildContext context,Assignment assignment) {
+/*_addFormBar(BuildContext context,Assignment assignment) {
   final TaskController _taskController = Get.put(TaskController());
   return Container(
     margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
@@ -294,11 +294,11 @@ _addFormBar(BuildContext context,Assignment assignment) {
             // Navigate to AddFormPage
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){},)),
+              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback:_refreshAssignmentDetails)),
             );
           },
         ),
       ],
     ),
   );
-}
+}*/
