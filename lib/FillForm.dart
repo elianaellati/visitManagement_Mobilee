@@ -416,7 +416,7 @@ class FillFormState extends State<FillForm> {
                           child: const Center(
                             child: Icon(
                               Icons.play_arrow,
-                              size: 24,
+                              size: 35,
                               color: Color(0xFF3F51B5),
                             ),
                           ),
@@ -448,7 +448,7 @@ class FillFormState extends State<FillForm> {
                           child: const Center(
                             child: Icon(
                               Icons.cancel,
-                              size: 24,
+                              size: 35,
                               color: Color(0xFF3F51B5),
                             ),
                           ),
@@ -489,8 +489,8 @@ class FillFormState extends State<FillForm> {
                           ),
                           child: const Center(
                             child: Icon(
-                              Icons.location_on_outlined,
-                              size: 24,
+                              Icons.location_on,
+                              size: 35,
                               color: Color(0xFF3F51B5),
                             ),
                           ),
@@ -511,234 +511,10 @@ class FillFormState extends State<FillForm> {
             ),
           ),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          /* Container(
-            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
-
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 5.0,
-                  color: Colors.grey,
-                  offset: Offset(0, 5),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(15.0),
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF3F51B5),
-                  Colors.blue,
-                ],
-              ),
-            ),
-            child: Column(
-              children: [
-                if (statusText == "Not Started")
-                  Row(
-
-                    children: <Widget>[
-
-                      InkWell(
-                        onTap: () {
-                          String request =
-                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                          requestServer(request);
-                          setState(() {
-                            isStarted = true;
-                            widget.refreshCallback();
-                          });
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.play_arrow,
-                              size: 24,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Spacer(), // Empty space to center the cancel icon
-                      InkWell(
-                        onTap: () {
-                          _showAlertDialog();
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.cancel,
-                              size: 24,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Spacer(), // Empty space to center the location icon
-                      InkWell(
-                        onTap: () {
-                          checkGps();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => openMap(
-                                widget.form.latitude,
-                                widget.form.longitude,
-                                lat,
-                                long,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.location_on_outlined,
-                              size: 24,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                if (statusText == "Undergoing")
-                  Row(
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () async {
-                          String request =
-                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
-                          _showNote(request);
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.check,
-                              size: 24,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Spacer(), // Empty space to center the cancel icon
-                      InkWell(
-                        onTap: () {
-                          _showAlertDialog();
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.cancel,
-                              size: 24,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Spacer(), // Empty space to center the location icon
-                      InkWell(
-                        onTap: () {
-                          checkGps();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => openMap(
-                                widget.form.latitude,
-                                widget.form.longitude,
-                                lat,
-                                long,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.map,
-                              size: 24,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-          ),*/
-
           const Divider(),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 13, vertical: 21),
+            height:300,
             decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
@@ -757,35 +533,35 @@ class FillFormState extends State<FillForm> {
             ),
             child: Column(
               children: [
-         const Padding(
-         padding: EdgeInsets.all(13.0), // Add padding to the left
-    child: Align(
-    alignment: Alignment.centerLeft, // Align the text to the left
-    child: Text(
-    'Contacts Details:',
-    style: TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-    ),
-    ),
-    ),
-    ),
-
+                const Padding(
+                  padding: EdgeInsets.all(13.0), // Add padding to the left
+                  child: Align(
+                    alignment: Alignment.centerLeft, // Align the text to the left
+                    child: Text(
+                      'Contacts :',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+                  height:200,
                   decoration: BoxDecoration(
                     boxShadow: const [
                       BoxShadow(
                         blurRadius: 5.0,
-                        color: Colors.white,
+                        color: Colors.white60,
                         offset: Offset(0, 5),
                       ),
                     ],
                     borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all( // Add this to set the border color
+                    border: Border.all(
                       color: Colors.white, // Change this color to your desired border color
-                      width: 2.0, // Adjust the border width as needed
+                      width: 1.0, // Adjust the border width as needed
                     ),
                     gradient: const LinearGradient(
                       colors: [
@@ -794,289 +570,71 @@ class FillFormState extends State<FillForm> {
                       ],
                     ),
                   ),
-                  child: FutureBuilder<List<contact>>(
-                    future: futureAssignment,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(
-                          child: Text('No Assignment Details available.'),
-                        );
-                      } else {
-                        final assignmentDetails = snapshot.data!;
+                    child: FutureBuilder<List<contact>>(
+                      future: futureAssignment,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text('No Assignment Details available.'),
+                          );
+                        } else {
+                          final assignmentDetails = snapshot.data!;
 
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: assignmentDetails.length,
-                          itemBuilder: (context, index) {
-                            final assignment = assignmentDetails[index];
-                            return ListTile(
-                              leading: const CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: Icon(
-                                  Icons.supervised_user_circle,
-                                  color: Color(0xFF3F51B5),
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: assignmentDetails.length,
+                            itemBuilder: (context, index) {
+                              final assignment = assignmentDetails[index];
+                              return ListTile(
+                                leading: const CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: Icon(
+                                    Icons.supervised_user_circle,
+                                    color: Color(0xFF3F51B5),
+                                  ),
                                 ),
-                              ),
-                              title: Text(
-                                assignment.firstName,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                title: Text(
+                                  assignment.firstName,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              subtitle: Text(
-                                assignment.email,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                subtitle: Text(
+                                  assignment.email,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              trailing: Text(
-                                assignment.phoneNumber,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                trailing: Text(
+                                  assignment.phoneNumber,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    },
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
                   ),
-                ),
+
               ],
             ),
           )
 
 
-
-
-          /*  Container(
-      color: Colors.blue,
-       child: Expanded(
-            child: FutureBuilder<List<contact>>(
-              future: futureAssignment,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                      child: Text('No Assignment Details available.'));
-                } else {
-                  final assignmentDetails = snapshot.data!;
-
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: assignmentDetails.length,
-                    itemBuilder: (context, index) {
-                      final assignment = assignmentDetails[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                      //    backgroundColor: Col, // Customize this based on your data
-                          child: const Icon(
-                            Icons.supervised_user_circle, // Customize this based on your data
-                            color: Colors.white,
-                          ),
-                        ),
-                        title: Text(assignment.firstName), // Customize this based on your data
-                        subtitle: Text(assignment.email), // Customize this based on your data
-                        trailing: Text(assignment.phoneNumber), // Customize this based on your data
-
-                      );
-                    },
-                  );
-
-                  /*ListView.builder(
-                    itemCount: assignmentDetails.length,
-                    itemBuilder: (context, index) {
-                      final assignment = assignmentDetails[index];
-                      return buildAssignmentTile(assignment);
-                    },
-*/                }
-              },
-            ),
-          ),
-       ),*/
-
         ],
       ),
 
     );
   }
 
-    /*Container(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Customer Information',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-                buildInfoRow('Name', widget.form.customerName),
-                const SizedBox(height: 8),
-                buildInfoRow('Location',
-                    '${widget.form.customerAddress}, ${widget.form.customerCity}'),
-                const SizedBox(height: 8),
-                // Set statusText to customerCity
-                buildInfoRow('Status', statusText), // Update the status here
-                if (statusText == "Not Started")
-                  Visibility(
-                    visible: true,
-                    child: Row(
-                      children: <Widget>[
-                        // Show the "Start" button when isStarted is false
-                        ElevatedButton(
-                          onPressed: () {
-                            String request =
-                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                            requestServer(request);
-                            setState(() {
-                              isStarted = true;
-                              widget.refreshCallback?.call();
-                              // Update the isStarted state to true when "Start" is clicked
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(150, 30),
-                            // Set the desired width and height
-                            primary: const Color(
-                                0xFF3F51B5), // Change the button's background color
-                          ),
-                          child: const Text('Start'),
-                        ),
-                        const SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            _showAlertDialog();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(150, 30),
-                            // Set the desired width and height
-                            primary: const Color(
-                                0xFF3F51B5), // Change the button's background color
-                          ),
-                          child: const Text('Cancelled'),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                if (statusText == "Undergoing")
-                  Visibility(
-                    visible: true,
-                    child: Row(
-                      children: <Widget>[
-                        // Show the "Start" button when isStarted is false
-                        ElevatedButton(
-                          onPressed: () async {
-                            String request =
-                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
-                            _showNote(request);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(150, 30),
-                            // Set the desired width and height
-                            primary: Color(
-                                0xFF3F51B5), // Change the button's background color
-                          ),
-                          child: Text('Completed'),
-                        ),
-                        SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            _showAlertDialog();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(150, 30),
-                            // Set the desired width and height
-                            primary: Color(
-                                0xFF3F51B5), // Change the button's background color
-                          ),
-                          child: Text('Cancelled'),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                /*  Visibility(
-                  visible: true, // Show the "Completed" button when isStarted is true
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      String request = 'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
-                      requestServer(request);
-                    },
-                    child: Text('Completed'),
-                  ),
-                ),*/
-                ElevatedButton(
-                  onPressed: () {
-                    checkGps();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => openMap(widget.form.latitude,
-                            widget.form.longitude, lat, long),
-                      ),
-                    );
-                  },
-                  child: Text("Show Route"),
-                ),
-              ],
-            ),
-          ),*/
-  /*   const Divider(),
-          const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Contacts',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<contact>>(
-              future: futureAssignment,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                      child: Text('No Assignment Details available.'));
-                } else {
-                  final assignmentDetails = snapshot.data!;
-
-                  return ListView.builder(
-                    itemCount: assignmentDetails.length,
-                    itemBuilder: (context, index) {
-                      final assignment = assignmentDetails[index];
-                      return buildAssignmentTile(assignment);
-                    },
-                  );
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-*/
   Widget buildInfoRow(String value, double fontSize, Color textColor) {
     return
         Text(
@@ -1353,6 +911,7 @@ class FillFormState extends State<FillForm> {
       );
 
       print(requestBody);
+      final jsonData = jsonDecode(response.body);
       print(jsonDecode(response.body));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
@@ -1361,10 +920,30 @@ class FillFormState extends State<FillForm> {
         setState(() {
           widget.refreshCallback();
           statusText = jsonData['status'];
+          Fluttertoast.showToast(
+              msg: "Successfully Started",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Colors.white,
+              textColor:Color(0xFF3F51B5),
+              fontSize: 16.0
+          );
         });
-        Fluttertoast.showToast(msg: "Hello!");
+
       } else {
-        print("Your Location is Far : ${response.statusCode}");
+
+        Future.delayed(Duration.zero, () {
+          Fluttertoast.showToast(
+            msg: jsonData['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.white,
+            textColor: Color(0xFF3F51B5),
+            fontSize: 16.0,
+          );
+        });
+
+
       }
     } catch (error) {
       print("Error: $error");
@@ -1380,7 +959,7 @@ class FillFormState extends State<FillForm> {
     } else if (status == "Undergoing") {
       icon = const Icon(Icons.access_time, color: Colors.white);
     } else if (status == "Not Started") {
-      icon = const Icon(Icons.error, color: Colors.white);
+      icon = const Icon(Icons.error_outline_rounded, color: Colors.white);
     } else {
       icon = const Icon(Icons.error, color: Colors.white);
     }
