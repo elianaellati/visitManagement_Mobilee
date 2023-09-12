@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:visitManagement_Mobilee/About.dart';
+
 import 'package:visitManagement_Mobilee/Change_Password.dart';
 import 'package:visitManagement_Mobilee/Profile.dart';
 
+import 'Help.dart';
 import 'HomePage.dart';
 import 'LoginPage.dart';
 
@@ -72,10 +73,6 @@ class _SettingsPage2State extends State<Settings> {
                       title: "Notifications",
                       icon: Icons.notifications_none_rounded,
                     ),
-                    const _CustomListTile(
-                      title: "Security Status",
-                      icon: CupertinoIcons.lock_shield,
-                    ),
                   ],
                 ),
                 const Divider(),
@@ -87,10 +84,6 @@ class _SettingsPage2State extends State<Settings> {
                       icon: Icons.person_outline_rounded,
                     ),
                     _CustomListTile(
-                      title: "People",
-                      icon: Icons.contacts_outlined,
-                    ),
-                    _CustomListTile(
                       title: 'Change Password',
                       icon: Icons.lock,
                     ),
@@ -100,12 +93,8 @@ class _SettingsPage2State extends State<Settings> {
                 const _SingleSection(
                   children: [
                     _CustomListTile(
-                      title: "Help & Feedback",
-                      icon: Icons.help_outline_rounded,
-                    ),
-                    _CustomListTile(
-                      title: "Team",
-                      icon: Icons.group,
+                      title: "Contact Us",
+                      icon: Icons.phone,
                     ),
                     _CustomListTile(
                       title: "Sign out",
@@ -160,11 +149,12 @@ class _CustomListTile extends StatelessWidget {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Profile()));
         }
-        if (title == 'Team') {
+
+        if (title=="Contact Us"){
           Navigator.of(context).pop();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => About()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> Help()));
         }
+
       },
     );
   }

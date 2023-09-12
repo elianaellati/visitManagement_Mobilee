@@ -95,7 +95,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         leading: BackButton(
             onPressed: () => Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Settings()))),
-        title: Text('Bisan Project'),
+        title: Text('Change Password'),
         centerTitle: true,
         backgroundColor: const Color(0xFF3F51B5),
       ),
