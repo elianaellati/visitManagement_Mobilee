@@ -182,9 +182,9 @@ class FillFormState extends State<FillForm> {
               ],
               borderRadius: BorderRadius.circular(15.0),
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF3F51B5),
+                colors: [Color(0xFF3F51B5),
                   Colors.blue,
+
                 ],
               ),
             ),

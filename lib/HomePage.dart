@@ -17,6 +17,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  final storageManager = StorageManager();
+  dynamic storedUserJson;
+  Map<String, dynamic> userData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    initilizeData();
+  }
+
+  Future<void> initilizeData() async {
+    storedUserJson = await storageManager.getObject('user');
+
+    if (storedUserJson != null) {
+      setState(() {
+        userData = json.decode(storedUserJson);
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -30,6 +52,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
 
 class NavigatorDrawer extends StatelessWidget {
   const NavigatorDrawer({super.key});
@@ -63,10 +87,7 @@ class NavigatorDrawer extends StatelessWidget {
             //     "https://static-00.iconduck.com/assets.00/user-icon-2048x2048-ihoxz4vq.png"),
           ),
           SizedBox(height: 12),
-          Text(
-            "halamon",
-            style: TextStyle(fontSize: 12, color: Colors.white),
-          ),
+
         ],
       ));
 
@@ -110,4 +131,6 @@ class NavigatorDrawer extends StatelessWidget {
           ),
         ],
       );
+
 }
+
