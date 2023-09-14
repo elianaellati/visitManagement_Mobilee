@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:visitManagement_Mobilee/Assignments.dart';
+import 'package:visitManagement_Mobilee/workflow.dart';
 import 'Classes/User.dart';
 import 'HomePage.dart';
 import 'package:http/http.dart' as http;
@@ -108,7 +109,12 @@ class NavigatorDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.summarize),
             title: const Text('Workflow'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => workflow()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.settings),
