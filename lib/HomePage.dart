@@ -7,7 +7,8 @@ import 'HomePage.dart';
 import 'package:http/http.dart' as http;
 import 'LoginPage.dart';
 import 'Settings.dart';
-import 'Classes/StorageManager.dart';
+import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,12 +85,12 @@ class NavigatorDrawer extends StatelessWidget {
             //   color: const Color(0xFF3F51B5),
             // ),
              backgroundImage: NetworkImage(
-                "https://cdn-icons-png.flaticon.com/512/309/309235.png"),
+                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
           ),
-          SizedBox(height: 12),
-
         ],
+
       ));
+
 
   Widget buildMenu(BuildContext context) => Column(
         children: <Widget>[

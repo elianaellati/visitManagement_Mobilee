@@ -89,10 +89,8 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
                           verticalOffset: 50.0,
                           child: GestureDetector(
                             onTap: () {
-                          //    widget.refreshCallback();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-
                                   builder: (context) => FillForm(assignment, refreshCallback: _refreshAssignmentDetails),
                                 ),
                               );
@@ -161,56 +159,47 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
   }
   _addFormBar(BuildContext context,Assignment assignment) {
     final TaskController _taskController = Get.put(TaskController());
-    return Container(
-      margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, top: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                assignment.comment,
-                style: subHeadingStyle,
+              Expanded(
+                child: Text(
+                  assignment.comment,
+                  style: subHeadingStyle,
+                ),
               ),
-              // Text(
-              //   'Today',
-              //   style: subHeadingStyle,
-              // ),
+              MyButton(
+                label: '+ Add Form',
+                onTap: () {
+                  // Navigate to AddFormPage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback: _refreshAssignmentDetails)),
+                  );
+                },
+              ),
             ],
           ),
-          MyButton(
-            label: '+ Add Form',
-            onTap: () {
-              // Navigate to AddFormPage
-              Navigator.push(
-
-                context,
-                MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback: _refreshAssignmentDetails)),
-              );
-            },
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  // ...
-
   Future<void> _refreshAssignmentDetails() async {
- updated = fetchAssignments(widget.assignment.id);
- print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
+    updated = fetchAssignments(widget.assignment.id);
+    print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
     // Update the state of your widget with the new data.
     setState(() {
       print("eliana");
       futureAssignment = updated;
-      // Assign the updated data to your widget's state variable.
-      // For example:
-      // assignmentData = updatedData;
     });
   }
-
-
 }
 
 
@@ -236,7 +225,6 @@ _noTaskMsg() {
               ),
               SvgPicture.asset(
                 'images/task.svg',
-                // ignore: deprecated_member_use
                 color: primaryClr.withOpacity(0.5),
                 height: 90,
                 semanticsLabel: 'Task',
@@ -261,44 +249,6 @@ _noTaskMsg() {
           ),
         ),
       ),
-
     ],
   );
-
 }
-
-
-/*_addFormBar(BuildContext context,Assignment assignment) {
-  final TaskController _taskController = Get.put(TaskController());
-  return Container(
-    margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              assignment.comment,
-              style: subHeadingStyle,
-            ),
-            // Text(
-            //   'Today',
-            //   style: subHeadingStyle,
-            // ),
-          ],
-        ),
-        MyButton(
-          label: '+ Add Form',
-          onTap: () {
-            // Navigate to AddFormPage
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback:_refreshAssignmentDetails)),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}*/

@@ -69,10 +69,7 @@ class _SettingsPage2State extends State<Settings> {
                         },
                       ),
                     ),
-                    const _CustomListTile(
-                      title: "Notifications",
-                      icon: Icons.notifications_none_rounded,
-                    ),
+
                   ],
                 ),
                 const Divider(),
