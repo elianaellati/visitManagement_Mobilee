@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -61,10 +60,10 @@ class _ProfileState extends State<Profile> {
           ),
            Text(
             "Welcome "+userData['firstName']?? 'Loading...',
-            style: GoogleFonts.roboto(textStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 40))
+            style: GoogleFonts.roboto(textStyle: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 40))
           ),
        Text(userData['username']+' Profile',style:
-        GoogleFonts.roboto(textStyle:  TextStyle(
+        GoogleFonts.roboto(textStyle:  const TextStyle(
           color: Colors.black ,
           letterSpacing: 3,
           fontSize: 20,
@@ -93,11 +92,11 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               child:  ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.person,
                   color: Colors.white,
                 ),
-                title:Text('First Name: ' + userData['firstName']?? 'Loading...',style:GoogleFonts.roboto( textStyle: TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18),)),
+                title:Text('First Name: ' + userData['firstName']?? 'Loading...',style:GoogleFonts.roboto( textStyle: const TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18),)),
               ),
             ),
           ),
@@ -114,11 +113,11 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               child:  ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.person,
                   color: Colors.white,
                 ),
-                title:Text('Last Name: '+userData['lastName'] ?? 'Loading...',style: GoogleFonts.roboto(textStyle: TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18)),),
+                title:Text('Last Name: '+userData['lastName'] ?? 'Loading...',style: GoogleFonts.roboto(textStyle: const TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18)),),
               ),
             ),
           ),
@@ -135,11 +134,11 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               child:  ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.person,
                   color: Colors.white,
                 ),
-                title:Text('Username: '+userData['username'] ?? 'Loading...',style: GoogleFonts.roboto(textStyle: TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18)),),
+                title:Text('Username: '+userData['username'] ?? 'Loading...',style: GoogleFonts.roboto(textStyle: const TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18)),),
               ),
             ),
           ),
@@ -149,3 +148,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
+
+
+

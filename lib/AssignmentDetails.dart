@@ -200,8 +200,8 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
   // ...
 
   Future<void> _refreshAssignmentDetails() async {
-    updated = fetchAssignments(widget.assignment.id);
-    print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
+ updated = fetchAssignments(widget.assignment.id);
+ print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
     // Update the state of your widget with the new data.
     setState(() {
       print("eliana");
