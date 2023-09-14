@@ -58,13 +58,20 @@ class _HelpState extends State<Help> {
     }
   }
 
+  Future<void> _launchPhone2() async {
+    const phoneNumber = 'tel: (987)654-3210';
+    if (await canLaunch(phoneNumber)) {
+      await launch(phoneNumber);
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
+
   // Function to launch website
   Future<void> _launchWebsite() async {
-    const websiteUrl = 'https://www.bisan.com/contactUs';
-    if (await canLaunch(websiteUrl)) {
-      await launch(websiteUrl);
-    } else {
-      throw 'Could not launch $websiteUrl';
+    final Uri url = Uri.parse('https://www.bisan.com/contactUs');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 
@@ -93,9 +100,10 @@ class _HelpState extends State<Help> {
             radius: 50,
           ),
           Text(
-            "Welcome to our Customer Support",
-              style: GoogleFonts.roboto(textStyle: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 40))
+            "  Welcome to our Customer \n Support",
+              style: GoogleFonts.roboto(textStyle: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 30))
           ),
+          SizedBox(height: 15),
           Text(userData['firstName']+" Please Contact Us:",
               style:
               GoogleFonts.roboto(textStyle:  const TextStyle(
@@ -142,8 +150,40 @@ class _HelpState extends State<Help> {
                         'General Inquiries: (123) 456-7890',
                           style:GoogleFonts.roboto( textStyle: const TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18),)
                       ),
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          Card(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+            child: InkWell(
+              onTap: _launchPhone2,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF3F51B5), Colors.blue],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+                child: ListTile(
+                  leading: Icon(
+                    Icons.phone,
+                    color: Colors.white,
+                  ),
+                  title: Text(
+                      'Phone Number:',
+                      style:GoogleFonts.roboto( textStyle: const TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18),)
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
                       Text(
-                        'Customer Support: (987) 654-3210',
+                          'Customer Support: (987) 654-3210',
                           style:GoogleFonts.roboto( textStyle: const TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18),)
                       ),
                     ],
@@ -152,6 +192,7 @@ class _HelpState extends State<Help> {
               ),
             ),
           ),
+
           Card(
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
             child: InkWell(

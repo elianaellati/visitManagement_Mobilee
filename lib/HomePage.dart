@@ -78,13 +78,13 @@ class NavigatorDrawer extends StatelessWidget {
           CircleAvatar(
             backgroundColor: Colors.white,
             radius: 50,
-            child: Icon(
-              Icons.person,
-              size: 75,
-              color: const Color(0xFF3F51B5),
-            ),
-            // backgroundImage: NetworkImage(
-            //     "https://static-00.iconduck.com/assets.00/user-icon-2048x2048-ihoxz4vq.png"),
+            // child: Icon(
+            //   Icons.person,
+            //   size: 75,
+            //   color: const Color(0xFF3F51B5),
+            // ),
+             backgroundImage: NetworkImage(
+                "https://cdn-icons-png.flaticon.com/512/309/309235.png"),
           ),
           SizedBox(height: 12),
 
