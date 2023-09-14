@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import 'package:visitManagement_Mobilee/Classes/Assignment.dart';
 import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'Classes/contact.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,11 +28,12 @@ class FillForm extends StatefulWidget {
 class FillFormState extends State<FillForm> {
   TextEditingController textarea = TextEditingController();
   final storageManager = StorageManager();
-  dynamic storedIdJson;
+  late Assignment storedAssignment;
 
   late Future<List<contact>> futureAssignment;
-  bool servicestatus = false;
-  bool haspermission = false;
+  late Future<List<String>> futureQuestions;
+  bool serviceStatus = false;
+  bool hasPermission = false;
   late LocationPermission permission;
   late Position position;
   String long = "";
@@ -45,11 +47,11 @@ class FillFormState extends State<FillForm> {
 
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
-    initilizeData();
+    initData();
   }
 
-  Future<void> initilizeData() async {
-    storedIdJson = await storageManager.getObject('assignmentId');
+  Future<void> initData() async {
+    storedAssignment = storageManager.getObject('assignment') as Assignment;
   }
 
   @override
@@ -58,14 +60,14 @@ class FillFormState extends State<FillForm> {
     TextEditingController textarea = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Form Information'),
-        backgroundColor: Color(0xFF3F51B5),
+        title: const Text('Form Information'),
+        backgroundColor: const Color(0xFF3F51B5),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 21),
             decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
@@ -79,13 +81,13 @@ class FillFormState extends State<FillForm> {
                 ],
               ),
             ),
-              child: Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    /*    Container(
+            child: Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  /*    Container(
 
               child: Image.asset(
                 "assets/imgs/chip.png",
@@ -93,12 +95,12 @@ class FillFormState extends State<FillForm> {
                 height: 51,
               ),
             ),*/
-                    buildInfoRow(widget.form.customerName, 22.0 , Colors.white),
-                    // Replace 20.0 with your desired font size
+                  buildInfoRow(widget.form.customerName, 22.0, Colors.white),
+                  // Replace 20.0 with your desired font size
 
-                    const SizedBox(
-                      height: 11,
-                    ),
+                  const SizedBox(
+                    height: 11,
+                  ),
                   /*   Row(
                      children:[
                       const Icon(
@@ -129,392 +131,311 @@ class FillFormState extends State<FillForm> {
 
                     ]
                     ),*/
-                    Container(
-                      padding: const EdgeInsets.all(8.0), // Add padding to the container
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align children to the start and end
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    // Add padding to the container
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // Align children to the start and end
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on_outlined,
+                              size: 24,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(
+                              width: 11,
+                            ),
+                            Text(
+                              '${widget.form.customerAddress}, ${widget.form.customerCity}',
+                              style: const TextStyle(
+                                  fontSize: 16.0, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            buildInfoRow(statusText, 16.0, Colors.white),
+                            const SizedBox(
+                              width: 6,
+                            ),
+                            _buildStatusIcon(statusText),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          if (statusText == "Not Started" || statusText == "Undergoing")
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+              height: 150, // Adjust the height as needed
+              decoration: BoxDecoration(
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: 5.0,
+                    color: Colors.grey,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(15.0),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF3F51B5),
+                    Colors.blue,
+                  ],
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 35, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (statusText == "Not Started")
+                      Column(
                         children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on_outlined,
-                                size: 24,
+                          InkWell(
+                            onTap: () {
+                              //Questions();
+                              _showQuestions();
+                              String request =
+                                  'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
+                              requestServer(request);
+                              setState(() {
+                                isStarted = true;
+                                widget.refreshCallback();
+                              });
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
                                 color: Colors.white,
                               ),
-                              const SizedBox(
-                                width: 11,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  size: 35,
+                                  color: Color(0xFF3F51B5),
+                                ),
                               ),
-                              Text(
-                                '${widget.form.customerAddress}, ${widget.form.customerCity}',
-                                style: TextStyle(fontSize: 16.0, color: Colors.white),
-                              ),
-                            ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              buildInfoRow(statusText, 16.0, Colors.white),
-                              const SizedBox(
-                                width: 6,
-                              ),
-                              _buildStatusIcon(statusText),
-                            ],
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Start',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
-                    )
+                    if (statusText == "Not Started")
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _showAlertDialog();
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.cancel,
+                                  size: 35,
+                                  color: Color(0xFF3F51B5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (statusText == "Not Started")
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              checkGps();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => openMap(
+                                    widget.form.latitude,
+                                    widget.form.longitude,
+                                    lat,
+                                    long,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.location_on,
+                                  size: 35,
+                                  color: Color(0xFF3F51B5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Location',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
 
-
+                    // Add a similar section for "Undergoing" status
+                    if (statusText == "Undergoing")
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              _showQuestions();
+                            /*  String request =
+                                  'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/question';
+                              _showNote(request);*/
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.check,
+                                  size: 35,
+                                  color: Color(0xFF3F51B5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Complete',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (statusText == "Undergoing")
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                           //   await _showQuestions();
+                          //    _showAlertDialog();
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.cancel,
+                                  size: 35,
+                                  color: Color(0xFF3F51B5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (statusText == "Undergoing")
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              checkGps();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => openMap(
+                                    widget.form.latitude,
+                                    widget.form.longitude,
+                                    lat,
+                                    long,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.map,
+                                  size: 35,
+                                  color: Color(0xFF3F51B5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Map',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
-
-            ),
-          ),
-
-         /* Container(
-            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 5.0,
-                  color: Colors.grey,
-                  offset: Offset(0, 5),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(15.0),
-              gradient: const LinearGradient(
-                colors: [Color(0xFF3F51B5),
-                  Colors.blue,
-
-                ],
               ),
             ),
-            child: Column(
-              children: [
-                if (statusText == "Not Started")
-                  Row(
-                    children: <Widget>[
-                     Padding(
-                     padding: const EdgeInsets.only(left:13),
-                        child: InkWell(
-                          onTap: () {
-                            String request =
-                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                            requestServer(request);
-                            setState(() {
-                              isStarted = true;
-                              widget.refreshCallback();
-                            });
-                          },
-
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.play_arrow,
-                                size: 24,
-                              color:  Color(0xFF3F51B5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(40.0),
-                        child: InkWell(
-                          onTap: () {
-                            _showAlertDialog();
-                          },
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.cancel,
-                                size: 24,
-                                color: Color(0xFF3F51B5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: InkWell(
-                          onTap: () {
-                            checkGps();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => openMap(
-                                  widget.form.latitude,
-                                  widget.form.longitude,
-                                  lat,
-                                  long,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color:  Colors.white,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.location_on_outlined,
-                                size: 24,
-                                color:  Color(0xFF3F51B5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                if (statusText == "Undergoing")
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(40.0),
-                        child: InkWell(
-                          onTap: () async {
-                            String request =
-                                'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/survey';
-                            _showNote(request);
-                          },
-                          child: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.check,
-                                size: 24,
-                                color:Color(0xFF3F51B5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(40.0),
-                        child: InkWell(
-                          onTap: () {
-                            _showAlertDialog();
-                          },
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.cancel,
-                                size: 24,
-                                color: Color(0xFF3F51B5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(40.0),
-                        child: InkWell(
-                          onTap: () {
-                            checkGps();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => openMap(
-                                  widget.form.latitude,
-                                  widget.form.longitude,
-                                  lat,
-                                  long,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white ,
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.map,
-                                size: 24,
-                                color: Color(0xFF3F51B5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-          ),*/
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
-            height: 150, // Adjust the height as needed
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 5.0,
-                  color: Colors.grey,
-                  offset: Offset(0, 5),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(15.0),
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF3F51B5),
-                  Colors.blue,
-                ],
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 35, bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          String request =
-                              'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                          requestServer(request);
-                          setState(() {
-                            isStarted = true;
-                            widget.refreshCallback();
-                          });
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.play_arrow,
-                              size: 35,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Start',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          _showAlertDialog();
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.cancel,
-                              size: 35,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          checkGps();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => openMap(
-                                widget.form.latitude,
-                                widget.form.longitude,
-                                lat,
-                                long,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.location_on,
-                              size: 35,
-                              color: Color(0xFF3F51B5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Location',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
           const Divider(),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 13, vertical: 21),
-            height:300,
+            margin: const EdgeInsets.symmetric(horizontal: 13, vertical: 21),
+            height: 300,
             decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
@@ -536,7 +457,8 @@ class FillFormState extends State<FillForm> {
                 const Padding(
                   padding: EdgeInsets.all(13.0), // Add padding to the left
                   child: Align(
-                    alignment: Alignment.centerLeft, // Align the text to the left
+                    alignment: Alignment.centerLeft,
+                    // Align the text to the left
                     child: Text(
                       'Contacts :',
                       style: TextStyle(
@@ -547,37 +469,43 @@ class FillFormState extends State<FillForm> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
-                  height:200,
-                  decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                        blurRadius: 5.0,
-                        color: Colors.white60,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all(
-                      color: Colors.white, // Change this color to your desired border color
-                      width: 1.0, // Adjust the border width as needed
-                    ),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFF3F51B5),
-                        Colors.blue,
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 21),
+                    height: 200,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          blurRadius: 5.0,
+                          color: Colors.white60,
+                          offset: Offset(0, 5),
+                        ),
                       ],
+                      borderRadius: BorderRadius.circular(15.0),
+                      border: Border.all(
+                        color: Colors.white,
+                        // Change this color to your desired border color
+                        width: 1.0, // Adjust the border width as needed
+                      ),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF3F51B5),
+                          Colors.blue,
+                        ],
+                      ),
                     ),
-                  ),
                     child: FutureBuilder<List<contact>>(
                       future: futureAssignment,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
                           return const Center(
                             child: Text('No Assignment Details available.'),
                           );
@@ -623,25 +551,20 @@ class FillFormState extends State<FillForm> {
                       },
                     ),
                   ),
-
+                ),
               ],
             ),
           )
-
-
         ],
       ),
-
     );
   }
 
   Widget buildInfoRow(String value, double fontSize, Color textColor) {
-    return
-        Text(
-          value,
-          style: TextStyle(fontSize: fontSize, color: textColor),
-        );
-
+    return Text(
+      value,
+      style: TextStyle(fontSize: fontSize, color: textColor),
+    );
   }
 
   Widget buildAssignmentTile(contact assignment) {
@@ -730,8 +653,8 @@ class FillFormState extends State<FillForm> {
   }
 
   checkGps() async {
-    servicestatus = await Geolocator.isLocationServiceEnabled();
-    if (!servicestatus) {
+    serviceStatus = await Geolocator.isLocationServiceEnabled();
+    if (!serviceStatus) {
       print("GPS Service is not enabled, turn on GPS location");
       return;
     }
@@ -744,10 +667,10 @@ class FillFormState extends State<FillForm> {
     }
 
     if (permission == LocationPermission.whileInUse) {
-      haspermission = true;
+      hasPermission = true;
     }
 
-    if (haspermission) {
+    if (hasPermission) {
       setState(() {
         // Refresh the UI
       });
@@ -807,6 +730,103 @@ class FillFormState extends State<FillForm> {
       },
     );
   }
+
+  Future<void> _showQuestions() async {
+    try {
+      final List<String> questionDetails =await Questions(); // Await the function here
+      print(questionDetails);
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              "Questions",
+              style: TextStyle(
+                color: Color(0xFF3F51B5),
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Are you sure you want to cancel the form?",
+                  style: TextStyle(
+                    color: Color(0xFF3F51B5),
+                  ),
+                ),
+                SizedBox(height: 10),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: questionDetails.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(questionDetails[index]),
+                    );
+                  },
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text(
+                  'No',
+                  style: TextStyle(
+                    color: Color(0xFF3F51B5),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                  'Yes',
+                  style: TextStyle(
+                    color: Color(0xFF3F51B5),
+                  ),
+                ),
+                onPressed: () {
+                  String request =
+                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
+                  Navigator.of(context).pop(); // Close the questions dialog
+                  _showNote(request);
+                },
+              ),
+            ],
+            elevation: 24.0,
+            backgroundColor: Colors.white,
+          );
+        },
+      );
+    } catch (error) {
+      print("Error: $error");
+    }
+  }
+
+  Future<List<String>> Questions() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/questions',
+        ),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return List<String>.from(jsonData);
+      } else {
+        throw Exception("HTTP Error: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error: $error");
+      return [];
+    }
+  }
+
 
   Future<void> _showNote(String request) async {
     return showDialog<void>(
@@ -925,13 +945,10 @@ class FillFormState extends State<FillForm> {
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               backgroundColor: Colors.white,
-              textColor:Color(0xFF3F51B5),
-              fontSize: 16.0
-          );
+              textColor: Color(0xFF3F51B5),
+              fontSize: 16.0);
         });
-
       } else {
-
         Future.delayed(Duration.zero, () {
           Fluttertoast.showToast(
             msg: jsonData['message'],
@@ -942,13 +959,12 @@ class FillFormState extends State<FillForm> {
             fontSize: 16.0,
           );
         });
-
-
       }
     } catch (error) {
       print("Error: $error");
     }
   }
+
   Widget _buildStatusIcon(String status) {
     Icon icon;
     Color iconColor;
@@ -983,11 +999,7 @@ class FillFormState extends State<FillForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               CircleAvatar(
-                  radius: 20,
-                  backgroundColor: circleColor,
-                  child: buttonIcon
-
-              ),
+                  radius: 20, backgroundColor: circleColor, child: buttonIcon),
               const SizedBox(
                 height: 5.0,
               ),
@@ -1003,5 +1015,4 @@ class FillFormState extends State<FillForm> {
       ),
     );
   }
-
 }

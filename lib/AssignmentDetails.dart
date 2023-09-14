@@ -47,6 +47,8 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     _assignment = widget.assignment;
     final String idAsString=widget.assignment.id.toString();
     storageManager.storeObject('assignmentId', idAsString);
+
+
   }
 
 
@@ -89,7 +91,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
                           verticalOffset: 50.0,
                           child: GestureDetector(
                             onTap: () {
-                          //    widget.refreshCallback();
+                              //    widget.refreshCallback();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
 
@@ -198,8 +200,8 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
   // ...
 
   Future<void> _refreshAssignmentDetails() async {
- updated = fetchAssignments(widget.assignment.id);
- print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
+    updated = fetchAssignments(widget.assignment.id);
+    print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
     // Update the state of your widget with the new data.
     setState(() {
       print("eliana");
@@ -266,6 +268,42 @@ _noTaskMsg() {
   );
 
 }
+
+
+/*_addFormBar(BuildContext context,Assignment assignment) {
+  final TaskController _taskController = Get.put(TaskController());
+  return Container(
+    margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              assignment.comment,
+              style: subHeadingStyle,
+            ),
+            // Text(
+            //   'Today',
+            //   style: subHeadingStyle,
+            // ),
+          ],
+        ),
+        MyButton(
+          label: '+ Add Form',
+          onTap: () {
+            // Navigate to AddFormPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback:_refreshAssignmentDetails)),
+            );
+          },
+        ),
+      ],
+    ),
+  );
+}*/
 
 
 /*_addFormBar(BuildContext context,Assignment assignment) {

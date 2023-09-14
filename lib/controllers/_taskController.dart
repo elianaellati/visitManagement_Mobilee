@@ -25,7 +25,6 @@ class TaskController extends GetxController {
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
       assignmentList.assignAll(jsonData
-
           .map((assignmentJsonList) => Assignment.fromJson(assignmentJsonList))
           .toList());
       return assignmentList;

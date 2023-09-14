@@ -3,6 +3,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'package:visitManagement_Mobilee/taskTitle.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
@@ -79,7 +80,8 @@ class _AssignmentsState extends State<Assignments> {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
       child: FutureBuilder(
-        future: _taskController.getTasks(), // Replace with your data fetching logic
+        future: _taskController.getTasks(),
+        // Replace with your data fetching logic
         builder: (context, snapshot) {
           return DatePicker(
             DateTime.now(),
@@ -147,7 +149,8 @@ class _AssignmentsState extends State<Assignments> {
   Widget showTasks() {
     return Expanded(
       child: Obx(() {
-        final hasTasksForSelectedDate = _taskController.assignmentList.any((task) {
+        final hasTasksForSelectedDate =
+            _taskController.assignmentList.any((task) {
           var outputFormat = DateFormat('dd-MM-yyyy');
           try {
             var parsedDate = outputFormat.parse(task.date);
@@ -159,7 +162,8 @@ class _AssignmentsState extends State<Assignments> {
           }
         });
 
-        if (_taskController.assignmentList.isEmpty || !hasTasksForSelectedDate) {
+        if (_taskController.assignmentList.isEmpty ||
+            !hasTasksForSelectedDate) {
           return _noTaskMsg();
         } else {
           return ListView.builder(
@@ -174,8 +178,7 @@ class _AssignmentsState extends State<Assignments> {
                 var parsedDate = outputFormat.parse(task.date);
                 if (outputFormat.format(parsedDate) ==
                     outputFormat.format(_selectedDate)) {
-                  print(
-                      'Assignment with matching date: ${task.comment} - ${task.date}');
+                  print('Assignment with matching date: ${task.comment} - ${task.date}');
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     duration: const Duration(milliseconds: 375),
@@ -185,12 +188,13 @@ class _AssignmentsState extends State<Assignments> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => AssignmentDetails(task,refreshCallback: refresh),
+                              builder: (context) => AssignmentDetails(task,
+                                  refreshCallback: refresh),
                             ),
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 4.0, horizontal: 5),
                           child: TaskTitle(task),
                         ),
@@ -224,11 +228,11 @@ class _AssignmentsState extends State<Assignments> {
               children: [
                 SizeConfig.orientation == Orientation.landscape
                     ? const SizedBox(
-                  height: 6,
-                )
+                        height: 6,
+                      )
                     : const SizedBox(
-                  height: 220,
-                ),
+                        height: 220,
+                      ),
                 SvgPicture.asset(
                   'images/task.svg',
                   color: primaryClr.withOpacity(0.5),
@@ -237,7 +241,7 @@ class _AssignmentsState extends State<Assignments> {
                 ),
                 Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: Text(
                     'You do not have any tasks yet!',
                     style: subTitleStyle,
@@ -246,17 +250,16 @@ class _AssignmentsState extends State<Assignments> {
                 ),
                 SizeConfig.orientation == Orientation.landscape
                     ? const SizedBox(
-                  height: 90,
-                )
+                        height: 90,
+                      )
                     : const SizedBox(
-                  height: 90,
-                ),
+                        height: 90,
+                      ),
               ],
             ),
           ),
         ),
       ],
     );
-
   }
 }

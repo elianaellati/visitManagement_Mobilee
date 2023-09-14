@@ -5,12 +5,14 @@ class Assignment {
   final int id;
   final String status;
 
+
   Assignment({
     required this.comment,
     required this.date,
     required this.type,
     required this.id,
     required this.status,
+
   });
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Assignment {
       type: json['visitType']['name'],
       id:json['id'],
       status:json['status'],
+
     );
   }
 }
