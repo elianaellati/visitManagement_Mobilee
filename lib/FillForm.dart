@@ -523,42 +523,69 @@ class FillFormState extends State<FillForm> {
                           );
                         } else {
                           final assignmentDetails = snapshot.data!;
-
                           return ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             itemCount: assignmentDetails.length,
                             itemBuilder: (context, index) {
                               final assignment = assignmentDetails[index];
-                              return ListTile(
-                                leading: const CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: Icon(
-                                    Icons.supervised_user_circle,
-                                    color: Color(0xFF3F51B5),
+                              return GestureDetector(
+                                onTap: () {
+                                  // When the ListTile is tapped, open the phone dialer with the phone number
+                                  final Uri phoneUri = Uri(scheme: 'tel', path: assignment.phoneNumber);
+                                  launch(phoneUri.toString());
+                                },
+                                child: ListTile(
+                                  leading: const CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: Icon(
+                                      Icons.supervised_user_circle,
+                                      color: Color(0xFF3F51B5),
+                                    ),
                                   ),
-                                ),
-                                title: Text(
-                                  assignment.firstName,
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  title: Text(
+                                    assignment.firstName,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                subtitle: Text(
-                                  assignment.email,
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  subtitle: GestureDetector(
+                                    onTap: () {
+                                      // When the subtitle is tapped, open the email app with the recipient's email address
+                                      final Uri emailUri = Uri(
+                                        scheme: 'mailto',
+                                        path: assignment.email,
+                                        queryParameters: {'subject': 'Regarding Assignment'},
+                                      );
+                                      launch(emailUri.toString());
+                                    },
+                                    child: Text(
+                                      assignment.email,
+                                      style: const TextStyle(
+                                        color: Colors.white, // Make the email text look like a link
+                                        decoration: TextDecoration.underline, // Underline to indicate it's clickable
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                trailing: Text(
-                                  assignment.phoneNumber,
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  trailing: GestureDetector(
+                                    onTap: () {
+                                      // When the trailing text is tapped, open the phone dialer with the phone number
+                                      final Uri phoneUri = Uri(scheme: 'tel', path: assignment.phoneNumber);
+                                      launch(phoneUri.toString());
+                                    },
+                                    child: Text(
+                                      assignment.phoneNumber,
+                                      style: const TextStyle(
+                                        color: Colors.white, // Make the phone number look like a link
+                                        decoration: TextDecoration.underline, // Underline to indicate it's clickable
+                                      ),
+                                    ),
                                   ),
                                 ),
                               );
                             },
                           );
+
                         }
                       },
                     ),
