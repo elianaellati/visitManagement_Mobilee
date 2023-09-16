@@ -1,9 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'package:visitManagement_Mobilee/taskTitle.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
@@ -14,6 +16,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'controllers/_taskController.dart';
 import 'main.dart';
+/*void main() {
+  runApp(const MaterialApp(
+    home: Assignments(),
+  ));
+}*/
 
 class Assignments extends StatefulWidget {
   const Assignments({Key? key}) : super(key: key);
@@ -23,37 +30,21 @@ class Assignments extends StatefulWidget {
 }
 
 class _AssignmentsState extends State<Assignments> {
-  DateTime _selectedDate = DateTime.now();
-  final TaskController _taskController = Get.put(TaskController());
-  List<DateTime> datesWithTasks = [];
+  //late Future<List<Assignment>> futureAssignment;
 
   @override
   void initState() {
     super.initState();
-    refresh();
+    refresh(); // test
+    // futureAssignment = fetchAssignments();
   }
 
-  void refresh() {
-    _taskController.getTasks().then((tasks) {
-      datesWithTasks.clear();
-      for (var task in tasks) {
-        var outputFormat = DateFormat('dd-MM-yyyy');
-        try {
-          var parsedDate = outputFormat.parse(task.date);
-          var date = parsedDate.toLocal();
-          if (!datesWithTasks.contains(date)) {
-            datesWithTasks.add(date);
-          }
-        } catch (e) {
-          print('Error parsing time: $e');
-        }
-      }
-      setState(() {});
-    });
-  }
-
+  DateTime _selectedDate = DateTime.now();
+  final TaskController _taskController = Get.put(TaskController());
   @override
   Widget build(BuildContext context) {
+    // SizeConfig().init(context);
+    //drawer: const NavigatorDrawer()
     return Scaffold(
       drawer: const NavigatorDrawer(),
       appBar: AppBar(
@@ -74,49 +65,37 @@ class _AssignmentsState extends State<Assignments> {
   }
 
   _addDateBar() {
-    bool hasTasksForSelectedDate = datesWithTasks.contains(_selectedDate);
-    Color dateColor = hasTasksForSelectedDate ? Colors.green : primaryClr;
-
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-      child: FutureBuilder(
-        future: _taskController.getTasks(),
-        // Replace with your data fetching logic
-        builder: (context, snapshot) {
-          return DatePicker(
-            DateTime.now(),
-            width: 80,
-            height: 100,
-            initialSelectedDate: _selectedDate,
-            selectedTextColor: Colors.white,
-            selectionColor: dateColor,
-            dateTextStyle: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                color: Colors.grey,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            dayTextStyle: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            monthTextStyle: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            onDateChange: (newDate) {
-              setState(() {
-                _selectedDate = newDate;
-              });
-            },
-          );
+      child: DatePicker(
+        DateTime.now(),
+        width: 80,
+        height: 100,
+        initialSelectedDate: _selectedDate,
+        selectedTextColor: Colors.white,
+        selectionColor: primaryClr,
+        dateTextStyle: GoogleFonts.lato(
+            textStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            )),
+        dayTextStyle: GoogleFonts.lato(
+            textStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            )),
+        monthTextStyle: GoogleFonts.lato(
+            textStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            )),
+        onDateChange: (newDate) {
+          setState(() {
+            _selectedDate = newDate;
+          });
         },
       ),
     );
@@ -150,7 +129,7 @@ class _AssignmentsState extends State<Assignments> {
     return Expanded(
       child: Obx(() {
         final hasTasksForSelectedDate =
-            _taskController.assignmentList.any((task) {
+        _taskController.assignmentList.any((task) {
           var outputFormat = DateFormat('dd-MM-yyyy');
           try {
             var parsedDate = outputFormat.parse(task.date);
@@ -164,7 +143,7 @@ class _AssignmentsState extends State<Assignments> {
 
         if (_taskController.assignmentList.isEmpty ||
             !hasTasksForSelectedDate) {
-          return _noTaskMsg();
+          return _noTaskMsg(); // Show "No Task" message
         } else {
           return ListView.builder(
             scrollDirection: SizeConfig.orientation == Orientation.landscape
@@ -178,7 +157,8 @@ class _AssignmentsState extends State<Assignments> {
                 var parsedDate = outputFormat.parse(task.date);
                 if (outputFormat.format(parsedDate) ==
                     outputFormat.format(_selectedDate)) {
-                  print('Assignment with matching date: ${task.comment} - ${task.date}');
+                  print(
+                      'Assignment with matching date: ${task.comment} - ${task.date}');
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     duration: const Duration(milliseconds: 375),
@@ -194,8 +174,8 @@ class _AssignmentsState extends State<Assignments> {
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4.0, horizontal: 5),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 5), // Add padding here
                           child: TaskTitle(task),
                         ),
                       ),
@@ -228,20 +208,21 @@ class _AssignmentsState extends State<Assignments> {
               children: [
                 SizeConfig.orientation == Orientation.landscape
                     ? const SizedBox(
-                        height: 6,
-                      )
+                  height: 6,
+                )
                     : const SizedBox(
-                        height: 220,
-                      ),
+                  height: 220,
+                ),
                 SvgPicture.asset(
                   'images/task.svg',
+                  // ignore: deprecated_member_use
                   color: primaryClr.withOpacity(0.5),
                   height: 90,
                   semanticsLabel: 'Task',
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: Text(
                     'You do not have any tasks yet!',
                     style: subTitleStyle,
@@ -250,16 +231,19 @@ class _AssignmentsState extends State<Assignments> {
                 ),
                 SizeConfig.orientation == Orientation.landscape
                     ? const SizedBox(
-                        height: 90,
-                      )
+                  height: 90,
+                )
                     : const SizedBox(
-                        height: 90,
-                      ),
+                  height: 90,
+                ),
               ],
             ),
           ),
         ),
       ],
     );
+  }
+  void refresh(){
+    _taskController.getTasks();
   }
 }

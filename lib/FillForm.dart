@@ -9,7 +9,8 @@ import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'Classes/contact.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Classes/forms.dart';
-import 'Survey.dart';
+import 'DialogueNote.dart';
+import 'controllers/GpsController.dart';
 import 'openMap.dart';
 
 import 'Classes/StorageManager.dart';
@@ -26,31 +27,37 @@ class FillForm extends StatefulWidget {
 }
 
 class FillFormState extends State<FillForm> {
+ // DialogueNote showdialogue= DialogueNote();
   TextEditingController textarea = TextEditingController();
-  final storageManager = StorageManager();
-  late Assignment storedAssignment;
   late Future<List<contact>> futureAssignment;
   late Future<List<String>> futureQuestions;
-  bool serviceStatus = false;
+  String long = "";
+  String lat = "";
+ /* bool serviceStatus = false;
   bool hasPermission = false;
   late LocationPermission permission;
   late Position position;
   String long = "";
-  String lat = "";
+  String lat = "";*/
   bool isStarted = false;
   String statusText = ''; // Add questionData here
   late List<dynamic>question=[];
+  List<String>answers=[];
+  GpsController gps=GpsController();
+
+
   @override
   void initState() {
     super.initState();
     List<dynamic>question;
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
+
     initData();
   }
 
   Future<void> initData() async {
-    storedAssignment = storageManager.getObject('assignment') as Assignment;
+    //storedAssignment = storageManager.getObject('assignment') as Assignment;
 
   }
 
@@ -201,12 +208,9 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
-                              //Questions();
-                             //
-                              // _showQuestions();
                               String request =
                                   'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
-                              requestServer(request);
+                              startRequest(request);
                               setState(() {
                                 isStarted = true;
                                 widget.refreshCallback();
@@ -243,7 +247,8 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
-                              _showAlertDialog();
+                             // showdialogue._showAlertDialog();
+                            //  _showAlertDialog();
                             },
                             child: Container(
                               width: 60,
@@ -276,7 +281,7 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
-                              checkGps();
+                             // checkGps();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => openMap(
@@ -323,10 +328,9 @@ class FillFormState extends State<FillForm> {
                             onTap: ()async  {
                              await  Questions();
                              await _showQuestions();
-
-                             /* String request =
+                             String request =
                                   'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/question';
-                              _showNote(request);*/                            },
+                                                     },
                             child: Container(
                               width: 60,
                               height: 60,
@@ -392,7 +396,7 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
-                              checkGps();
+                              //checkGps();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => openMap(
@@ -654,7 +658,7 @@ class FillFormState extends State<FillForm> {
     }
   }
 
-  checkGps() async {
+  /*checkGps() async {
     serviceStatus = await Geolocator.isLocationServiceEnabled();
     if (!serviceStatus) {
       print("GPS Service is not enabled, turn on GPS location");
@@ -683,7 +687,7 @@ class FillFormState extends State<FillForm> {
         // Refresh the UI
       });
     }
-  }
+  }*/
 
   Future<void> _showAlertDialog() async {
     return showDialog<void>(
@@ -722,7 +726,7 @@ class FillFormState extends State<FillForm> {
                 String request =
                     'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
                 Navigator.of(context).pop();
-                _showNote(request);
+                //_showNote(request);
               },
             ),
           ],
@@ -737,6 +741,7 @@ class FillFormState extends State<FillForm> {
     try {
     // Await the function here
       print("elinaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      answers = List<String>.filled(question.length, '');
       print(question);
       await showDialog<void>(
         context: context,
@@ -763,46 +768,96 @@ class FillFormState extends State<FillForm> {
                 Container(
                   height: 500,
                   width: 500,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: question.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(question[index],
-                          style: const TextStyle(
-                          color: Color(0xFF3F51B5),
-                        ),),
-                      );
-                    },
-                  ),
-                ),
+                  child:     Container(
+                    height: 500,
+                    width: 500,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: question.length,
+                      itemBuilder: (context, index) {
+                        print(index);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                question[index],
+                                style: const TextStyle(
+                                  color: Color(0xFF3F51B5),
+                                ),
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter your answer...',
+
+                                ),
+                                // Add your logic to handle the text input for this question
+                                onChanged: (text) {
+                                  answers[index] = text;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16.0),
+                            const Text(
+                              "Feed Back",
+                              style: TextStyle(
+                                color: Color(0xFF3F51B5),
+                              ),
+                            ),
+                            TextField(
+                              controller: textarea,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 4,
+                              decoration: const InputDecoration(
+                                hintText: "Suggest us what went wrong",
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(width: 1, color: Colors.redAccent),
+                                ),
+                              ),
+                            ),// Adjust the spacing between questions and text fields
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                )
+
               ],
             ),
 
             actions: <Widget>[
+
               TextButton(
                 child: const Text(
-                  'No',
+                  'Cancel',
                   style: TextStyle(
                     color: Color(0xFF3F51B5),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
+                onPressed: () async{
+                  String request =
+                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
+                  Navigator.of(context).pop(); // Close the questions dialog
+
                 },
               ),
               TextButton(
                 child: const Text(
-                  'Yes',
+                  'Complete',
                   style: TextStyle(
                     color: Color(0xFF3F51B5),
                   ),
                 ),
                 onPressed: () {
+                   print (answers);
                   String request =
-                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
-                  Navigator.of(context).pop(); // Close the questions dialog
-                  _showNote(request);
+                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/question';
+                      requestServer(request);
+                     Navigator.of(context).pop();
                 },
               ),
             ],
@@ -842,7 +897,7 @@ class FillFormState extends State<FillForm> {
   }
 
 
-  Future<void> _showNote(String request) async {
+ /* Future<void> _showNote(String request) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -890,9 +945,9 @@ class FillFormState extends State<FillForm> {
         );
       },
     );
-  }
+  }*/
 
-  getLocation() async {
+  /*getLocation() async {
     position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -920,18 +975,20 @@ class FillFormState extends State<FillForm> {
       lat = position.latitude.toString();
     });
   }
-
+*/
   Future<void> requestServer(String request) async {
     try {
-      await checkGps();
+      await gps.checkGps();
       String note = "";
       if (request.contains("complete") || request.contains("cancel")) {
         note = textarea.text;
+
       }
       Map<String, dynamic> data = {
-        "latitude": lat,
-        "longitude": long,
+        "latitude": gps.lat,
+        "longitude": gps.long,
         "note": note,
+        "answers":answers,
       };
 
       String requestBody = json.encode(data);
@@ -978,6 +1035,73 @@ class FillFormState extends State<FillForm> {
       print("Error: $error");
     }
   }
+  Future<void> startRequest(String request) async {
+    try {
+      await gps.checkGps();
+
+      Map<String, dynamic> data = {
+        "latitude": gps.lat,
+        "longitude": gps.long,
+
+      };
+
+      String requestBody = json.encode(data);
+
+      final response = await http.put(
+        Uri.parse(request),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
+      );
+
+      print(requestBody);
+      final jsonData = jsonDecode(response.body);
+      print(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print("Request successful");
+        print(jsonData['status']);
+        setState(() {
+          widget.refreshCallback();
+          statusText = jsonData['status'];
+          Fluttertoast.showToast(
+              msg: "Successfully Started",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Colors.white,
+              textColor: Color(0xFF3F51B5),
+              fontSize: 16.0);
+        });
+      } else {
+        Future.delayed(Duration.zero, () {
+          Fluttertoast.showToast(
+            msg: jsonData['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.white,
+            textColor: Color(0xFF3F51B5),
+            fontSize: 16.0,
+          );
+        });
+      }
+    } catch (error) {
+      print("Error: $error");
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   Widget _buildStatusIcon(String status) {
     Icon icon;
