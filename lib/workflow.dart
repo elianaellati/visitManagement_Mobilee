@@ -12,7 +12,7 @@ class workflow extends StatefulWidget {
 
 class _workflowState extends State<workflow> {
   late String name;
-  double _percentage = 0.0;
+
 
   final StorageManager storageManager = StorageManager();
   late Map<String, dynamic> storedUserJson;
@@ -29,7 +29,6 @@ class _workflowState extends State<workflow> {
   void initState() {
     super.initState();
     initializeData();
-    startAnimation();
   }
 
   Future<void> initializeData() async {
@@ -72,11 +71,6 @@ class _workflowState extends State<workflow> {
     }
   }
 
-  void startAnimation() {
-    setState(() {
-      _percentage = 75.0;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
