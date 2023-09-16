@@ -339,3 +339,20 @@ _noTaskMsg() {
     ),
   );
 }*/
+Widget _buildStatusIcon(String status) {
+  Icon icon;
+  Color iconColor;
+
+  // Define icons and colors based on status
+  if (status == "Completed") {
+    icon = const Icon(Icons.check_circle, color: Colors.green);
+  } else if (status == "Undergoing") {
+    icon = const Icon(Icons.access_time, color: Colors.orange);
+  } else if (status == "Not Started") {
+    icon = const Icon(Icons.error, color: Colors.red);
+  } else {
+    icon = const Icon(Icons.error, color: Colors.grey);
+  }
+
+  return icon;
+}

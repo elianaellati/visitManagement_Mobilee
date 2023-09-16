@@ -35,51 +35,33 @@ class formTitle extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: getProportionateScreenWidth(
-                    SizeConfig.orientation == Orientation.landscape ? 4 : 20,
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        form.customerName!,
-                        style: GoogleFonts.lato(
-                          textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            ' ${form.customerCity},${form.customerAddress}' ,
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(
-                                color: Colors.grey[100],
-                                fontSize: 15,
-                              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                        title: Text(
+                          '${form.customerCity},${form.customerAddress}',
+                          style: GoogleFonts.lato(
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                    ],
-                  ),
+                        ),
+                        subtitle: Text(
+                          form.status,
+                          style: GoogleFonts.lato(
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        trailing: _buildStatusIcon(form.status)),
+                  ],
                 ),
               ),
             ),
@@ -88,4 +70,22 @@ class formTitle extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildStatusIcon(String status) {
+  Icon icon;
+  Color iconColor;
+
+  // Define icons and colors based on status
+  if (status == "Completed") {
+    icon = const Icon(Icons.check_circle, color: Colors.green);
+  } else if (status == "Undergoing") {
+    icon = const Icon(Icons.access_time, color: Colors.orange);
+  } else if (status == "Not Started") {
+    icon = const Icon(Icons.error, color: Colors.red);
+  } else {
+    icon = const Icon(Icons.error, color: Colors.grey);
+  }
+
+  return icon;
 }
