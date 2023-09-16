@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:visitManagement_Mobilee/Assignments.dart';
 import 'package:visitManagement_Mobilee/workflow.dart';
 import 'Classes/User.dart';
@@ -130,6 +131,7 @@ class NavigatorDrawer extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app_rounded),
             title: const Text('Sign out'),
             onTap: () {
+              DefaultCacheManager().emptyCache();
               Navigator.pop(context);
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => LoginPage()),

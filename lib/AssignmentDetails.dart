@@ -24,8 +24,8 @@ import 'formTitle.dart';
 
 class AssignmentDetails extends StatefulWidget {
   final Assignment assignment;
-  final Function refreshCallback; // Change the type to Function
-  AssignmentDetails(this.assignment, {Key? key, required this.refreshCallback});
+  final  Function refreshCallback;
+  AssignmentDetails(this.assignment, {Key? key,required this.refreshCallback} );
 
   @override
   State<StatefulWidget> createState() {

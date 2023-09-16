@@ -20,8 +20,17 @@ class formTitle extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Color(0xFF3F51B5),
+          boxShadow: const [
+            BoxShadow(
+                blurRadius: 5.0, color: Colors.grey, offset: Offset(0, 5)),
+          ],
+          borderRadius: BorderRadius.circular(12.0),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF3F51B5),
+              Colors.blue,
+            ],
+          ),
         ),
         child: Row(
           children: [
