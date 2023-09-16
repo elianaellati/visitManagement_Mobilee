@@ -29,7 +29,6 @@ class FillFormState extends State<FillForm> {
   TextEditingController textarea = TextEditingController();
   final storageManager = StorageManager();
   late Assignment storedAssignment;
-
   late Future<List<contact>> futureAssignment;
   late Future<List<String>> futureQuestions;
   bool serviceStatus = false;
@@ -40,11 +39,11 @@ class FillFormState extends State<FillForm> {
   String lat = "";
   bool isStarted = false;
   String statusText = ''; // Add questionData here
-
+  late List<dynamic>question=[];
   @override
   void initState() {
     super.initState();
-
+    List<dynamic>question;
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
     initData();
@@ -52,6 +51,7 @@ class FillFormState extends State<FillForm> {
 
   Future<void> initData() async {
     storedAssignment = storageManager.getObject('assignment') as Assignment;
+
   }
 
   @override
@@ -202,7 +202,8 @@ class FillFormState extends State<FillForm> {
                           InkWell(
                             onTap: () {
                               //Questions();
-                              _showQuestions();
+                             //
+                              // _showQuestions();
                               String request =
                                   'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
                               requestServer(request);
@@ -319,12 +320,13 @@ class FillFormState extends State<FillForm> {
                       Column(
                         children: [
                           InkWell(
-                            onTap: () async {
-                              _showQuestions();
-                            /*  String request =
+                            onTap: ()async  {
+                             await  Questions();
+                             await _showQuestions();
+
+                             /* String request =
                                   'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/question';
-                              _showNote(request);*/
-                            },
+                              _showNote(request);*/                            },
                             child: Container(
                               width: 60,
                               height: 60,
@@ -733,8 +735,9 @@ class FillFormState extends State<FillForm> {
 
   Future<void> _showQuestions() async {
     try {
-      final List<String> questionDetails =await Questions(); // Await the function here
-      print(questionDetails);
+    // Await the function here
+      print("elinaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      print(question);
       await showDialog<void>(
         context: context,
         barrierDismissible: false,
@@ -747,26 +750,35 @@ class FillFormState extends State<FillForm> {
               ),
             ),
             content: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,  // Align children to the start horizontally
               children: [
                 const Text(
-                  "Are you sure you want to cancel the form?",
+                  "  Please Answer These Questions",
                   style: TextStyle(
                     color: Color(0xFF3F51B5),
                   ),
                 ),
                 SizedBox(height: 10),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: questionDetails.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(questionDetails[index]),
-                    );
-                  },
+                Container(
+                  height: 500,
+                  width: 500,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: question.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(question[index],
+                          style: const TextStyle(
+                          color: Color(0xFF3F51B5),
+                        ),),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
+
             actions: <Widget>[
               TextButton(
                 child: const Text(
@@ -804,7 +816,7 @@ class FillFormState extends State<FillForm> {
     }
   }
 
-  Future<List<String>> Questions() async {
+  Future<void> Questions() async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -817,13 +829,15 @@ class FillFormState extends State<FillForm> {
 
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-        return List<String>.from(jsonData);
+        print("jameellllllllll");
+   question=jsonData;
+   print(question);
       } else {
         throw Exception("HTTP Error: ${response.statusCode}");
       }
     } catch (error) {
       print("Error: $error");
-      return [];
+
     }
   }
 
