@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 
 import 'package:visitManagement_Mobilee/Change_Password.dart';
@@ -128,6 +129,7 @@ class _CustomListTile extends StatelessWidget {
       trailing: trailing,
       onTap: () {
         if (title == "Sign out") {
+          DefaultCacheManager().emptyCache();
           // Navigate to the home page
           Navigator.of(context).pop(); // Close the settings screen
           // Replace the following line with your home page widget
