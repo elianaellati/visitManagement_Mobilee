@@ -14,12 +14,11 @@ import 'Classes/StorageManager.dart';
 import 'controllers/_taskController.dart';
 import 'AddFormPage.dart';
 import 'Classes/Assignment.dart';
-import 'Dialogue.dart';
 
 import 'Classes/forms.dart';
 import 'package:http/http.dart' as http;
 
-import 'controllers/_taskController.dart';
+
 import 'formTitle.dart';
 
 class AssignmentDetails extends StatefulWidget {
@@ -47,8 +46,8 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     _assignment = widget.assignment;
     final String idAsString=widget.assignment.id.toString();
     storageManager.storeObject('assignmentId', idAsString);
-
-
+    storageManager.storeObject('base', _assignment.base);
+print(_assignment.base);
   }
 
 
@@ -162,7 +161,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     }
   }
   _addFormBar(BuildContext context,Assignment assignment) {
-    final TaskController _taskController = Get.put(TaskController());
+    // final TaskController _taskController = Get.put(TaskController());
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
       child: Row(

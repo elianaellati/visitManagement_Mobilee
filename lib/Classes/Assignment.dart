@@ -4,6 +4,7 @@ class Assignment {
   final String type;
   final int id;
   final String status;
+  final String base;
 
 
   Assignment({
@@ -12,6 +13,7 @@ class Assignment {
     required this.type,
     required this.id,
     required this.status,
+    required this.base,
 
   });
 
@@ -22,6 +24,7 @@ class Assignment {
       type: json['visitType']['name'],
       id:json['id'],
       status:json['status'],
+      base:json['visitType']['base']
 
     );
   }

@@ -1,21 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
-import 'package:visitManagement_Mobilee/Classes/Assignment.dart';
 import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'Classes/contact.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Classes/forms.dart';
-import 'DialogueNote.dart';
+
 import 'controllers/GpsController.dart';
 import 'openMap.dart';
 
-import 'Classes/StorageManager.dart';
+
 
 class FillForm extends StatefulWidget {
+
   final forms form;
   final Function refreshCallback; // Change the type to Function
   FillForm(this.form, {Key? key, required this.refreshCallback});
@@ -28,6 +28,9 @@ class FillForm extends StatefulWidget {
 
 class FillFormState extends State<FillForm> {
  // DialogueNote showdialogue= DialogueNote();
+
+  final storageManager=StorageManager();
+  dynamic storedBaseJson;
   TextEditingController textarea = TextEditingController();
   late Future<List<contact>> futureAssignment;
   late Future<List<String>> futureQuestions;
@@ -57,8 +60,9 @@ class FillFormState extends State<FillForm> {
   }
 
   Future<void> initData() async {
-    //storedAssignment = storageManager.getObject('assignment') as Assignment;
-
+    storedBaseJson = await storageManager.getObject('base');
+    print("drrrrrrrrrrrrrr");
+    print("jnnnnnnnnnn ${storedBaseJson}");
   }
 
   @override
@@ -67,7 +71,7 @@ class FillFormState extends State<FillForm> {
     TextEditingController textarea = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Form Information'),
+        title:  Text('Form information'),
         backgroundColor: const Color(0xFF3F51B5),
       ),
       body: Column(
