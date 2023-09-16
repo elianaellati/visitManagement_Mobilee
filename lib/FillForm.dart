@@ -17,17 +17,19 @@ import 'openMap.dart';
 class FillForm extends StatefulWidget {
 
   final forms form;
-  final Function refreshCallback; // Change the type to Function
+  final Function refreshCallback;
+// Change the type to Function
   FillForm(this.form, {Key? key, required this.refreshCallback});
 
   @override
   State<StatefulWidget> createState() {
     return FillFormState();
+
   }
 }
 
 class FillFormState extends State<FillForm> {
- // DialogueNote showdialogue= DialogueNote();
+
 
   final storageManager=StorageManager();
   dynamic storedBaseJson;
@@ -47,6 +49,7 @@ class FillFormState extends State<FillForm> {
   late List<dynamic>question=[];
   List<String>answers=[];
   GpsController gps=GpsController();
+
 
 
   @override
@@ -251,8 +254,7 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
-                             // showdialogue._showAlertDialog();
-                            //  _showAlertDialog();
+                              _showAlertDialog();
                             },
                             child: Container(
                               width: 60,
@@ -753,83 +755,69 @@ class FillFormState extends State<FillForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text(
-              "Questions",
+              "Please Answer These Questions",
               style: TextStyle(
                 color: Color(0xFF3F51B5),
               ),
             ),
             content: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,  // Align children to the start horizontally
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "  Please Answer These Questions",
+                  "Feed Back",
                   style: TextStyle(
                     color: Color(0xFF3F51B5),
+                  ),
+                ),
+                TextField(
+                  controller: textarea,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 4,
+                  decoration: const InputDecoration(
+                    hintText: "Suggest us what went wrong",
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 1, color: Colors.redAccent),
+                    ),
                   ),
                 ),
                 SizedBox(height: 10),
                 Container(
                   height: 500,
                   width: 500,
-                  child:     Container(
-                    height: 500,
-                    width: 500,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: question.length,
-                      itemBuilder: (context, index) {
-                        print(index);
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListTile(
-                              title: Text(
-                                question[index],
-                                style: const TextStyle(
-                                  color: Color(0xFF3F51B5),
-                                ),
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  hintText: 'Enter your answer...',
-
-                                ),
-                                // Add your logic to handle the text input for this question
-                                onChanged: (text) {
-                                  answers[index] = text;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 16.0),
-                            const Text(
-                              "Feed Back",
-                              style: TextStyle(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: question.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListTile(
+                            title: Text(
+                              question[index],
+                              style: const TextStyle(
                                 color: Color(0xFF3F51B5),
                               ),
                             ),
-                            TextField(
-                              controller: textarea,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 4,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: TextField(
                               decoration: const InputDecoration(
-                                hintText: "Suggest us what went wrong",
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(width: 1, color: Colors.redAccent),
-                                ),
+                                hintText: 'Enter your answer...',
                               ),
-                            ),// Adjust the spacing between questions and text fields
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                )
-
+                              onChanged: (text) {
+                                setState(() {
+                                  answers[index] = text;
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
 
@@ -877,26 +865,28 @@ class FillFormState extends State<FillForm> {
 
   Future<void> Questions() async {
     try {
-      final response = await http.get(
-        Uri.parse(
-          'http://10.10.33.91:8080/visit_forms/${widget.form.id}/questions',
-        ),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      );
+      if (storedBaseJson == "QUESTION") {
+        final response = await http.get(
+          Uri.parse(
+            'http://10.10.33.91:8080/visit_forms/${widget.form.id}/questions',
+          ),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        );
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        print("jameellllllllll");
-   question=jsonData;
-   print(question);
-      } else {
-        throw Exception("HTTP Error: ${response.statusCode}");
+        if (response.statusCode == 200) {
+          final jsonData = jsonDecode(response.body);
+          question = jsonData;
+          print(question);
+        } else {
+          throw Exception("HTTP Error: ${response.statusCode}");
+        }
+      }else{
+        question=["Payment","Amount"];
       }
-    } catch (error) {
+      } catch (error) {
       print("Error: $error");
-
     }
   }
 

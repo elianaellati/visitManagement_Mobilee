@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'FillForm.dart';
+class DialogueNote{
 
-/*class DialogueNote{
-  Future<void> _showAlertDialog( ) async {
+  Future<void> showAlertDialog( context, id,widget) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -37,6 +38,7 @@ import 'package:flutter/material.dart';
               onPressed: () {
                 String request =
                     'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
+
                 Navigator.of(context).pop();
               },
             ),
@@ -47,4 +49,6 @@ import 'package:flutter/material.dart';
       },
     );
   }
-}*/
+
+
+}

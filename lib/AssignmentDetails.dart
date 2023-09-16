@@ -42,7 +42,6 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
   void initState() {
     super.initState();
     futureAssignment = fetchAssignments(widget.assignment.id);
-
     _assignment = widget.assignment;
     final String idAsString=widget.assignment.id.toString();
     storageManager.storeObject('assignmentId', idAsString);
