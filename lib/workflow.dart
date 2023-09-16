@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'Classes/chart_container.dart';
 import 'HomePage.dart';
 import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 
@@ -100,6 +101,10 @@ class _workflowState extends State<workflow> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        const Text(
+                    'Your workflow for  your assignments',
+                          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                        ),
                         Expanded(
                           flex: 2, // Use more space for the pie chart
                           child: Center(
@@ -126,13 +131,11 @@ class _workflowState extends State<workflow> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 0), // Add spacing between pie chart and color-text section
+                        SizedBox(height: 8), // Add spacing between pie chart and color-text section
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-
-                            mainAxisAlignment:MainAxisAlignment.center,
-
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Wrap(
+                            alignment: WrapAlignment.center, // Center items horizontally
                             children: [
                               for (var i = 0; i < pieChartData.length; i++)
                                 Row(
@@ -144,33 +147,102 @@ class _workflowState extends State<workflow> {
                                     ),
                                     SizedBox(width: 10),
                                     Text(pieChartData[i]['name']),
-                                    SizedBox(width: 16),
+                                    SizedBox(width: 30),
                                   ],
                                 ),
+                              SizedBox(height: 10), // Add vertical spacing between rows
                             ],
                           ),
-                        ),
+                        )
+
                       ],
                     ),
                   ),
                 ),
               ),
 
+              // Padding(
+              //   padding: EdgeInsets.all(25.0),
+              //   child: Container(
+              //     width: 100, // Adjust this value as needed
+              //     height: 100, // Adjust this value as needed
+              //     child: BarChart(
+              //       BarChartData(
+              //         alignment: BarChartAlignment.spaceAround,
+              //         maxY: 20,
+              //         titlesData: FlTitlesData(
+              //           // Customize the left y-axis label
+              //           leftTitles: SideTitles(
+              //             showTitles: true,
+              //             getTitles: (value) {
+              //               return value.toString();
+              //             },
+              //           ),
+              //           topTitles: SideTitles(
+              //             showTitles: false,
+              //           ),
+              //           rightTitles: SideTitles(
+              //             showTitles: false,
+              //           ),
+              //           bottomTitles: SideTitles(
+              //             showTitles: true,
+              //             reservedSize: 22,
+              //             getTitles: (double value) {
+              //               if (value.floor() >= 0 && value.floor() < barChartData.length) {
+              //                 return barChartData[value.floor()]['label'].toString();
+              //               }
+              //               return '';
+              //             },
+              //           ),
+              //         ),
+              //         borderData: FlBorderData(
+              //           show: true,
+              //           border: Border.all(
+              //             color: const Color(0xff37434d),
+              //             width: 1,
+              //           ),
+              //         ),
+              //         barGroups: [
+              //           for (var i = 0; i < barChartData.length; i++)
+              //             BarChartGroupData(
+              //               x: i,
+              //               barRods: [
+              //                 BarChartRodData(
+              //                   y: barChartData[i]['y'] != null && barChartData[i]['y'] is num
+              //                       ? barChartData[i]['y'].toDouble()
+              //                       : 0.0,
+              //                   colors: [Colors.blue],
+              //                   width: 8, // Reduce the bar width
+              //                 ),
+              //               ],
+              //               showingTooltipIndicators: [0],
+              //             ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(28.0),
                 child: Container(
                   width: 100, // Adjust this value as needed
                   height: 100, // Adjust this value as needed
                   child: BarChart(
                     BarChartData(
                       alignment: BarChartAlignment.spaceAround,
-                      maxY: 20,
+                      maxY: 50,
                       titlesData: FlTitlesData(
                         // Customize the left y-axis label
                         leftTitles: SideTitles(
                           showTitles: true,
                           getTitles: (value) {
-                            return value.toString();
+                            if (value > 0) {
+                              // Show labels for values greater than 0
+                              return value.toString();
+                            } else {
+                              // Hide labels for value 0
+                              return '';
+                            }
                           },
                         ),
                         topTitles: SideTitles(
@@ -217,6 +289,8 @@ class _workflowState extends State<workflow> {
                   ),
                 ),
               ),
+
+
             ],
           ),
         ),
