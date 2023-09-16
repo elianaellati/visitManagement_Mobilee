@@ -41,7 +41,7 @@ class formTitle extends StatelessWidget {
                   children: [
                     ListTile(
                         title: Text(
-                          '${form.customerCity},${form.customerAddress}',
+                          '${form.customerName}',
                           style: GoogleFonts.lato(
                             textStyle: const TextStyle(
                               color: Colors.white,

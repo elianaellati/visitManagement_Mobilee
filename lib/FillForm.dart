@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
+import 'package:visitManagement_Mobilee/util/MapUtil.dart';
 import 'Classes/contact.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Classes/forms.dart';
 
 import 'controllers/GpsController.dart';
-import 'openMap.dart';
 
 
 
@@ -30,13 +30,12 @@ class FillForm extends StatefulWidget {
 
 class FillFormState extends State<FillForm> {
 
-
   final storageManager=StorageManager();
   dynamic storedBaseJson;
   TextEditingController textarea = TextEditingController();
   late Future<List<contact>> futureAssignment;
   late Future<List<String>> futureQuestions;
-  String long = "";
+  String long ="";
   String lat = "";
  /* bool serviceStatus = false;
   bool hasPermission = false;
@@ -58,7 +57,8 @@ class FillFormState extends State<FillForm> {
     List<dynamic>question;
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
-
+    long = widget.form.longitude.toString();
+    lat = widget.form.latitude.toString();;
     initData();
   }
 
@@ -287,17 +287,8 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
-                             // checkGps();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => openMap(
-                                    widget.form.latitude,
-                                    widget.form.longitude,
-                                    lat,
-                                    long,
-                                  ),
-                                ),
-                              );
+                             MapUtil.openMap(lat, long);
+
                             },
                             child: Container(
                               width: 60,
@@ -308,7 +299,7 @@ class FillFormState extends State<FillForm> {
                               ),
                               child: const Center(
                                 child: Icon(
-                                  Icons.location_on,
+                                  Icons.drive_eta,
                                   size: 35,
                                   color: Color(0xFF3F51B5),
                                 ),
@@ -317,7 +308,7 @@ class FillFormState extends State<FillForm> {
                           ),
                           const SizedBox(height: 8),
                           const Text(
-                            'Location',
+                            'Path',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -402,17 +393,7 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
-                              //checkGps();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => openMap(
-                                    widget.form.latitude,
-                                    widget.form.longitude,
-                                    lat,
-                                    long,
-                                  ),
-                                ),
-                              );
+                              MapUtil.openMap(lat, long);
                             },
                             child: Container(
                               width: 60,
@@ -423,7 +404,7 @@ class FillFormState extends State<FillForm> {
                               ),
                               child: const Center(
                                 child: Icon(
-                                  Icons.map,
+                                  Icons.drive_eta,
                                   size: 35,
                                   color: Color(0xFF3F51B5),
                                 ),
@@ -432,7 +413,7 @@ class FillFormState extends State<FillForm> {
                           ),
                           const SizedBox(height: 8),
                           const Text(
-                            'Map',
+                            'Path',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -691,37 +672,6 @@ class FillFormState extends State<FillForm> {
     }
   }
 
-  /*checkGps() async {
-    serviceStatus = await Geolocator.isLocationServiceEnabled();
-    if (!serviceStatus) {
-      print("GPS Service is not enabled, turn on GPS location");
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      print("REQUESTING LOCATION PERMISSION");
-    }
-
-    if (permission == LocationPermission.whileInUse) {
-      hasPermission = true;
-    }
-
-    if (hasPermission) {
-      setState(() {
-        // Refresh the UI
-      });
-
-      await getLocation();
-    } else {
-      setState(() {
-        // Refresh the UI
-      });
-    }
-  }*/
-
   Future<void> _showAlertDialog() async {
     return showDialog<void>(
       context: context,
@@ -968,35 +918,7 @@ class FillFormState extends State<FillForm> {
     );
   }*/
 
-  /*getLocation() async {
-    position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    print(position.longitude);
-    print(position.latitude);
 
-    long = position.longitude.toString();
-    lat = position.latitude.toString();
-
-    print("Longitude:  $long ");
-    print("Latitude: $lat");
-    print("Request successful");
-
-    LocationSettings locationSettings = const LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100,
-    );
-
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {
-      print(position.longitude);
-      print(position.latitude);
-      long = position.longitude.toString();
-      lat = position.latitude.toString();
-    });
-  }
-*/
   Future<void> requestServer(String request) async {
     try {
       await gps.checkGps();
