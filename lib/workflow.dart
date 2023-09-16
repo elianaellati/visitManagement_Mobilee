@@ -134,13 +134,11 @@ class _workflowState extends State<workflow> {
                         ),
                         SizedBox(height: 0), // Add spacing between pie chart and color-text section
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 0),
-                          child: GridView.count(
-                            crossAxisCount: 2, // Display two items per row
-                            crossAxisSpacing: 2,
-                            mainAxisSpacing: 1,
-                            shrinkWrap: true, // Required for ListView.builder inside a Column
-                            physics: NeverScrollableScrollPhysics(), // Disable scrolling
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+
+                            mainAxisAlignment:MainAxisAlignment.center,
+
                             children: [
                               for (var i = 0; i < pieChartData.length; i++)
                                 Row(
