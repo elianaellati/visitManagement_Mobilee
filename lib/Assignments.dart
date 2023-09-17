@@ -92,6 +92,13 @@ class _AssignmentsState extends State<Assignments> {
         width: 80,
         height: 100,
         initialSelectedDate: _selectedDate,
+    //    for(i=0 ;i<assigmentsDate;i++){
+    //
+    // Icon(Icons.assigment,
+    // size: 50,
+    // color: Colors.red
+    // )
+    // }
         selectedTextColor: Colors.white,
         selectionColor: primaryClr,
         dateTextStyle: GoogleFonts.lato(
