@@ -129,7 +129,7 @@ class FillFormState extends State<FillForm> {
                         Row(
                           children: [
                             const Icon(
-                              Icons.location_on_outlined,
+                              Icons.drive_eta,
                               size: 24,
                               color: Colors.white,
                             ),
