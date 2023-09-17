@@ -5,50 +5,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:visitManagement_Mobilee/FillForm.dart';
 import 'package:visitManagement_Mobilee/ui/button.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
 import 'Classes/StorageManager.dart';
-import 'controllers/_taskController.dart';
 import 'AddFormPage.dart';
 import 'Classes/Assignment.dart';
 
 import 'Classes/forms.dart';
 import 'package:http/http.dart' as http;
 
-
 import 'formTitle.dart';
 
 class AssignmentDetails extends StatefulWidget {
   final Assignment assignment;
-  final  Function refreshCallback;
-  AssignmentDetails(this.assignment, {Key? key,required this.refreshCallback} );
+  final Function refreshCallback;
+  AssignmentDetails(this.assignment, {Key? key, required this.refreshCallback});
 
   @override
   State<StatefulWidget> createState() {
     return AssignmentDetailsState();
   }
-
 }
 
 class AssignmentDetailsState extends State<AssignmentDetails> {
-  final storageManager=StorageManager();
+  final storageManager = StorageManager();
   late Future<List<forms>> futureAssignment;
   late Future<List<forms>> updated;
   late Assignment _assignment;
+
   @override
   void initState() {
     super.initState();
     futureAssignment = fetchAssignments(widget.assignment.id);
     _assignment = widget.assignment;
-    final String idAsString=widget.assignment.id.toString();
+    final String idAsString = widget.assignment.id.toString();
     storageManager.storeObject('assignmentId', idAsString);
     storageManager.storeObject('base', _assignment.base);
-print(_assignment.base);
+    print(_assignment.base);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +86,6 @@ print(_assignment.base);
                           verticalOffset: 50.0,
                           child: GestureDetector(
                             onTap: () {
-                              // widget.refreshCallback();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => FillForm(
@@ -119,8 +114,6 @@ print(_assignment.base);
     );
   }
 
-
-
   Future<List<forms>> fetchAssignments(int assignmentId) async {
     final response = await http.get(
       Uri.parse(
@@ -145,8 +138,8 @@ print(_assignment.base);
         final latitude = userJson['customer']['latitude'] ?? 'Unknown latitude';
 
         return forms(
-          longitude:longitude,
-          latitude:latitude,
+          longitude: longitude,
+          latitude: latitude,
           customerName: customerName,
           customerAddress: customerAddress,
           status: status,
@@ -162,34 +155,36 @@ print(_assignment.base);
       throw Exception('Failed to load assignment details');
     }
   }
-  _addFormBar(BuildContext context,Assignment assignment) {
-    // final TaskController _taskController = Get.put(TaskController());
+
+  _addFormBar(BuildContext context, Assignment assignment) {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                assignment.comment,
-                style: subHeadingStyle,
-              ),
-              // Text(
-              //   'Today',
-              //   style: subHeadingStyle,
-              // ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  assignment.comment,
+                  style: subHeadingStyle,
+                ),
+              ],
+            ),
           ),
           MyButton(
             label: '+ Add Unplanned Visit',
             onTap: () {
-              // Navigate to AddFormPage
               Navigator.push(
-
                 context,
-                MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback: _refreshAssignmentDetails)),
+                MaterialPageRoute(
+                  builder: (context) => AddFormPage(
+                    assignment,
+                    onFormAdded: () {},
+                    refreshCallback: _refreshAssignmentDetails,
+                  ),
+                ),
               );
             },
           ),
@@ -198,151 +193,70 @@ print(_assignment.base);
     );
   }
 
-  // ...
-
   Future<void> _refreshAssignmentDetails() async {
- updated = fetchAssignments(widget.assignment.id);
- print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
-    // Update the state of your widget with the new data.
+    updated = fetchAssignments(widget.assignment.id);
+    print("kkkkkkkkkkkkkkddddddddddddddddddddddddddddddkkkkkkkkkkkkkkkkkkk");
     setState(() {
       print("eliana");
       futureAssignment = updated;
-      // Assign the updated data to your widget's state variable.
-      // For example:
-      // assignmentData = updatedData;
     });
   }
 
-
-}
-
-
-_noTaskMsg() {
-  return Stack(
-    children: [
-      AnimatedPositioned(
-        duration: const Duration(milliseconds: 2000),
-        child: SingleChildScrollView(
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            direction: SizeConfig.orientation == Orientation.landscape
-                ? Axis.horizontal
-                : Axis.vertical,
-            children: [
-              SizeConfig.orientation == Orientation.landscape
-                  ? const SizedBox(
-                height: 6,
-              )
-                  : const SizedBox(
-                height: 220,
-              ),
-              SvgPicture.asset(
-                'images/task.svg',
-                // ignore: deprecated_member_use
-                color: primaryClr.withOpacity(0.5),
-                height: 90,
-                semanticsLabel: 'Task',
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: Text(
-                  'You do not have any tasks yet!',
-                  style: subTitleStyle,
-                  textAlign: TextAlign.center,
+  _noTaskMsg() {
+    return Stack(
+      children: [
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 2000),
+          child: SingleChildScrollView(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              direction: SizeConfig.orientation == Orientation.landscape
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              children: [
+                SizeConfig.orientation == Orientation.landscape
+                    ? const SizedBox(
+                  height: 6,
+                )
+                    : const SizedBox(
+                  height: 220,
                 ),
-              ),
-              SizeConfig.orientation == Orientation.landscape
-                  ? const SizedBox(
-                height: 90,
-              )
-                  : const SizedBox(
-                height: 90,
-              ),
-            ],
+                SvgPicture.asset(
+                  'images/task.svg',
+                  color: primaryClr.withOpacity(0.5),
+                  height: 90,
+                  semanticsLabel: 'Task',
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30, vertical: 10),
+                  child: Text(
+                    'You do not have any tasks yet!',
+                    style: subTitleStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizeConfig.orientation == Orientation.landscape
+                    ? const SizedBox(
+                  height: 90,
+                )
+                    : const SizedBox(
+                  height: 90,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }
 
-/*_addFormBar(BuildContext context,Assignment assignment) {
-  final TaskController _taskController = Get.put(TaskController());
-  return Container(
-    margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              assignment.comment,
-              style: subHeadingStyle,
-            ),
-            // Text(
-            //   'Today',
-            //   style: subHeadingStyle,
-            // ),
-          ],
-        ),
-        MyButton(
-          label: '+ Add Form',
-          onTap: () {
-            // Navigate to AddFormPage
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback:_refreshAssignmentDetails)),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}*/
-
-
-/*_addFormBar(BuildContext context,Assignment assignment) {
-  final TaskController _taskController = Get.put(TaskController());
-  return Container(
-    margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              assignment.comment,
-              style: subHeadingStyle,
-            ),
-            // Text(
-            //   'Today',
-            //   style: subHeadingStyle,
-            // ),
-          ],
-        ),
-        MyButton(
-          label: '+ Add Form',
-          onTap: () {
-            // Navigate to AddFormPage
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddFormPage(assignment,onFormAdded: (){}, refreshCallback:_refreshAssignmentDetails)),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}*/
 Widget _buildStatusIcon(String status) {
   Icon icon;
   Color iconColor;
 
-  // Define icons and colors based on status
   if (status == "Completed") {
     icon = const Icon(Icons.check_circle, color: Colors.green);
   } else if (status == "Undergoing") {
