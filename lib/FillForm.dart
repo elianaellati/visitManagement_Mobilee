@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -9,8 +10,9 @@ import 'package:visitManagement_Mobilee/util/MapUtil.dart';
 import 'Classes/contact.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Classes/forms.dart';
-
+import 'ENUM/PaymentType.dart';
 import 'controllers/GpsController.dart';
+
 
 
 
@@ -30,12 +32,15 @@ class FillForm extends StatefulWidget {
 
 class FillFormState extends State<FillForm> {
 
+
   final storageManager=StorageManager();
   dynamic storedBaseJson;
   TextEditingController textarea = TextEditingController();
+  TextEditingController textamount= TextEditingController();
   late Future<List<contact>> futureAssignment;
   late Future<List<String>> futureQuestions;
-  String long ="";
+  PaymentType selectedType = PaymentType.visa;
+  String long = "";
   String lat = "";
  /* bool serviceStatus = false;
   bool hasPermission = false;
@@ -57,8 +62,7 @@ class FillFormState extends State<FillForm> {
     List<dynamic>question;
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
-    long = widget.form.longitude.toString();
-    lat = widget.form.latitude.toString();;
+
     initData();
   }
 
@@ -115,36 +119,6 @@ class FillFormState extends State<FillForm> {
                   const SizedBox(
                     height: 11,
                   ),
-                  /*   Row(
-                     children:[
-                      const Icon(
-                        Icons.location_on_outlined,
-                        size: 24, // Adjust the size as needed
-                        color: Colors.white, // Adjust the color as needed
-                      ),
-                     const SizedBox(
-                        width: 11,
-                      ),
-                      buildInfoRow(
-                          '${widget.form.customerAddress}, ${widget.form.customerCity}',
-                          16.0 ,
-                          Colors.white),
-                       const SizedBox(
-                         width: 600
-                       ),
-                       Row(
-                           children:[
-
-                             buildInfoRow( statusText, 16.0, Colors.white),
-                             const SizedBox(
-                               width:6,
-                             ),
-                             _buildStatusIcon(statusText),
-                           ]
-                       ),
-
-                    ]
-                    ),*/
                   Container(
                     padding: const EdgeInsets.all(8.0),
                     // Add padding to the container
@@ -214,10 +188,13 @@ class FillFormState extends State<FillForm> {
                       Column(
                         children: [
                           InkWell(
-                            onTap: () {
+                            onTap: () async{
                               String request =
                                   'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
                               startRequest(request);
+                              await  Questions();
+                              await _showQuestions();
+
                               setState(() {
                                 isStarted = true;
                                 widget.refreshCallback();
@@ -249,7 +226,7 @@ class FillFormState extends State<FillForm> {
                           ),
                         ],
                       ),
-                    if (statusText == "Not Started")
+                 //   if (statusText == "Not Started")
                       Column(
                         children: [
                           InkWell(
@@ -282,41 +259,6 @@ class FillFormState extends State<FillForm> {
                           ),
                         ],
                       ),
-                    if (statusText == "Not Started")
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                             MapUtil.openMap(lat, long);
-
-                            },
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.drive_eta,
-                                  size: 35,
-                                  color: Color(0xFF3F51B5),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Path',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-
                     // Add a similar section for "Undergoing" status
                     if (statusText == "Undergoing")
                       Column(
@@ -325,8 +267,7 @@ class FillFormState extends State<FillForm> {
                             onTap: ()async  {
                              await  Questions();
                              await _showQuestions();
-                             String request =
-                                  'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/question';
+
                                                      },
                             child: Container(
                               width: 60,
@@ -337,7 +278,7 @@ class FillFormState extends State<FillForm> {
                               ),
                               child: const Center(
                                 child: Icon(
-                                  Icons.check,
+                                  Icons.restart_alt_rounded,
                                   size: 35,
                                   color: Color(0xFF3F51B5),
                                 ),
@@ -346,7 +287,7 @@ class FillFormState extends State<FillForm> {
                           ),
                           const SizedBox(height: 8),
                           const Text(
-                            'Complete',
+                            'Continue',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -354,41 +295,7 @@ class FillFormState extends State<FillForm> {
                           ),
                         ],
                       ),
-                    if (statusText == "Undergoing")
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                           //   await _showQuestions();
-                          //    _showAlertDialog();
-                            },
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.cancel,
-                                  size: 35,
-                                  color: Color(0xFF3F51B5),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Cancel',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    if (statusText == "Undergoing")
+
                       Column(
                         children: [
                           InkWell(
@@ -504,6 +411,7 @@ class FillFormState extends State<FillForm> {
                           );
                         } else {
                           final assignmentDetails = snapshot.data!;
+
                           return ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
@@ -566,7 +474,6 @@ class FillFormState extends State<FillForm> {
                               );
                             },
                           );
-
                         }
                       },
                     ),
@@ -671,7 +578,6 @@ class FillFormState extends State<FillForm> {
       throw Exception('Failed to load assignment details');
     }
   }
-
   Future<void> _showAlertDialog() async {
     return showDialog<void>(
       context: context,
@@ -681,12 +587,12 @@ class FillFormState extends State<FillForm> {
           title: const Text("Cancel Form",
               style: TextStyle(
                 color:
-                    Color(0xFF3F51B5), // Change the color to your desired color
+                Color(0xFF3F51B5), // Change the color to your desired color
               )),
-          content: const Text("Are you sure you want to cancel form?",
+             content: const Text("Are you sure you want to cancel form?",
               style: TextStyle(
                 color:
-                    Color(0xFF3F51B5), // Change the color to your desired color
+                Color(0xFF3F51B5), // Change the color to your desired color
               )),
           actions: <Widget>[
             TextButton(
@@ -708,8 +614,9 @@ class FillFormState extends State<FillForm> {
               onPressed: () {
                 String request =
                     'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
+                requestServer(request);
                 Navigator.of(context).pop();
-                //_showNote(request);
+
               },
             ),
           ],
@@ -737,66 +644,8 @@ class FillFormState extends State<FillForm> {
                 color: Color(0xFF3F51B5),
               ),
             ),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Feed Back",
-                  style: TextStyle(
-                    color: Color(0xFF3F51B5),
-                  ),
-                ),
-                TextField(
-                  controller: textarea,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 4,
-                  decoration: const InputDecoration(
-                    hintText: "Suggest us what went wrong",
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1, color: Colors.redAccent),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  height: 500,
-                  width: 500,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: question.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListTile(
-                            title: Text(
-                              question[index],
-                              style: const TextStyle(
-                                color: Color(0xFF3F51B5),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16.0),
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                hintText: 'Enter your answer...',
-                              ),
-                              onChanged: (text) {
-                                setState(() {
-                                  answers[index] = text;
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+            content:
+            buildAlertDialogContent(),
 
             actions: <Widget>[
 
@@ -822,11 +671,22 @@ class FillFormState extends State<FillForm> {
                   ),
                 ),
                 onPressed: () {
-                   print (answers);
-                  String request =
-                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/question';
-                      requestServer(request);
-                     Navigator.of(context).pop();
+
+                  if(storedBaseJson=="QUESTION") {
+                    String request =
+                        'http://10.10.33.91:8080/visit_forms/${widget.form
+                        .id}/complete/question';
+                    requestServer(request);
+                    Navigator.of(context).pop();
+                  }
+                 else{
+                    String request =
+                        'http://10.10.33.91:8080/visit_forms/${widget.form
+                        .id}/complete/payment';
+                    requestServerpayment(request);
+                    Navigator.of(context).pop();
+
+                  }
                 },
               ),
             ],
@@ -868,7 +728,7 @@ class FillFormState extends State<FillForm> {
   }
 
 
- /* Future<void> _showNote(String request) async {
+ Future<void> _showNote(String request) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -916,8 +776,7 @@ class FillFormState extends State<FillForm> {
         );
       },
     );
-  }*/
-
+  }
 
   Future<void> requestServer(String request) async {
     try {
@@ -978,6 +837,67 @@ class FillFormState extends State<FillForm> {
       print("Error: $error");
     }
   }
+  Future<void> requestServerpayment(String request) async {
+    try {
+      await gps.checkGps();
+      String note = "";
+      if (request.contains("complete") || request.contains("cancel")) {
+        print(answers);
+        note = textarea.text;
+      }
+      Map<String, dynamic> data = {
+        "latitude": gps.lat,
+        "longitude": gps.long,
+         "note":note,
+         "amount":textamount.text,
+        "type":paymentt(selectedType),
+      };
+
+      String requestBody = json.encode(data);
+
+      final response = await http.put(
+        Uri.parse(request),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
+      );
+
+      print(requestBody);
+      final jsonData = jsonDecode(response.body);
+      print(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print("Request successful");
+        print(jsonData['status']);
+        setState(() {
+          widget.refreshCallback();
+          statusText = jsonData['status'];
+          Fluttertoast.showToast(
+              msg: "Successfully Started",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Colors.white,
+              textColor: Color(0xFF3F51B5),
+              fontSize: 16.0);
+        });
+      } else {
+        Future.delayed(Duration.zero, () {
+          Fluttertoast.showToast(
+            msg: jsonData['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.white,
+            textColor: Color(0xFF3F51B5),
+            fontSize: 16.0,
+          );
+        });
+      }
+    } catch (error) {
+      print("Error: $error");
+    }
+  }
+
   Future<void> startRequest(String request) async {
     try {
       await gps.checkGps();
@@ -1032,18 +952,162 @@ class FillFormState extends State<FillForm> {
       print("Error: $error");
     }
   }
+  Widget buildAlertDialogContent() {
+   // int? selectedTypeIndex;
+    if (storedBaseJson=="QUESTION") {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          Container(
+            height: 300,
+            width: 500,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: question.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: Text(
+                        question[index],
+                        style: const TextStyle(
+                          color: Color(0xFF3F51B5),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your answer...',
+                        ),
+                        onChanged: (text) {
+                          setState(() {
+                            answers[index] = text;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                  ],
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          const Text(
+            "  Feed Back",
+            style: TextStyle(
+              color: Color(0xFF3F51B5),
+            ),
+          ),
+          TextField(
+            controller: textarea,
+            keyboardType: TextInputType.multiline,
+            maxLines: 4,
+            decoration: const InputDecoration(
+              hintText: "  Suggest us what went wrong",
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 1, color: Colors.redAccent),
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+
+          Text(
+            "Feed Back",
+            style: TextStyle(
+              color: Color(0xFF3F51B5),
+            ),
+          ),
+        Padding(
+       padding: const EdgeInsets.only(left: 2.0),
+       child:TextField(
+            controller: textarea,
+            keyboardType: TextInputType.multiline,
+            maxLines: 4,
+            decoration: const InputDecoration(
+              hintText: "  Suggest us what went wrong",
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 1, color: Colors.redAccent),
+              ),
+            ),
+    ),
+        ),
+          const SizedBox(height: 35.0),
+            const Text(
+              'Amount',
+              style: TextStyle(
+                color: Color(0xFF3F51B5),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0),
+              child: TextField(
+                controller: textamount,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')), // Allow only digits
+                ],
+                decoration: const InputDecoration(
+                  hintText: 'Enter amount...',
+
+                ),
 
 
+              ),
+            ),
+          const SizedBox(height: 35.0),
+          Row(
+         children:[
+            // Add type text and ComboBox
+            const Text(
+              'Type :',
+              style: TextStyle(
+                color: Color(0xFF3F51B5),
+              ),
+            ),
 
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: DropdownButton<PaymentType>(
+              value: selectedType,
+              onChanged:onTypeChanged,
+              items: typeOptions.map((PaymentType value) {
+                return DropdownMenuItem<PaymentType>(
+                    value: value,
+                    child:SizedBox(  // Adjust the width of the dropdown items
+                    width: 80,  // Adjust the width as needed
+                    child: Text(
+                    paymentTypeToString(value),
+                     style: const TextStyle(fontSize: 16,color: Color(0xFF3F51B5)),  // Adjust the font size as needed
+                ),
+                ),
+                );
+              }).toList(),
+            ),
 
+          )
+],
+          ),
+        ],
 
+      );
+    }
+  }
 
-
-
-
-
-
-
+  void onTypeChanged(PaymentType? newValue) {
+    if (newValue != null) {
+      selectedType = newValue;
+    }
+  }
 
 
   Widget _buildStatusIcon(String status) {

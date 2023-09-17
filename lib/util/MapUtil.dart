@@ -7,7 +7,6 @@ class MapUtil {
 
   static Future<void> openMap(String lat, String lng) async {
     var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
-    print("LAT, LNG $lat,$lng");
     print("OPENING URI ${uri.toString()}");
     if (await canLaunchUrl(uri)){
       await launchUrl(uri);
