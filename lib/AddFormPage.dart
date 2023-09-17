@@ -195,10 +195,8 @@ class _AddFormPageState extends State<AddFormPage> {
               MyButton(
                 label: 'Create Form',
                 onTap: () {
-                  if (!isButtonDisabled) {
-                    isButtonDisabled = true;
                     validateData(widget.assignment);
-                  }
+
                 },
 
               ),
@@ -239,16 +237,9 @@ class _AddFormPageState extends State<AddFormPage> {
         // Handle a successful response
         print("Request successful");
         setState(() {
-          isButtonDisabled = false;
+          isButtonDisabled = true;
         });
-
-        Fluttertoast.showToast(
-            msg: "Added Successfully",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            backgroundColor: Colors.white,
-            textColor: Color(0xFF3F51B5),
-            fontSize: 16.0);
+        Text( "Added Successfully");
         widget.onFormAdded();
       } else {
         // Handle other response codes if needed
@@ -363,10 +354,19 @@ class _AddFormPageState extends State<AddFormPage> {
           "Content-Type": "application/json",
         },
         body: requestBody,
+
       );
 
       if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+            msg: "Successfully Added",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.white,
+            textColor: Color(0xFF3F51B5),
+            fontSize: 16.0);
         widget.refreshCallback();
+
         print("Request successful");
       } else {
         // Handle other response codes if needed
