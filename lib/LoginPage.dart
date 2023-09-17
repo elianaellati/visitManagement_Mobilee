@@ -126,22 +126,17 @@ class LoginState extends State<LoginPage> {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Assignments()),
-                        );
                         if (_formKey.currentState!.validate()) {
                           String username = _usernameController.text;
                           String password = _PasswordController.text;
                           bool loginSuccess =
-                              await LoginVal(username, password);
+                             await LoginVal(username, password);
                           if (loginSuccess == true) {
-                          /*  Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const Assignments()),
-                            );*/
+                            );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -166,15 +161,15 @@ class LoginState extends State<LoginPage> {
                   ]),
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               TextButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ForgotPassword()));
+                            builder: (context) => const ForgotPassword()));
                   },
-                  child: Text(
+                  child: const Text(
                     'Forget Password?',
                     style: TextStyle(
                         color: Color(0xFF3F51B5), fontWeight: FontWeight.bold),

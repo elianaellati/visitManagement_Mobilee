@@ -40,8 +40,8 @@ class FillFormState extends State<FillForm> {
   late Future<List<contact>> futureAssignment;
   late Future<List<String>> futureQuestions;
   PaymentType selectedType = PaymentType.visa;
-  String long = "";
-  String lat = "";
+  String long ="";
+  String lat ="";
  /* bool serviceStatus = false;
   bool hasPermission = false;
   late LocationPermission permission;
@@ -63,6 +63,8 @@ class FillFormState extends State<FillForm> {
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
 
+    long =widget.form.longitude.toString();
+    lat = widget.form.latitude.toString();
     initData();
   }
 
@@ -300,6 +302,7 @@ class FillFormState extends State<FillForm> {
                         children: [
                           InkWell(
                             onTap: () {
+
                               MapUtil.openMap(lat, long);
                             },
                             child: Container(
