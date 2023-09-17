@@ -278,7 +278,7 @@ class FillFormState extends State<FillForm> {
                               ),
                               child: const Center(
                                 child: Icon(
-                                  Icons.restart_alt_rounded,
+                                  Icons.not_started_outlined,
                                   size: 35,
                                   color: Color(0xFF3F51B5),
                                 ),
@@ -569,6 +569,8 @@ class FillFormState extends State<FillForm> {
           firstName: firstName,
           lastName: lastName,
           email: email,
+
+
           phoneNumber: phoneNumber,
           id: id,
         );
@@ -639,9 +641,10 @@ class FillFormState extends State<FillForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text(
-              "Please Answer These Questions",
+              " Answer These Questions",
               style: TextStyle(
                 color: Color(0xFF3F51B5),
+                  fontWeight: FontWeight.bold
               ),
             ),
             content:
@@ -654,20 +657,21 @@ class FillFormState extends State<FillForm> {
                   'Cancel',
                   style: TextStyle(
                     color: Color(0xFF3F51B5),
+                      fontWeight: FontWeight.bold
                   ),
                 ),
                 onPressed: () async{
-                  String request =
-                      'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
                   Navigator.of(context).pop(); // Close the questions dialog
 
                 },
               ),
+              SizedBox(height: 10),
               TextButton(
                 child: const Text(
                   'Complete',
                   style: TextStyle(
                     color: Color(0xFF3F51B5),
+                      fontWeight: FontWeight.bold
                   ),
                 ),
                 onPressed: () {
@@ -952,15 +956,17 @@ class FillFormState extends State<FillForm> {
       print("Error: $error");
     }
   }
-  Widget buildAlertDialogContent() {
+  /*Widget buildAlertDialogContent() {
    // int? selectedTypeIndex;
     if (storedBaseJson=="QUESTION") {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
           SizedBox(height: 10),
           Container(
-            height: 300,
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
+           height: 380,
             width: 500,
             child: ListView.builder(
               shrinkWrap: true,
@@ -974,6 +980,7 @@ class FillFormState extends State<FillForm> {
                         question[index],
                         style: const TextStyle(
                           color: Color(0xFF3F51B5),
+                            fontWeight: FontWeight.bold
                         ),
                       ),
                     ),
@@ -982,6 +989,7 @@ class FillFormState extends State<FillForm> {
                       child: TextField(
                         decoration: const InputDecoration(
                           hintText: 'Enter your answer...',
+
                         ),
                         onChanged: (text) {
                           setState(() {
@@ -996,11 +1004,12 @@ class FillFormState extends State<FillForm> {
               },
             ),
           ),
-          const SizedBox(height: 16.0),
+
           const Text(
-            "  Feed Back",
+            "   Feed Back",
             style: TextStyle(
               color: Color(0xFF3F51B5),
+              fontWeight: FontWeight.bold
             ),
           ),
           TextField(
@@ -1023,10 +1032,11 @@ class FillFormState extends State<FillForm> {
         children: [
           const SizedBox(height: 10),
 
-          Text(
+          const Text(
             "Feed Back",
             style: TextStyle(
               color: Color(0xFF3F51B5),
+                fontWeight: FontWeight.bold
             ),
           ),
         Padding(
@@ -1047,7 +1057,8 @@ class FillFormState extends State<FillForm> {
             const Text(
               'Amount',
               style: TextStyle(
-                color: Color(0xFF3F51B5),
+                  color: Color(0xFF3F51B5),
+                  fontWeight: FontWeight.bold
               ),
             ),
             Padding(
@@ -1072,40 +1083,205 @@ class FillFormState extends State<FillForm> {
               'Type :',
               style: TextStyle(
                 color: Color(0xFF3F51B5),
+                  fontWeight: FontWeight.bold
               ),
             ),
 
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
-            child: DropdownButton<PaymentType>(
-              value: selectedType,
-              onChanged:onTypeChanged,
-              items: typeOptions.map((PaymentType value) {
-                return DropdownMenuItem<PaymentType>(
-                    value: value,
-                    child:SizedBox(  // Adjust the width of the dropdown items
-                    width: 80,  // Adjust the width as needed
-                    child: Text(
-                    paymentTypeToString(value),
-                     style: const TextStyle(fontSize: 16,color: Color(0xFF3F51B5)),  // Adjust the font size as needed
-                ),
-                ),
-                );
-              }).toList(),
-            ),
 
-          )
+            child:// Step 1. Create a variable to hold the selected PaymentType
+    DropdownButton<PaymentType>(
+    // Step 3. Set the value to the selected PaymentType
+    value: selectedType,
+    // Step 4. Map the PaymentType options to DropdownMenuItem<PaymentType>
+    items: PaymentType.values.map((PaymentType value) {
+    return DropdownMenuItem<PaymentType>(
+    value: value,
+    child: SizedBox(
+    width: 80,
+    child: Text(
+    paymentTypeToString(value),
+    style: const TextStyle(fontSize: 16, color: Color(0xFF3F51B5)),
+    ),
+    ),
+    );
+    }).toList(),
+    // Step 5. Update the selectedType in the onChanged callback
+    onChanged: (PaymentType? newValue) {
+    if (newValue != null) {
+    setState(() {
+    selectedType = newValue;
+    });
+    }
+    },
+    )
+
+
+    )
 ],
           ),
         ],
 
       );
     }
-  }
-
-  void onTypeChanged(PaymentType? newValue) {
-    if (newValue != null) {
-      selectedType = newValue;
+  }*/
+  Widget buildAlertDialogContent() {
+    // int? selectedTypeIndex;
+    if (storedBaseJson == "QUESTION") {
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 10),
+            Container(
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
+              height: 380,
+              width: 500,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: question.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          question[index],
+                          style: const TextStyle(
+                            color: Color(0xFF3F51B5),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: 'Enter your answer...',
+                          ),
+                          onChanged: (text) {
+                            setState(() {
+                              answers[index] = text;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                    ],
+                  );
+                },
+              ),
+            ),
+            const Text(
+              "   Feed Back",
+              style: TextStyle(
+                color: Color(0xFF3F51B5),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextField(
+              controller: textarea,
+              keyboardType: TextInputType.multiline,
+              maxLines: 4,
+              decoration: const InputDecoration(
+                hintText: "  Suggest us what went wrong",
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 1, color: Colors.redAccent),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            const Text(
+              "Feed Back",
+              style: TextStyle(
+                color: Color(0xFF3F51B5),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0),
+              child: TextField(
+                controller: textarea,
+                keyboardType: TextInputType.multiline,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  hintText: "  Suggest us what went wrong",
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Colors.redAccent),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 35.0),
+            const Text(
+              'Amount',
+              style: TextStyle(
+                color: Color(0xFF3F51B5),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0),
+              child: TextField(
+                controller: textamount,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')), // Allow only digits
+                ],
+                decoration: const InputDecoration(
+                  hintText: 'Enter amount...',
+                ),
+              ),
+            ),
+            const SizedBox(height: 35.0),
+            Row(
+              children: [
+                // Add type text and ComboBox
+                const Text(
+                  'Type :',
+                  style: TextStyle(
+                    color: Color(0xFF3F51B5),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: DropdownButton<PaymentType>(
+                    value: selectedType,
+                    items: PaymentType.values.map((PaymentType value) {
+                      return DropdownMenuItem<PaymentType>(
+                        value: value,
+                        child: SizedBox(
+                          width: 80,
+                          child: Text(
+                            paymentTypeToString(value),
+                            style: const TextStyle(fontSize: 16, color: Color(0xFF3F51B5)),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (PaymentType? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          selectedType = newValue;
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
     }
   }
 

@@ -55,7 +55,7 @@ class LoginState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Login'), centerTitle: true, backgroundColor: Color(0xFF3F51B5)),
+          title: const Text('Login'), centerTitle: true, backgroundColor: const Color(0xFF3F51B5)),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -126,20 +126,25 @@ class LoginState extends State<LoginPage> {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Assignments()),
+                        );
                         if (_formKey.currentState!.validate()) {
                           String username = _usernameController.text;
                           String password = _PasswordController.text;
                           bool loginSuccess =
                               await LoginVal(username, password);
                           if (loginSuccess == true) {
-                            Navigator.push(
+                          /*  Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const Assignments()),
-                            );
+                            );*/
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('Invalid Name or Password'),
                                 backgroundColor: Colors.red,
                               ),
