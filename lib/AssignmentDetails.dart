@@ -65,7 +65,6 @@ print(_assignment.base);
             padding: const EdgeInsets.all(8.0), // Add your desired padding
             child: _addFormBar(context, _assignment),
           ),
-
           Expanded(
             child: FutureBuilder<List<forms>>(
               future: futureAssignment,
@@ -75,7 +74,9 @@ print(_assignment.base);
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return _noTaskMsg();
+                  return Center(
+                    child: _noTaskMsg(), // Center the "No Task" message
+                  );
                 } else {
                   final assignmentDetails = snapshot.data!;
                   return ListView.builder(
@@ -89,16 +90,19 @@ print(_assignment.base);
                           verticalOffset: 50.0,
                           child: GestureDetector(
                             onTap: () {
-                              //    widget.refreshCallback();
+                              // widget.refreshCallback();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-
-                                  builder: (context) => FillForm(assignment, refreshCallback: _refreshAssignmentDetails),
+                                  builder: (context) => FillForm(
+                                    assignment,
+                                    refreshCallback: _refreshAssignmentDetails,
+                                  ),
                                 ),
                               );
                             },
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 5), // Add padding here
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 5), // Add padding here
                               child: formTitle(assignment),
                             ),
                           ),
@@ -106,7 +110,6 @@ print(_assignment.base);
                       );
                     },
                   );
-
                 }
               },
             ),
@@ -180,7 +183,7 @@ print(_assignment.base);
             ],
           ),
           MyButton(
-            label: '+ Add Form',
+            label: '+ Add Unplanned Visit',
             onTap: () {
               // Navigate to AddFormPage
               Navigator.push(
@@ -242,10 +245,10 @@ _noTaskMsg() {
                 semanticsLabel: 'Task',
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 30, vertical: 10),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                 child: Text(
-                  'No Forms  available.!',
+                  'You do not have any tasks yet!',
                   style: subTitleStyle,
                   textAlign: TextAlign.center,
                 ),
@@ -261,12 +264,9 @@ _noTaskMsg() {
           ),
         ),
       ),
-
     ],
   );
-
 }
-
 
 /*_addFormBar(BuildContext context,Assignment assignment) {
   final TaskController _taskController = Get.put(TaskController());

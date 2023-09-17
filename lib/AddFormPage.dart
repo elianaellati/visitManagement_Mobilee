@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +26,7 @@ class AddFormPage extends StatefulWidget {
 
 class _AddFormPageState extends State<AddFormPage> {
   late LocationPermission permission;
+  bool isButtonDisabled = false;
   bool servicestatus = false;
   bool haspermission = false;
   late Position position;
@@ -75,6 +77,9 @@ class _AddFormPageState extends State<AddFormPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter Customer Name';
                     }
+                    if (value.length < 5 || value.length > 30) {
+                      return 'Customer Name must be between 5 and 30 characters';
+                    }
                     return null;
                   },
                 ),
@@ -98,6 +103,9 @@ class _AddFormPageState extends State<AddFormPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter Contact First Name';
+                    }
+                    if (value.length < 3 || value.length > 30) {
+                      return 'First Name must be between 3 and 30 characters';
                     }
                     return null;
                   },
@@ -125,6 +133,9 @@ class _AddFormPageState extends State<AddFormPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter Contact Last Name';
+                    }
+                    if (value.length < 3 || value.length > 30) {
+                      return 'First Name must be between 3 and 30 characters';
                     }
                     return null;
                   },
@@ -184,8 +195,12 @@ class _AddFormPageState extends State<AddFormPage> {
               MyButton(
                 label: 'Create Form',
                 onTap: () {
-                  validateData(widget.assignment);
+                  if (!isButtonDisabled) {
+                    isButtonDisabled = true;
+                    validateData(widget.assignment);
+                  }
                 },
+
               ),
             ],
           ),
@@ -223,14 +238,46 @@ class _AddFormPageState extends State<AddFormPage> {
       if (response.statusCode == 200) {
         // Handle a successful response
         print("Request successful");
+        setState(() {
+          isButtonDisabled = false;
+        });
+
+        Fluttertoast.showToast(
+            msg: "Added Successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.white,
+            textColor: Color(0xFF3F51B5),
+            fontSize: 16.0);
         widget.onFormAdded();
       } else {
         // Handle other response codes if needed
         print("Your Location is Far : ${response.statusCode}");
+        Fluttertoast.showToast(
+            msg: "Your Location is Far : ${response.statusCode}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.white,
+            textColor: Color(0xFF3F51B5),
+            fontSize: 16.0);
+        setState(() {
+          isButtonDisabled = false;
+        });
       }
     } catch (error) {
       // Handle any exceptions that may occur during the request
       print("Error: $error");
+      setState(() {
+        isButtonDisabled = false;
+      });
+
+      Fluttertoast.showToast(
+          msg: "Error : ${error}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.white,
+          textColor: Color(0xFF3F51B5),
+          fontSize: 16.0);
     }
   }
 

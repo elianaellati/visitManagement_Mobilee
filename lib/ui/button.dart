@@ -14,7 +14,7 @@ class MyButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         alignment: Alignment.center,
-        width: 100,
+        width: 120,
         height: 45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

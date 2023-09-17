@@ -32,15 +32,35 @@ class Assignments extends StatefulWidget {
 class _AssignmentsState extends State<Assignments> {
   //late Future<List<Assignment>> futureAssignment;
 
+
+
+  DateTime _selectedDate = DateTime.now();
+  final RxList<DateTime> assignmentDates = <DateTime>[].obs;
+  final TaskController _taskController = Get.put(TaskController());
   @override
   void initState() {
     super.initState();
     refresh(); // test
-    // futureAssignment = fetchAssignments();
+    _loadAssignments();
+
   }
 
-  DateTime _selectedDate = DateTime.now();
-  final TaskController _taskController = Get.put(TaskController());
+  Future<void> _loadAssignments() async {
+    try {
+      await _taskController.getTasks(); // Wait for assignments to be fetched
+      _taskController.assignmentList.forEach((assignment) {
+        print("Assignment date: ${assignment.date}");
+        // Convert the string date to a DateTime object
+        final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+        final DateTime parsedDate = dateFormat.parse(assignment.date);
+        assignmentDates.add(parsedDate);
+      });
+      print("Assignment Dates: $assignmentDates");
+    } catch (e) {
+      // Handle errors
+      print("Error loading assignments: $e");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // SizeConfig().init(context);
@@ -97,9 +117,69 @@ class _AssignmentsState extends State<Assignments> {
             _selectedDate = newDate;
           });
         },
-      ),
+    ),
     );
   }
+
+
+
+  // Widget dayBuilder(
+  //     context,
+  //     date,
+  //     selectedDate,
+  //     rowIndex,
+  //     dayName,
+  //     isDateMarked,
+  //     isDateOutOfRange,
+  //     ) {
+  //   // Check if the current date is in the specialDates list
+  //   bool isSpecialDate = assignmentDates.contains(date);
+  //
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: isSpecialDate ? Colors.blue : Colors.transparent,
+  //       borderRadius: BorderRadius.circular(8.0),
+  //     ),
+  //     margin: EdgeInsets.all(4.0),
+  //     child: Center(
+  //       child: Column(
+  //         children: <Widget>[
+  //           Text(
+  //             DateFormat("d").format(date),
+  //             style: TextStyle(
+  //               fontSize: 20,
+  //               fontWeight: FontWeight.bold,
+  //               color: isSpecialDate ? Colors.white : Colors.black,
+  //             ),
+  //           ),
+  //           if (isSpecialDate)
+  //             Icon(
+  //               Icons.star, // You can use any icon you prefer
+  //               color: Colors.yellow,
+  //             ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+  // Widget _addDateBar() {
+  //   return Container(
+  //     margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
+  //     child: DatePicker(
+  //       DateTime.now(),
+  //       onDateChange: (selectedDate) {
+  //         // Handle date selection here
+  //       },
+  //       dayBuilder: dayBuilder, // Use the custom day builder function
+  //       dateTextStyle: TextStyle(
+  //         fontSize: 16,
+  //         fontWeight: FontWeight.bold,
+  //       ),
+  //     ),
+  //   );
+  // }
+
+
 
   _addTaskBar() {
     return Container(
@@ -174,7 +254,7 @@ class _AssignmentsState extends State<Assignments> {
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 4.0, horizontal: 5), // Add padding here
                           child: TaskTitle(task),
                         ),
@@ -246,4 +326,5 @@ class _AssignmentsState extends State<Assignments> {
   void refresh(){
     _taskController.getTasks();
   }
+
 }
