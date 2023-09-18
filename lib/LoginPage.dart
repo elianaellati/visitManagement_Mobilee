@@ -126,19 +126,22 @@ class LoginState extends State<LoginPage> {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async {
+                        // Capture the context before the asynchronous call
+                        BuildContext? currentContext = context;
+
                         if (_formKey.currentState!.validate()) {
                           String username = _usernameController.text;
                           String password = _PasswordController.text;
-                          bool loginSuccess =
-                             await LoginVal(username, password);
+                          bool loginSuccess = await LoginVal(username, password);
+
+                          // Use the captured context for showing SnackBar
                           if (loginSuccess == true) {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Assignments()),
+                              currentContext,
+                              MaterialPageRoute(builder: (context) => const Assignments()),
                             );
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(currentContext!).showSnackBar(
                               const SnackBar(
                                 content: Text('Invalid Name or Password'),
                                 backgroundColor: Colors.red,

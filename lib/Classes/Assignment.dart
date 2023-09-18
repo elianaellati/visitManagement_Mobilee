@@ -5,6 +5,8 @@ class Assignment {
   final int id;
   final String status;
   final String base;
+  final String location;
+  final String city;
 
 
   Assignment({
@@ -14,7 +16,8 @@ class Assignment {
     required this.id,
     required this.status,
     required this.base,
-
+   required this.location,
+    required this.city,
   });
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
@@ -24,8 +27,9 @@ class Assignment {
       type: json['visitType']['name'],
       id:json['id'],
       status:json['status'],
-      base:json['visitType']['base']
-
+      base:json['visitType']['base'],
+      location: json['location']['address'],
+      city:json['location']['cityName']
     );
   }
 }

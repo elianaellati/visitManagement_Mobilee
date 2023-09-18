@@ -60,6 +60,16 @@ class TaskTitle extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text(
+                          task.city+" , "+task.location,
+                          style: GoogleFonts.lato(
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                       /* subtitle: Text(
                           task.status,
                           style: GoogleFonts.lato(
                             textStyle: const TextStyle(
@@ -68,7 +78,7 @@ class TaskTitle extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
+                        ),*/
                         trailing: _buildStatusIcon(task.status)),
                   ],
                 ),

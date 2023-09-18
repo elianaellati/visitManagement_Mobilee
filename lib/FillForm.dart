@@ -53,14 +53,13 @@ class FillFormState extends State<FillForm> {
   late List<dynamic>question=[];
   List<String>answers=[];
   GpsController gps=GpsController();
+
   String d ='test';
 
 
   @override
   void initState() {
     super.initState();
-    print('++++${PaymentType.values}');
-
     List<dynamic>question;
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
