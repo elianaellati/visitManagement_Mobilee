@@ -11,13 +11,13 @@ class TaskController extends GetxController {
   Future<List<Assignment>> getTasks() async {
     final storageManager = StorageManager();
     final storedUserJson = await storageManager.getObject('user');
-
+     print('storedUserJson $storedUserJson');
     if (storedUserJson == null) {
       throw Exception('Failed to load user');
     }
     final storedUser = User.fromJson(jsonDecode(storedUserJson));
     String username = storedUser.username;
-
+print(username);
     final response = await http.get(
       Uri.parse('http://10.10.33.91:8080/users/$username/visit_assignments'),
     );

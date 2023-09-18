@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   final storageManager = StorageManager();
-  dynamic storedUserJson;
+   dynamic storedUserJson;
 
   Map<String, dynamic> userData = {};
 
@@ -51,7 +51,9 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Bisan"),
         backgroundColor: const Color(0xFF3F51B5),
       ),
-      drawer: const NavigatorDrawer(),
+     // drawer: const NavigatorDrawer(),
+      drawer: NavigatorDrawer(storageManager),
+
     );
   }
 }
@@ -59,8 +61,9 @@ class _HomePageState extends State<HomePage> {
 
 
 class NavigatorDrawer extends StatelessWidget {
-  const NavigatorDrawer({super.key});
-
+  final StorageManager storageManager;
+  //const NavigatorDrawer({super.key});
+  const NavigatorDrawer(this.storageManager);
   @override
   Widget build(BuildContext context) => Drawer(
           child: Column(
@@ -142,8 +145,8 @@ class NavigatorDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.exit_to_app_rounded),
             title: const Text('Sign out'),
-            onTap: () {
-              DefaultCacheManager().emptyCache();
+            onTap: () async{
+              await storageManager.deleteAll();
               Navigator.pop(context);
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => LoginPage()),

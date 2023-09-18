@@ -40,8 +40,10 @@ class LoginState extends State<LoginPage> {
       body: jsonData,
     );
 
+    print('response.statusCode ${response.statusCode}');
     if (response.statusCode == 202) {
-      _userChecker.fetchUser( _usernameController.text);
+      print('_usernameController.text ${_usernameController.text}');
+
       return true;
     } else {
       final responseBody = json.decode(response.body);
@@ -126,7 +128,8 @@ class LoginState extends State<LoginPage> {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async {
-                        // Capture the context before the asynchronous call
+                        _userChecker.fetchUser( _usernameController.text);
+
                         BuildContext? currentContext = context;
 
                         if (_formKey.currentState!.validate()) {
@@ -136,7 +139,7 @@ class LoginState extends State<LoginPage> {
 
                           // Use the captured context for showing SnackBar
                           if (loginSuccess == true) {
-                            Navigator.push(
+                           Navigator.push(
                               currentContext,
                               MaterialPageRoute(builder: (context) => const Assignments()),
                             );

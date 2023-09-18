@@ -17,4 +17,9 @@ class StorageManager {
   Future<void> deleteObject(String key) async {
     await _storage.delete(key: key);
   }
+
+   Future<void> deleteAll() async {
+    print("ppoppp3");
+    await _storage.deleteAll();
+  }
 }
