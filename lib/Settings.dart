@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-
+import 'Classes/StorageManager.dart';
 import 'package:visitManagement_Mobilee/Change_Password.dart';
 import 'package:visitManagement_Mobilee/Profile.dart';
 
@@ -20,6 +19,7 @@ class Settings extends StatefulWidget {
 class _SettingsPage2State extends State<Settings> {
   bool _isDark = false;
 
+  final storageManager = StorageManager();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +43,8 @@ class _SettingsPage2State extends State<Settings> {
             },
           ),
         ),
-        drawer: const NavigatorDrawer(),
+      //  drawer: const NavigatorDrawer(),
+        drawer: NavigatorDrawer(storageManager),
         body: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 400),
@@ -114,6 +115,7 @@ class _CustomListTile extends StatelessWidget {
   final IconData icon;
   final Widget? trailing;
 
+
   const _CustomListTile({
     Key? key,
     required this.title,
@@ -123,19 +125,22 @@ class _CustomListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final storageManager = StorageManager();
     return ListTile(
       title: Text(title),
       leading: Icon(icon),
       trailing: trailing,
-      onTap: () {
+      onTap: ()  async {
         if (title == "Sign out") {
-          DefaultCacheManager().emptyCache();
+           await storageManager.deleteAll();
+
           // Navigate to the home page
           Navigator.of(context).pop(); // Close the settings screen
           // Replace the following line with your home page widget
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => LoginPage()));
+          Navigator.pushAndRemoveUntil(
+              context, MaterialPageRoute(builder: (context) => HomePage()),  (Route<dynamic> route) => false);
         }
+
         if (title == "Change Password") {
           Navigator.of(context).pop();
 

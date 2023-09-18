@@ -80,7 +80,8 @@ class _workflowState extends State<workflow> {
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
-          drawer: const NavigatorDrawer(),
+          // drawer: const NavigatorDrawer(),
+          drawer: NavigatorDrawer(storageManager),
           appBar: AppBar(
             title: Text('Chart Examples'),
             backgroundColor: Color(0xFF3F51B5),

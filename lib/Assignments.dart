@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -15,12 +16,13 @@ import 'HomePage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'controllers/_taskController.dart';
+import 'package:visitManagement_Mobilee/Classes/StorageManager.dart';
 import 'main.dart';
-/*void main() {
+ main() {
   runApp(const MaterialApp(
     home: Assignments(),
   ));
-}*/
+}
 
 class Assignments extends StatefulWidget {
   const Assignments({Key? key}) : super(key: key);
@@ -31,7 +33,7 @@ class Assignments extends StatefulWidget {
 
 class _AssignmentsState extends State<Assignments> {
   //late Future<List<Assignment>> futureAssignment;
-
+  final storageManager =StorageManager();
   DateTime initialSelectedDate = DateTime.now(); // Initialize it here
 
   DateTime _selectedDate = DateTime.now();
@@ -40,7 +42,8 @@ class _AssignmentsState extends State<Assignments> {
   @override
   void initState() {
     super.initState();
-    refresh(); // test
+    refresh();
+    print("Opennn haloss");// test
     _loadAssignments();
     if (assignmentDates.isNotEmpty) {
       initialSelectedDate = assignmentDates[0];
@@ -50,7 +53,8 @@ class _AssignmentsState extends State<Assignments> {
 
   Future<void> _loadAssignments() async {
     try {
-      await _taskController.getTasks(); // Wait for assignments to be fetched
+    //  await _taskController.getTasks(); // Wait for assignments to be fetched
+      print('_taskController.assignmentList=>${_taskController.assignmentList}');
       _taskController.assignmentList.forEach((assignment) {
         print("Assignment date: ${assignment.date}");
         // Convert the string date to a DateTime object
@@ -66,10 +70,16 @@ class _AssignmentsState extends State<Assignments> {
   }
   @override
   Widget build(BuildContext context) {
-    // SizeConfig().init(context);
-    //drawer: const NavigatorDrawer()
-    return Scaffold(
-      drawer: const NavigatorDrawer(),
+    return WillPopScope(
+      onWillPop: () async {
+        // Intercept the back button press and exit the app
+        storageManager.deleteAll();
+        SystemNavigator.pop();
+        return true; // Return true to allow popping.
+      },
+    child:Scaffold(
+     // drawer: const NavigatorDrawer(),
+        drawer:NavigatorDrawer(storageManager),
       appBar: AppBar(
         title: const Text('Assignments'),
         backgroundColor:  Color(0xFF3F51B5),
@@ -84,6 +94,7 @@ class _AssignmentsState extends State<Assignments> {
          showTasks(),
         ],
       ),
+    ),
     );
   }
 
