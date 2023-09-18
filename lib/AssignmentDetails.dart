@@ -52,7 +52,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forms'),
-        backgroundColor: Color(0xFF3F51B5),
+        backgroundColor: Colors.blue,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

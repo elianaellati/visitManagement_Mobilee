@@ -78,13 +78,13 @@ Widget _buildStatusIcon(String status) {
 
   // Define icons and colors based on status
   if (status == "Completed") {
-    icon = const Icon(Icons.check_circle, color: Colors.green);
+    icon = const Icon(Icons.check_circle, color: Colors.white);
   } else if (status == "Undergoing") {
-    icon = const Icon(Icons.access_time, color: Colors.orange);
+    icon = const Icon(Icons.access_time, color: Colors.white);
   } else if (status == "Not Started") {
-    icon = const Icon(Icons.error, color: Colors.red);
+    icon = const Icon(Icons.error, color: Colors.white);
   } else {
-    icon = const Icon(Icons.error, color: Colors.grey);
+    icon = const Icon(Icons.error, color: Colors.white);
   }
 
   return icon;
