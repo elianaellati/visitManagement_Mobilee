@@ -432,7 +432,7 @@ class FillFormState extends State<FillForm> {
                                   leading: const CircleAvatar(
                                     backgroundColor: Colors.white,
                                     child: Icon(
-                                      Icons.supervised_user_circle,
+                                      Icons.contact_page_outlined,
                                       color: Color(0xFF3F51B5),
                                     ),
                                   ),
@@ -1249,6 +1249,7 @@ class FillFormState extends State<FillForm> {
                 padding: const EdgeInsets.only(left: 2.0),
                 child: TextField(
                   controller: textamount,
+                  keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
                     // Allow only digits
@@ -1315,13 +1316,12 @@ class FillFormState extends State<FillForm> {
     if (status == "Completed") {
       icon = const Icon(Icons.check_circle, color: Colors.white);
     } else if (status == "Undergoing") {
-      icon = const Icon(Icons.access_time, color: Colors.white);
+      icon = const Icon(Icons.access_time_filled, color: Colors.white);
     } else if (status == "Not Started") {
-      icon = const Icon(Icons.error_outline_rounded, color: Colors.white);
+      icon = const Icon(Icons.not_started, color: Colors.white);
     } else {
-      icon = const Icon(Icons.error, color: Colors.white);
+      icon = const Icon(Icons.cancel, color: Colors.white);
     }
-
     return icon;
   }
 

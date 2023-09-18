@@ -52,7 +52,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forms'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF3F51B5),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,8 +168,15 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
               children: [
                 Text(
                   assignment.comment,
-                  style: subHeadingStyle,
+                  style: const TextStyle(
+                    color: Color(0xFF3F51B5),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+
+
                 ),
+
               ],
             ),
           ),

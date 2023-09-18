@@ -72,7 +72,7 @@ class _AssignmentsState extends State<Assignments> {
       drawer: const NavigatorDrawer(),
       appBar: AppBar(
         title: const Text('Assignments'),
-        backgroundColor:  Colors.blue,
+        backgroundColor:  Color(0xFF3F51B5),
       ),
       body: Column(
         children: [
