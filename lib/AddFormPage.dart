@@ -366,6 +366,8 @@ class _AddFormPageState extends State<AddFormPage> {
             textColor: Color(0xFF3F51B5),
             fontSize: 16.0);
         widget.refreshCallback();
+        Navigator.pop(context);
+
 
         print("Request successful");
       } else {
