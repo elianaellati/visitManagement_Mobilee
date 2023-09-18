@@ -53,12 +53,14 @@ class FillFormState extends State<FillForm> {
   late List<dynamic>question=[];
   List<String>answers=[];
   GpsController gps=GpsController();
-
+  String d ='test';
 
 
   @override
   void initState() {
     super.initState();
+    print('++++${PaymentType.values}');
+
     List<dynamic>question;
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
@@ -1132,158 +1134,175 @@ class FillFormState extends State<FillForm> {
   Widget buildAlertDialogContent() {
     // int? selectedTypeIndex;
     if (storedBaseJson == "QUESTION") {
-      return SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 10),
-            Container(
-              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
-              height: 380,
-              width: 500,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: question.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text(
-                          question[index],
-                          style: const TextStyle(
-                            color: Color(0xFF3F51B5),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+      return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Container(
+                    constraints: BoxConstraints(maxHeight: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.5),
+                    height: 380,
+                    width: 500,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: question.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                question[index],
+                                style: const TextStyle(
+                                  color: Color(0xFF3F51B5),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter your answer...',
+                                ),
+                                onChanged: (text) {
+                                  setState(() {
+                                    answers[index] = text;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16.0),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  const Text(
+                    "   Feed Back",
+                    style: TextStyle(
+                      color: Color(0xFF3F51B5),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextField(
+                    controller: textarea,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 4,
+                    decoration: const InputDecoration(
+                      hintText: "  Suggest us what went wrong",
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 1, color: Colors.redAccent),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Enter your answer...',
-                          ),
-                          onChanged: (text) {
-                            setState(() {
-                              answers[index] = text;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
-                    ],
-                  );
-                },
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const Text(
-              "   Feed Back",
-              style: TextStyle(
-                color: Color(0xFF3F51B5),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextField(
-              controller: textarea,
-              keyboardType: TextInputType.multiline,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                hintText: "  Suggest us what went wrong",
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(width: 1, color: Colors.redAccent),
-                ),
-              ),
-            ),
-          ],
-        ),
+            );
+
+          }
       );
     } else {
-      return SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            const Text(
-              "Feed Back",
-              style: TextStyle(
-                color: Color(0xFF3F51B5),
-                fontWeight: FontWeight.bold,
+      return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState)
+      {
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              const Text(
+                "Feed Back",
+                style: TextStyle(
+                  color: Color(0xFF3F51B5),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 2.0),
-              child: TextField(
-                controller: textarea,
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-                decoration: const InputDecoration(
-                  hintText: "  Suggest us what went wrong",
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1, color: Colors.redAccent),
+              Padding(
+                padding: const EdgeInsets.only(left: 2.0),
+                child: TextField(
+                  controller: textarea,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 4,
+                  decoration: const InputDecoration(
+                    hintText: "  Suggest us what went wrong",
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 1, color: Colors.redAccent),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 35.0),
-            const Text(
-              'Amount',
-              style: TextStyle(
-                color: Color(0xFF3F51B5),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 2.0),
-              child: TextField(
-                controller: textamount,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')), // Allow only digits
-                ],
-                decoration: const InputDecoration(
-                  hintText: 'Enter amount...',
+              const SizedBox(height: 35.0),
+              const Text(
+                'Amount',
+                style: TextStyle(
+                  color: Color(0xFF3F51B5),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            const SizedBox(height: 35.0),
-            Row(
-              children: [
-                // Add type text and ComboBox
-                const Text(
-                  'Type :',
-                  style: TextStyle(
-                    color: Color(0xFF3F51B5),
-                    fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.only(left: 2.0),
+                child: TextField(
+                  controller: textamount,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
+                    // Allow only digits
+                  ],
+                  decoration: const InputDecoration(
+                    hintText: 'Enter amount...',
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: DropdownButton<PaymentType>(
-                    value: selectedType,
-                    items: PaymentType.values.map((PaymentType value) {
-                      return DropdownMenuItem<PaymentType>(
-                        value: value,
-                        child: SizedBox(
-                          width: 80,
-                          child: Text(
-                            paymentTypeToString(value),
-                            style: const TextStyle(fontSize: 16, color: Color(0xFF3F51B5)),
+              ),
+              const SizedBox(height: 35.0),
+              Row(
+                children: [
+                  // Add type text and ComboBox
+                  const Text(
+                    'Type :',
+                    style: TextStyle(
+                      color: Color(0xFF3F51B5),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: DropdownButton<PaymentType>(
+                      value: selectedType,
+                      items: PaymentType.values.map((PaymentType value) {
+                        return DropdownMenuItem<PaymentType>(
+                          value: value,
+                          child: SizedBox(
+                            width: 80,
+                            child: Text(
+                              paymentTypeToString(value),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Color(0xFF3F51B5)),
+                            ),
                           ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (PaymentType? newValue) {
-                      if (newValue != null) {
+                        );
+                      }).toList(),
+                      onChanged: (PaymentType? newValue) {
+                        // if (newValue != null) {
                         setState(() {
-                          selectedType = newValue;
+                          selectedType = newValue!;
+                          d = 'hi';
                         });
-                      }
-                    },
+                        // }
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }
       );
     }
   }

@@ -23,25 +23,25 @@ class _HomePageState extends State<HomePage> {
 
   final storageManager = StorageManager();
   dynamic storedUserJson;
+
   Map<String, dynamic> userData = {};
 
   @override
   void initState() {
     super.initState();
     initilizeData();
+
   }
 
   Future<void> initilizeData() async {
     storedUserJson = await storageManager.getObject('user');
-
     if (storedUserJson != null) {
       setState(() {
         userData = json.decode(storedUserJson);
+        String? name = storedUserJson['name'];
       });
     }
   }
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -89,6 +89,15 @@ class NavigatorDrawer extends StatelessWidget {
              backgroundImage: NetworkImage(
                 "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
           ),
+          SizedBox(height:8),
+          Text("ghjh                                                                                                                                                                                      ",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          )
+
         ],
 
       ));
@@ -107,6 +116,7 @@ class NavigatorDrawer extends StatelessWidget {
               );
             },
           ),
+          SizedBox(height:10),
           ListTile(
             leading: const Icon(Icons.summarize),
             title: const Text('Workflow'),
@@ -117,6 +127,7 @@ class NavigatorDrawer extends StatelessWidget {
               );
             },
           ),
+          SizedBox(height:10),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
@@ -127,6 +138,7 @@ class NavigatorDrawer extends StatelessWidget {
               );
             },
           ),
+          SizedBox(height:10),
           ListTile(
             leading: const Icon(Icons.exit_to_app_rounded),
             title: const Text('Sign out'),

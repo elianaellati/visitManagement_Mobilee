@@ -32,7 +32,7 @@ class Assignments extends StatefulWidget {
 class _AssignmentsState extends State<Assignments> {
   //late Future<List<Assignment>> futureAssignment;
 
-
+  DateTime initialSelectedDate = DateTime.now(); // Initialize it here
 
   DateTime _selectedDate = DateTime.now();
   final RxList<DateTime> assignmentDates = <DateTime>[].obs;
@@ -42,6 +42,9 @@ class _AssignmentsState extends State<Assignments> {
     super.initState();
     refresh(); // test
     _loadAssignments();
+    if (assignmentDates.isNotEmpty) {
+      initialSelectedDate = assignmentDates[0];
+    }
 
   }
 
@@ -78,11 +81,14 @@ class _AssignmentsState extends State<Assignments> {
           const SizedBox(
             height: 6,
           ),
-          showTasks(),
+         showTasks(),
         ],
       ),
     );
   }
+
+  DateTime sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
+
 
   _addDateBar() {
     return Container(
@@ -92,99 +98,37 @@ class _AssignmentsState extends State<Assignments> {
         width: 80,
         height: 100,
         initialSelectedDate: _selectedDate,
-    //    for(i=0 ;i<assigmentsDate;i++){
-    //
-    // Icon(Icons.assigment,
-    // size: 50,
-    // color: Colors.red
-    // )
-    // }
         selectedTextColor: Colors.white,
         selectionColor: primaryClr,
         dateTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            )),
+          textStyle: const TextStyle(
+            color: Colors.grey,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         dayTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            )),
+          textStyle: const TextStyle(
+            color: Colors.grey,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         monthTextStyle: GoogleFonts.lato(
-            textStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            )),
+          textStyle: const TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         onDateChange: (newDate) {
           setState(() {
             _selectedDate = newDate;
           });
         },
-    ),
+      ),
     );
   }
-
-
-
-  // Widget dayBuilder(
-  //     context,
-  //     date,
-  //     selectedDate,
-  //     rowIndex,
-  //     dayName,
-  //     isDateMarked,
-  //     isDateOutOfRange,
-  //     ) {
-  //   // Check if the current date is in the specialDates list
-  //   bool isSpecialDate = assignmentDates.contains(date);
-  //
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       color: isSpecialDate ? Colors.blue : Colors.transparent,
-  //       borderRadius: BorderRadius.circular(8.0),
-  //     ),
-  //     margin: EdgeInsets.all(4.0),
-  //     child: Center(
-  //       child: Column(
-  //         children: <Widget>[
-  //           Text(
-  //             DateFormat("d").format(date),
-  //             style: TextStyle(
-  //               fontSize: 20,
-  //               fontWeight: FontWeight.bold,
-  //               color: isSpecialDate ? Colors.white : Colors.black,
-  //             ),
-  //           ),
-  //           if (isSpecialDate)
-  //             Icon(
-  //               Icons.star, // You can use any icon you prefer
-  //               color: Colors.yellow,
-  //             ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-  // Widget _addDateBar() {
-  //   return Container(
-  //     margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-  //     child: DatePicker(
-  //       DateTime.now(),
-  //       onDateChange: (selectedDate) {
-  //         // Handle date selection here
-  //       },
-  //       dayBuilder: dayBuilder, // Use the custom day builder function
-  //       dateTextStyle: TextStyle(
-  //         fontSize: 16,
-  //         fontWeight: FontWeight.bold,
-  //       ),
-  //     ),
-  //   );
-  // }
 
 
 
@@ -244,8 +188,6 @@ class _AssignmentsState extends State<Assignments> {
                 var parsedDate = outputFormat.parse(task.date);
                 if (outputFormat.format(parsedDate) ==
                     outputFormat.format(_selectedDate)) {
-                  print(
-                      'Assignment with matching date: ${task.comment} - ${task.date}');
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     duration: const Duration(milliseconds: 375),
@@ -333,5 +275,9 @@ class _AssignmentsState extends State<Assignments> {
   void refresh(){
     _taskController.getTasks();
   }
+
+
+
+
 
 }
