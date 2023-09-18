@@ -56,29 +56,38 @@ class TaskTitle extends StatelessWidget {
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              height: 2,
                             ),
                           ),
                         ),
-                        subtitle: Text(
-                          task.city+" , "+task.location,
-                          style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                       /* subtitle: Text(
-                          task.status,
-                          style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),*/
+
+                        subtitle:  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                  Text(
+                    task.city + ", " + task.location,
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                        color: Colors.white60,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  Text(
+                  task.type,
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                        color: Colors.white60,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
                         trailing: _buildStatusIcon(task.status)),
                   ],
                 ),
@@ -96,13 +105,13 @@ class TaskTitle extends StatelessWidget {
 
     // Define icons and colors based on status
     if (status == "Completed") {
-      icon = const Icon(Icons.check_circle, color: Colors.green);
+      icon = const Icon(Icons.check_circle, color: Colors.white);
     } else if (status == "Undergoing") {
-      icon = const Icon(Icons.access_time, color: Colors.orange);
+      icon = const Icon(Icons.access_time, color: Colors.white);
     } else if (status == "Not Started") {
-      icon = const Icon(Icons.error, color: Colors.red);
+      icon = const Icon(Icons.error, color: Colors.white);
     } else {
-      icon = const Icon(Icons.error, color: Colors.grey);
+      icon = const Icon(Icons.error, color: Colors.white);
     }
 
     return icon;
