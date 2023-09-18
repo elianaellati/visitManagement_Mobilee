@@ -52,7 +52,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forms'),
-        backgroundColor: Color(0xFF3F51B5),
+        backgroundColor: const Color(0xFF3F51B5),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +66,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
               future: futureAssignment,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -96,7 +96,7 @@ class AssignmentDetailsState extends State<AssignmentDetails> {
                               );
                             },
                             child: Padding(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 4.0, horizontal: 5), // Add padding here
                               child: formTitle(assignment),
                             ),
