@@ -141,14 +141,22 @@ class _AssignmentsState extends State<Assignments> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Today',
-                style: subHeadingStyle,
+              style:TextStyle(
+                color:Color(0xFF3F51B5),
+                fontSize: 20,
+                fontWeight: FontWeight.bold
+              )
               ),
               Text(
                 DateFormat.yMMMMd().format(DateTime.now()),
-                style: subHeadingStyle,
-              ),
+                  style:const TextStyle(
+                      color:Color(0xFF3F51B5),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                  )
+              )
             ],
           ),
         ],
