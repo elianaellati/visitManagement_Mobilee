@@ -86,7 +86,7 @@ class DataButton extends StatelessWidget {
         padding: EdgeInsets.only(top: 0, bottom: 0, left: 20, right: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: isSpecial ? Colors.green : Colors.transparent,
+          color: isSpecial ? Colors.lightBlue[100] : Colors.transparent,
         ),
         child: Align(
           alignment: Alignment.center,
@@ -121,19 +121,6 @@ class DataButton extends StatelessWidget {
                   ),
                 ],
               ),
-              if (isSpecial)
-                Positioned(
-                  top: 0.0, // Adjust the position as needed
-                  right: 0.0, // Adjust the position as needed
-                  child: Container(
-                    padding: const EdgeInsets.all(0.0), // Add padding as needed
-                    // child: Icon(
-                    //   size: 20.0,
-                    //   Icons.assignment,
-                    //   color: Colors.red, // You can change the color
-                    // ),
-                  ),
-                ),
             ],
           ),
         ),
