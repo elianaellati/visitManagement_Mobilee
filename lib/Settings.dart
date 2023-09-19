@@ -134,11 +134,12 @@ class _CustomListTile extends StatelessWidget {
         if (title == "Sign out") {
            await storageManager.deleteAll();
 
-          // Navigate to the home page
-          Navigator.of(context).pop(); // Close the settings screen
-          // Replace the following line with your home page widget
-          Navigator.pushAndRemoveUntil(
-              context, MaterialPageRoute(builder: (context) => HomePage()),  (Route<dynamic> route) => false);
+           Navigator.of(context).popUntil((route) => route.isFirst);
+          // // Navigate to the home page
+          // Navigator.of(context).pop(); // Close the settings screen
+          // // Replace the following line with your home page widget
+          // Navigator.pushAndRemoveUntil(
+          //     context, MaterialPageRoute(builder: (context) => LoginPage()),  (Route<dynamic> route) => false);
         }
 
         if (title == "Change Password") {

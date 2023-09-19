@@ -139,9 +139,10 @@ class LoginState extends State<LoginPage> {
 
                           // Use the captured context for showing SnackBar
                           if (loginSuccess == true) {
-                           Navigator.push(
+                           Navigator.pushAndRemoveUntil(
                               currentContext,
                               MaterialPageRoute(builder: (context) => const Assignments()),
+                                   (Route route) => false
                             );
                           } else {
                             ScaffoldMessenger.of(currentContext!).showSnackBar(
