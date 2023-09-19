@@ -195,8 +195,7 @@ class FillFormState extends State<FillForm> {
                               String request =
                                   'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
                               startRequest(request);
-                              await  Questions();
-                              await _showQuestions();
+
 
                               setState(() {
                                 isStarted = true;
@@ -870,7 +869,6 @@ class FillFormState extends State<FillForm> {
         },
         body: requestBody,
       );
-
       print(requestBody);
       final jsonData = jsonDecode(response.body);
       print(jsonDecode(response.body));
@@ -931,6 +929,8 @@ class FillFormState extends State<FillForm> {
       print(jsonDecode(response.body));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
+        await  Questions();
+        await _showQuestions();
         print("Request successful");
         print(jsonData['status']);
         setState(() {
@@ -1132,13 +1132,32 @@ class FillFormState extends State<FillForm> {
   }*/
   Widget buildAlertDialogContent() {
     // int? selectedTypeIndex;
-    if (storedBaseJson == "QUESTION") {
+    if (storedBaseJson == "QUESTION" ) {
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    "   Feed Back",
+                    style: TextStyle(
+                      color: Color(0xFF3F51B5),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextField(
+                    controller: textarea,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 4,
+                    decoration: const InputDecoration(
+                      hintText: "  Suggest us what went wrong",
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 1, color: Colors.redAccent),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 10),
                   Container(
                     constraints: BoxConstraints(maxHeight: MediaQuery
@@ -1182,25 +1201,7 @@ class FillFormState extends State<FillForm> {
                       },
                     ),
                   ),
-                  const Text(
-                    "   Feed Back",
-                    style: TextStyle(
-                      color: Color(0xFF3F51B5),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextField(
-                    controller: textarea,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 4,
-                    decoration: const InputDecoration(
-                      hintText: "  Suggest us what went wrong",
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 1, color: Colors.redAccent),
-                      ),
-                    ),
-                  ),
+
                 ],
               ),
             );
