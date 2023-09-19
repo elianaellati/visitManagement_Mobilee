@@ -80,7 +80,7 @@ class FillFormState extends State<FillForm> {
     TextEditingController textarea = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Form information'),
+        title: const Text('Form information'),
         backgroundColor: const Color(0xFF3F51B5),
       ),
       body: Column(
@@ -712,7 +712,6 @@ class FillFormState extends State<FillForm> {
         if (response.statusCode == 200) {
           final jsonData = jsonDecode(response.body);
           question = jsonData;
-          print(question);
         } else {
           throw Exception("HTTP Error: ${response.statusCode}");
         }

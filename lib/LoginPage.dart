@@ -63,12 +63,12 @@ class LoginState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 100),
               Text(
                 "Welcome back",
                 style: Theme.of(context).textTheme.headline5?.copyWith(
                   color:Color(0xFF3F51B5), // Change the color to any color you want
-                ),
+                fontSize: 40),
               ),
 
               const SizedBox(height: 15),

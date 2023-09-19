@@ -71,8 +71,8 @@ class _AddFormPageState extends State<AddFormPage> {
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Customer Name',
                     prefixIcon: Icon(Icons.account_box_outlined,color:Color(0xFF3F51B5) ,),
-                    hintText: 'Enter Customer Name',
-                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                    //hintText: 'Enter Customer Name',
+                    //hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
                     labelStyle: TextStyle(color:Color(0xFF3F51B5)),
 
                   ),
@@ -99,10 +99,10 @@ class _AddFormPageState extends State<AddFormPage> {
                     border: OutlineInputBorder(borderSide: BorderSide()),
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    labelText: 'Contact FirstName',
+                    labelText: 'Contact First Name',
                     prefixIcon: Icon(Icons.account_box_outlined,color:Color(0xFF3F51B5) ,),
-                    hintText: 'Enter Contact First Name',
-                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                   // hintText: 'Enter Contact First Name',
+                    //hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
                     labelStyle: TextStyle(color:Color(0xFF3F51B5)),
                   ),
                   validator: (value) {
@@ -131,10 +131,10 @@ class _AddFormPageState extends State<AddFormPage> {
                     border: OutlineInputBorder(borderSide: BorderSide()),
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    labelText: 'Contact LastName',
+                    labelText: 'Contact Last Name',
                     prefixIcon: Icon(Icons.account_box_outlined,color: Color(0xFF3F51B5),),
-                    hintText: 'Enter Contact Last Name',
-                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                   // hintText: 'Enter Contact Last Name',
+                   // hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
                     labelStyle: TextStyle(color:Color(0xFF3F51B5)),
                   ),
                   validator: (value) {
@@ -152,15 +152,16 @@ class _AddFormPageState extends State<AddFormPage> {
                 padding: const EdgeInsets.only(top: 25.0),
                 child: TextFormField(
                   controller: _phoneController,
+                  keyboardType: TextInputType.number,
                   maxLength: 10,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide()),
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    labelText: 'Contact PhoneNumber',
-                    hintText: 'Enter Contact Phone Number',
-                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                    labelText: 'Contact Phone Number',
+                   // hintText: 'Enter Contact Phone Number',
+                  //  hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
                     labelStyle: TextStyle(color:Color(0xFF3F51B5)),
                     prefixIcon: Icon(Icons.phone_android_outlined,color:Color(0xFF3F51B5),),
                   ),
@@ -184,10 +185,10 @@ class _AddFormPageState extends State<AddFormPage> {
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Contact Email',
-                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                   // hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
                     labelStyle: TextStyle(color:Color(0xFF3F51B5)),
                     prefixIcon: Icon(Icons.email_outlined,color: Color(0xFF3F51B5),),
-                    hintText: 'Enter Contact Email',
+                   // hintText: 'Enter Contact Email',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

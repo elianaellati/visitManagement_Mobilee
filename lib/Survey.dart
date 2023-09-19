@@ -31,7 +31,7 @@ class SurveyState extends State<Survey> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Survey Questions'),
+        title: const Text('Survey Questions'),
       ),
       body: FutureBuilder<List<String>>(
         future: questions,
