@@ -64,12 +64,20 @@ class LoginState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              Text("Welcome back",
-                  style: Theme.of(context).textTheme.headline5),
-              const SizedBox(height: 10),
-              Text("Login to your account",
-                  style: Theme.of(context).textTheme.bodyText1),
+              Text(
+                "Welcome back",
+                style: Theme.of(context).textTheme.headline5?.copyWith(
+                  color:Color(0xFF3F51B5), // Change the color to any color you want
+                ),
+              ),
+
               const SizedBox(height: 15),
+              Text("Login to your account",
+                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                    color:Color(0xFF3F51B5), // Change the color to any color you want
+                  ),
+              ),
+              const SizedBox(height: 45),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Form(
@@ -77,9 +85,20 @@ class LoginState extends State<LoginPage> {
                   child: Column(children: [
                     TextFormField(
                       controller: _usernameController,
+                      style: TextStyle(color: Color(0xFF3F51B5)),
                       decoration: const InputDecoration(
-                        icon: Icon(Icons.person),
+                        //
+                        prefixIcon: const Padding(
+                      padding: EdgeInsets.only(right: 25.0),
+                    child: Icon(Icons.person,
+                      color: Color(0xFF3F51B5),),
+
+                  ),
                         hintText: 'Username',
+                        hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                        labelStyle: TextStyle(color:Color(0xFF3F51B5)),
+
+
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -91,15 +110,22 @@ class LoginState extends State<LoginPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 15),
+
                     TextFormField(
                       obscureText: _isObscure,//test
                       controller: _PasswordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
+                      style: TextStyle(color: Color(0xFF3F51B5)),
+                       decoration: InputDecoration(
+                        hintText: 'Password',
+                        hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                        labelStyle: TextStyle(color:Color(0xFF3F51B5)),
                         prefixIcon: const Padding(
-                          padding: EdgeInsets.only(top: 15.0),
-                          child: Icon(Icons.password),
+                          padding: EdgeInsets.only(right: 25.0),
+                          child: Icon(Icons.password,
+                          color: Color(0xFF3F51B5),),
+
+
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(

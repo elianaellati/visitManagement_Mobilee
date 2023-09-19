@@ -70,8 +70,11 @@ class _AddFormPageState extends State<AddFormPage> {
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Customer Name',
-                    prefixIcon: Icon(Icons.account_box_outlined),
+                    prefixIcon: Icon(Icons.account_box_outlined,color:Color(0xFF3F51B5) ,),
                     hintText: 'Enter Customer Name',
+                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                    labelStyle: TextStyle(color:Color(0xFF3F51B5)),
+
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -97,8 +100,10 @@ class _AddFormPageState extends State<AddFormPage> {
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Contact FirstName',
-                    prefixIcon: Icon(Icons.account_box_outlined),
+                    prefixIcon: Icon(Icons.account_box_outlined,color:Color(0xFF3F51B5) ,),
                     hintText: 'Enter Contact First Name',
+                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                    labelStyle: TextStyle(color:Color(0xFF3F51B5)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -127,8 +132,10 @@ class _AddFormPageState extends State<AddFormPage> {
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Contact LastName',
-                    prefixIcon: Icon(Icons.account_box_outlined),
+                    prefixIcon: Icon(Icons.account_box_outlined,color: Color(0xFF3F51B5),),
                     hintText: 'Enter Contact Last Name',
+                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                    labelStyle: TextStyle(color:Color(0xFF3F51B5)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -153,7 +160,9 @@ class _AddFormPageState extends State<AddFormPage> {
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Contact PhoneNumber',
                     hintText: 'Enter Contact Phone Number',
-                    prefixIcon: Icon(Icons.phone_android_outlined),
+                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                    labelStyle: TextStyle(color:Color(0xFF3F51B5)),
+                    prefixIcon: Icon(Icons.phone_android_outlined,color:Color(0xFF3F51B5),),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -169,17 +178,21 @@ class _AddFormPageState extends State<AddFormPage> {
                 padding: const EdgeInsets.only(top: 25.0),
                 child: TextFormField(
                   controller: _emailController,
+                  style: TextStyle(color: Color(0xFF3F51B5)),
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide()),
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     labelText: 'Contact Email',
-                    prefixIcon: Icon(Icons.email_outlined),
+                    hintStyle: TextStyle(color: Color(0xFF3F51B5)), // Change hint text color
+                    labelStyle: TextStyle(color:Color(0xFF3F51B5)),
+                    prefixIcon: Icon(Icons.email_outlined,color: Color(0xFF3F51B5),),
                     hintText: 'Enter Contact Email',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter Contact Email';
+
                     } else if (!RegExp(
                         r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
                         .hasMatch(value)) {

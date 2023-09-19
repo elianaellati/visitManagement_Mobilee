@@ -13,66 +13,65 @@ import 'Classes/forms.dart';
 import 'ENUM/PaymentType.dart';
 import 'controllers/GpsController.dart';
 
-
-
-
 class FillForm extends StatefulWidget {
-
   final forms form;
   final Function refreshCallback;
+
 // Change the type to Function
   FillForm(this.form, {Key? key, required this.refreshCallback});
 
   @override
   State<StatefulWidget> createState() {
     return FillFormState();
-
   }
 }
 
 class FillFormState extends State<FillForm> {
-
-
-  final storageManager=StorageManager();
+  final storageManager = StorageManager();
   dynamic storedBaseJson;
   TextEditingController textarea = TextEditingController();
-  TextEditingController textamount= TextEditingController();
+  TextEditingController textamount = TextEditingController();
+  TextEditingController question1 = TextEditingController();
+  TextEditingController question2 = TextEditingController();
+  TextEditingController question3 = TextEditingController();
   late Future<List<contact>> futureAssignment;
   late Future<List<String>> futureQuestions;
   PaymentType selectedType = PaymentType.visa;
-  String long ="";
-  String lat ="";
- /* bool serviceStatus = false;
+  String long = "";
+  String lat = "";
+
+  /* bool serviceStatus = false;
   bool hasPermission = false;
   late LocationPermission permission;
   late Position position;
   String long = "";
   String lat = "";*/
   bool isStarted = false;
+  bool under = false;
   String statusText = ''; // Add questionData here
-  late List<dynamic>question=[];
-  List<String>answers=[];
-  GpsController gps=GpsController();
+  late List<dynamic> question = [];
+  List<String> answers = [];
+  Map<String,String> questionAnswerList = new Map();
+  String initialAnswer = "";
+  GpsController gps = GpsController();
 
-  String d ='test';
-
+  String d = 'test';
 
   @override
   void initState() {
     super.initState();
-    List<dynamic>question;
+    List<dynamic> question;
     statusText = widget.form.status.toString();
     futureAssignment = fetchContacts(widget.form.id);
 
-    long =widget.form.longitude.toString();
+    long = widget.form.longitude.toString();
     lat = widget.form.latitude.toString();
     initData();
   }
 
   Future<void> initData() async {
     storedBaseJson = await storageManager.getObject('base');
-    print("drrrrrrrrrrrrrr");
-    print("jnnnnnnnnnn ${storedBaseJson}");
+
   }
 
   @override
@@ -81,7 +80,7 @@ class FillFormState extends State<FillForm> {
     TextEditingController textarea = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title:  Text('Form information'),
+        title: Text('Form information'),
         backgroundColor: const Color(0xFF3F51B5),
       ),
       body: Column(
@@ -191,11 +190,10 @@ class FillFormState extends State<FillForm> {
                       Column(
                         children: [
                           InkWell(
-                            onTap: () async{
+                            onTap: () async {
                               String request =
                                   'http://10.10.33.91:8080/visit_forms/${widget.form.id}/start';
                               startRequest(request);
-
 
                               setState(() {
                                 isStarted = true;
@@ -228,49 +226,48 @@ class FillFormState extends State<FillForm> {
                           ),
                         ],
                       ),
-                 //   if (statusText == "Not Started")
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              _showAlertDialog();
-                            },
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.cancel,
-                                  size: 35,
-                                  color: Color(0xFF3F51B5),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Cancel',
-                            style: TextStyle(
+                    //   if (statusText == "Not Started")
+                    Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            _showAlertDialog();
+                          },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
                               color: Colors.white,
-                              fontSize: 14,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.cancel,
+                                size: 35,
+                                color: Color(0xFF3F51B5),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                     // Add a similar section for "Undergoing" status
                     if (statusText == "Undergoing")
                       Column(
                         children: [
                           InkWell(
-                            onTap: ()async  {
-                             await  Questions();
-                             await _showQuestions();
-
-                                                     },
+                            onTap: () async {
+                              await Questions();
+                              await _showQuestions();
+                            },
                             child: Container(
                               width: 60,
                               height: 60,
@@ -298,39 +295,38 @@ class FillFormState extends State<FillForm> {
                         ],
                       ),
 
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-
-                              MapUtil.openMap(lat, long);
-                            },
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.drive_eta,
-                                  size: 35,
-                                  color: Color(0xFF3F51B5),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Path',
-                            style: TextStyle(
+                    Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            MapUtil.openMap(lat, long);
+                          },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
                               color: Colors.white,
-                              fontSize: 14,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.drive_eta,
+                                size: 35,
+                                color: Color(0xFF3F51B5),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Path',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -424,7 +420,9 @@ class FillFormState extends State<FillForm> {
                               return GestureDetector(
                                 onTap: () {
                                   // When the ListTile is tapped, open the phone dialer with the phone number
-                                  final Uri phoneUri = Uri(scheme: 'tel', path: assignment.phoneNumber);
+                                  final Uri phoneUri = Uri(
+                                      scheme: 'tel',
+                                      path: assignment.phoneNumber);
                                   launch(phoneUri.toString());
                                 },
                                 child: ListTile(
@@ -447,29 +445,37 @@ class FillFormState extends State<FillForm> {
                                       final Uri emailUri = Uri(
                                         scheme: 'mailto',
                                         path: assignment.email,
-                                        queryParameters: {'subject': 'Regarding Assignment'},
+                                        queryParameters: {
+                                          'subject': 'Regarding Assignment'
+                                        },
                                       );
                                       launch(emailUri.toString());
                                     },
                                     child: Text(
                                       assignment.email,
                                       style: const TextStyle(
-                                        color: Colors.white, // Make the email text look like a link
-                                        decoration: TextDecoration.underline, // Underline to indicate it's clickable
+                                        color: Colors.white,
+                                        // Make the email text look like a link
+                                        decoration: TextDecoration
+                                            .underline, // Underline to indicate it's clickable
                                       ),
                                     ),
                                   ),
                                   trailing: GestureDetector(
                                     onTap: () {
                                       // When the trailing text is tapped, open the phone dialer with the phone number
-                                      final Uri phoneUri = Uri(scheme: 'tel', path: assignment.phoneNumber);
+                                      final Uri phoneUri = Uri(
+                                          scheme: 'tel',
+                                          path: assignment.phoneNumber);
                                       launch(phoneUri.toString());
                                     },
                                     child: Text(
                                       assignment.phoneNumber,
                                       style: const TextStyle(
-                                        color: Colors.white, // Make the phone number look like a link
-                                        decoration: TextDecoration.underline, // Underline to indicate it's clickable
+                                        color: Colors.white,
+                                        // Make the phone number look like a link
+                                        decoration: TextDecoration
+                                            .underline, // Underline to indicate it's clickable
                                       ),
                                     ),
                                   ),
@@ -572,8 +578,6 @@ class FillFormState extends State<FillForm> {
           firstName: firstName,
           lastName: lastName,
           email: email,
-
-
           phoneNumber: phoneNumber,
           id: id,
         );
@@ -583,6 +587,7 @@ class FillFormState extends State<FillForm> {
       throw Exception('Failed to load assignment details');
     }
   }
+
   Future<void> _showAlertDialog() async {
     return showDialog<void>(
       context: context,
@@ -592,12 +597,12 @@ class FillFormState extends State<FillForm> {
           title: const Text("Cancel Form",
               style: TextStyle(
                 color:
-                Color(0xFF3F51B5), // Change the color to your desired color
+                    Color(0xFF3F51B5), // Change the color to your desired color
               )),
-             content: const Text("Are you sure you want to cancel form?",
+          content: const Text("Are you sure you want to cancel form?",
               style: TextStyle(
                 color:
-                Color(0xFF3F51B5), // Change the color to your desired color
+                    Color(0xFF3F51B5), // Change the color to your desired color
               )),
           actions: <Widget>[
             TextButton(
@@ -621,7 +626,6 @@ class FillFormState extends State<FillForm> {
                     'http://10.10.33.91:8080/visit_forms/${widget.form.id}/cancel';
                 requestServer(request);
                 Navigator.of(context).pop();
-
               },
             ),
           ],
@@ -634,9 +638,10 @@ class FillFormState extends State<FillForm> {
 
   Future<void> _showQuestions() async {
     try {
-    // Await the function here
-      print("elinaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-      answers = List<String>.filled(question.length, '');
+      // Await the function here
+      print(
+          "elinaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+     // answers = List<String>.filled(question.length, '');
       print(question);
       await showDialog<void>(
         context: context,
@@ -646,26 +651,18 @@ class FillFormState extends State<FillForm> {
             title: const Text(
               " Answer These Questions",
               style: TextStyle(
-                color: Color(0xFF3F51B5),
-                  fontWeight: FontWeight.bold
-              ),
+                  color: Color(0xFF3F51B5), fontWeight: FontWeight.bold),
             ),
-            content:
-            buildAlertDialogContent(),
-
+            content: buildAlertDialogContent(),
             actions: <Widget>[
-
               TextButton(
                 child: const Text(
-                  'Cancel',
+                  'Close',
                   style: TextStyle(
-                    color: Color(0xFF3F51B5),
-                      fontWeight: FontWeight.bold
-                  ),
+                      color: Color(0xFF3F51B5), fontWeight: FontWeight.bold),
                 ),
-                onPressed: () async{
+                onPressed: () async {
                   Navigator.of(context).pop(); // Close the questions dialog
-
                 },
               ),
               SizedBox(height: 10),
@@ -673,26 +670,19 @@ class FillFormState extends State<FillForm> {
                 child: const Text(
                   'Complete',
                   style: TextStyle(
-                    color: Color(0xFF3F51B5),
-                      fontWeight: FontWeight.bold
-                  ),
+                      color: Color(0xFF3F51B5), fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-
-                  if(storedBaseJson=="QUESTION") {
+                  if (storedBaseJson == "QUESTION") {
                     String request =
-                        'http://10.10.33.91:8080/visit_forms/${widget.form
-                        .id}/complete/question';
+                        'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/question';
                     requestServer(request);
                     Navigator.of(context).pop();
-                  }
-                 else{
+                  } else {
                     String request =
-                        'http://10.10.33.91:8080/visit_forms/${widget.form
-                        .id}/complete/payment';
+                        'http://10.10.33.91:8080/visit_forms/${widget.form.id}/complete/payment';
                     requestServerpayment(request);
                     Navigator.of(context).pop();
-
                   }
                 },
               ),
@@ -726,16 +716,15 @@ class FillFormState extends State<FillForm> {
         } else {
           throw Exception("HTTP Error: ${response.statusCode}");
         }
-      }else{
-        question=["Payment","Amount"];
+      } else {
+        question = ["Payment", "Amount"];
       }
-      } catch (error) {
+    } catch (error) {
       print("Error: $error");
     }
   }
 
-
- Future<void> _showNote(String request) async {
+  Future<void> _showNote(String request) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -791,13 +780,16 @@ class FillFormState extends State<FillForm> {
       String note = "";
       if (request.contains("complete") || request.contains("cancel")) {
         note = textarea.text;
-
       }
+      answers.add(question1.text);
+      answers.add(question2.text);
+      answers.add(question3.text);
+
       Map<String, dynamic> data = {
         "latitude": gps.lat,
         "longitude": gps.long,
         "note": note,
-        "answers":answers,
+        "answers": answers,
       };
 
       String requestBody = json.encode(data);
@@ -844,6 +836,7 @@ class FillFormState extends State<FillForm> {
       print("Error: $error");
     }
   }
+
   Future<void> requestServerpayment(String request) async {
     try {
       await gps.checkGps();
@@ -855,9 +848,9 @@ class FillFormState extends State<FillForm> {
       Map<String, dynamic> data = {
         "latitude": gps.lat,
         "longitude": gps.long,
-         "note":note,
-         "amount":textamount.text,
-        "type":paymentt(selectedType),
+        "note": note,
+        "amount": textamount.text,
+        "type": paymentt(selectedType),
       };
 
       String requestBody = json.encode(data);
@@ -911,7 +904,6 @@ class FillFormState extends State<FillForm> {
       Map<String, dynamic> data = {
         "latitude": gps.lat,
         "longitude": gps.long,
-
       };
 
       String requestBody = json.encode(data);
@@ -929,7 +921,7 @@ class FillFormState extends State<FillForm> {
       print(jsonDecode(response.body));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-        await  Questions();
+        await Questions();
         await _showQuestions();
         print("Request successful");
         print(jsonData['status']);
@@ -960,6 +952,7 @@ class FillFormState extends State<FillForm> {
       print("Error: $error");
     }
   }
+
   /*Widget buildAlertDialogContent() {
    // int? selectedTypeIndex;
     if (storedBaseJson=="QUESTION") {
@@ -1130,88 +1123,108 @@ class FillFormState extends State<FillForm> {
       );
     }
   }*/
+
   Widget buildAlertDialogContent() {
     // int? selectedTypeIndex;
-    if (storedBaseJson == "QUESTION" ) {
+    if (storedBaseJson == "QUESTION") {
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "   Feed Back",
-                    style: TextStyle(
-                      color: Color(0xFF3F51B5),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextField(
-                    controller: textarea,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 4,
-                    decoration: const InputDecoration(
-                      hintText: "  Suggest us what went wrong",
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 1, color: Colors.redAccent),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    constraints: BoxConstraints(maxHeight: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.5),
-                    height: 380,
-                    width: 500,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: question.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListTile(
-                              title: Text(
-                                question[index],
-                                style: const TextStyle(
-                                  color: Color(0xFF3F51B5),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  hintText: 'Enter your answer...',
-                                ),
-                                onChanged: (text) {
-                                  setState(() {
-                                    answers[index] = text;
-                                  });
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 16.0),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-
-                ],
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Feed Back",
+                style: TextStyle(
+                  color: Color(0xFF3F51B5),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            );
+              TextField(
+                controller: textarea,
+                keyboardType: TextInputType.multiline,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  hintText: "Suggest us what went wrong",
+                  hintStyle: TextStyle(color: Color(0xFF3F51B5)),
+                  // Change hint text color
+                  labelStyle: TextStyle(color: Color(0xFF3F51B5)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Colors.redAccent),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.5),
+                height: 380,
+                width: 500,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: question.length,
+                  itemBuilder: (context, index) {
+            /*  if (questionAnswerList.isNotEmpty) {
+                initialAnswer = questionAnswerList[question[index]];
+                print(initialAnswer);
+            }*/
 
-          }
-      );
+                    if (questionAnswerList.isNotEmpty) {
+                      if(index==0 && initialAnswer!=''){
+                        initialAnswer = questionAnswerList[question[index]] as String ;
+                        question1.text =initialAnswer; // Set initial text for question1
+                      }else if(index==1 && initialAnswer!=''){
+                        question2.text =initialAnswer;
+                      }else if(index==2 &&initialAnswer!=''){
+                        question3.text =initialAnswer;
+                      }
+
+
+                    }
+
+                      return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          title: Text(
+                            question[index],
+                            style: const TextStyle(
+                              color: Color(0xFF3F51B5),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: TextField(
+                            controller: index == 0 ? question1 : (
+                              index == 1 ? question2 : question3
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: 'Enter your answer...',
+                            ),
+
+                            onChanged: (text) {
+                              // setState(() {
+                                questionAnswerList[question[index]] = text;
+                               // answers[index] = text;
+                            },
+
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      });
     } else {
       return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState)
-      {
+          builder: (BuildContext context, StateSetter setState) {
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1303,11 +1316,9 @@ class FillFormState extends State<FillForm> {
             ],
           ),
         );
-      }
-      );
+      });
     }
   }
-
 
   Widget _buildStatusIcon(String status) {
     Icon icon;

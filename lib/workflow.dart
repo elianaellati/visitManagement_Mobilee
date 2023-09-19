@@ -81,7 +81,7 @@ class _workflowState extends State<workflow> {
         length: 2,
         child: Scaffold(
           // drawer: const NavigatorDrawer(),
-          drawer: NavigatorDrawer(storageManager),
+          drawer: const NavigatorDrawer(),
           appBar: AppBar(
             title: Text('Chart Examples'),
             backgroundColor: Color(0xFF3F51B5),
@@ -103,8 +103,9 @@ class _workflowState extends State<workflow> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         const Text(
-                    'Your workflow for  your assignments',
-                          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                    'Your workflow for your assignments',
+                          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold,color: Color(0xFF3F51B5)),
+
                         ),
                         Expanded(
                           flex: 2, // Use more space for the pie chart
@@ -116,7 +117,7 @@ class _workflowState extends State<workflow> {
                                     PieChartSectionData(
                                       color: pieChartColors[i],
                                       value: pieChartData[i]['y'].toDouble(),
-                                      title: '${(pieChartData[i]['y'] as double).toStringAsFixed(2)}',
+                                      title: (pieChartData[i]['y'] as double).toStringAsFixed(2),
                                       radius: 60,
                                       titleStyle: const TextStyle(
                                         fontSize: 16,
@@ -146,12 +147,12 @@ class _workflowState extends State<workflow> {
                                       height: 20,
                                       color: pieChartColors[i],
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Text(pieChartData[i]['name']),
-                                    SizedBox(width: 30),
+                                    const SizedBox(width: 30),
                                   ],
                                 ),
-                              SizedBox(height: 10), // Add vertical spacing between rows
+                              const SizedBox(height: 10), // Add vertical spacing between rows
                             ],
                           ),
                         )

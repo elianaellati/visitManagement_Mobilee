@@ -79,7 +79,7 @@ class _AssignmentsState extends State<Assignments> {
       },
     child:Scaffold(
      // drawer: const NavigatorDrawer(),
-        drawer:NavigatorDrawer(storageManager),
+      drawer:NavigatorDrawer(),
       appBar: AppBar(
         title: const Text('Assignments'),
         backgroundColor:  Color(0xFF3F51B5),

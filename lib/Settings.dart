@@ -44,7 +44,7 @@ class _SettingsPage2State extends State<Settings> {
           ),
         ),
       //  drawer: const NavigatorDrawer(),
-        drawer: NavigatorDrawer(storageManager),
+        drawer: NavigatorDrawer(),
         body: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 400),
