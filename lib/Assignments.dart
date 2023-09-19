@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:visitManagement_Mobilee/taskTitle.dart';
+import 'package:visitManagement_Mobilee/ui/dateButton.dart';
 import 'package:visitManagement_Mobilee/ui/size_config.dart';
 import 'package:visitManagement_Mobilee/ui/theme.dart';
 import 'Classes/Assignment.dart';
@@ -31,14 +32,31 @@ class Assignments extends StatefulWidget {
   _AssignmentsState createState() => _AssignmentsState();
 }
 
+
 class _AssignmentsState extends State<Assignments> {
   //late Future<List<Assignment>> futureAssignment;
   final storageManager =StorageManager();
   DateTime initialSelectedDate = DateTime.now(); // Initialize it here
 
   DateTime _selectedDate = DateTime.now();
-  final RxList<DateTime> assignmentDates = <DateTime>[].obs;
+  RxList<DateTime> assignmentDates = <DateTime>[].obs;
   final TaskController _taskController = Get.put(TaskController());
+
+  void onDateSelected(DateTime selectedDate) {
+    setState(() {
+      _selectedDate = selectedDate; // Update the selected date
+    });
+  }
+
+  void addUniqueDateTime(DateTime dateTime) {
+    final DateTime dateWithoutTime = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+    if (!assignmentDates.contains(dateWithoutTime)) {
+      assignmentDates.add(dateWithoutTime);
+    }
+  }
+
+  var color;
   @override
   void initState() {
     super.initState();
@@ -53,14 +71,19 @@ class _AssignmentsState extends State<Assignments> {
 
   Future<void> _loadAssignments() async {
     try {
-    //  await _taskController.getTasks(); // Wait for assignments to be fetched
+      await _taskController.getTasks(); // Wait for assignments to be fetched
       print('_taskController.assignmentList=>${_taskController.assignmentList}');
       _taskController.assignmentList.forEach((assignment) {
         print("Assignment date: ${assignment.date}");
         // Convert the string date to a DateTime object
-        final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-        final DateTime parsedDate = dateFormat.parse(assignment.date);
-        assignmentDates.add(parsedDate);
+      //  final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+         final DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+         final DateTime parsedDate = dateFormat.parse(assignment.date);
+         print("parsing $parsedDate");
+      addUniqueDateTime(parsedDate);
+      });
+      setState(() {
+        assignmentDates = assignmentDates;
       });
       print("Assignment Dates: $assignmentDates");
     } catch (e) {
@@ -73,8 +96,8 @@ class _AssignmentsState extends State<Assignments> {
     return WillPopScope(
       onWillPop: () async {
         // Intercept the back button press and exit the app
-        storageManager.deleteAll();
-        SystemNavigator.pop();
+        // storageManager.deleteAll();
+        // SystemNavigator.pop();
         return true; // Return true to allow popping.
       },
     child:Scaffold(
@@ -88,6 +111,7 @@ class _AssignmentsState extends State<Assignments> {
         children: [
           _addTaskBar(),
           _addDateBar(),
+
           const SizedBox(
             height: 6,
           ),
@@ -102,48 +126,16 @@ class _AssignmentsState extends State<Assignments> {
 
 
   _addDateBar() {
+    print("Elianaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     return Container(
+      height: 100,
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-      child: DatePicker(
-        DateTime.now(),
-        width: 80,
-        height: 100,
-        initialSelectedDate: _selectedDate,
-        selectedTextColor: Colors.white,
-        selectionColor: primaryClr,
-        dateTextStyle: GoogleFonts.lato(
-          textStyle: const TextStyle(
-            color: Colors.grey,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        dayTextStyle: GoogleFonts.lato(
-          textStyle: const TextStyle(
-            color: Colors.grey,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        monthTextStyle: GoogleFonts.lato(
-          textStyle: const TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        onDateChange: (newDate) {
-          setState(() {
-            _selectedDate = newDate;
-          });
-        },
-      ),
+
+      child: assignmentDates.isEmpty ? Container() : DateTimeline(specialDates:assignmentDates, onDateSelected: onDateSelected),
     );
   }
-
-
-
   _addTaskBar() {
+    print("here is Testingggggggggggggggggggg");
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
       child: Row(
@@ -176,6 +168,7 @@ class _AssignmentsState extends State<Assignments> {
   }
 
   Widget showTasks() {
+
     return Expanded(
       child: Obx(() {
         final hasTasksForSelectedDate =
@@ -291,12 +284,9 @@ class _AssignmentsState extends State<Assignments> {
       ],
     );
   }
+
   void refresh(){
     _taskController.getTasks();
   }
-
-
-
-
 
 }
